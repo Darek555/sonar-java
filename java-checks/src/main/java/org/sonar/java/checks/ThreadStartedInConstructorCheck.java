@@ -26,6 +26,7 @@ import java.util.List;
 import org.apache.commons.lang.BooleanUtils;
 import org.sonar.check.Rule;
 import org.sonar.java.matcher.MethodMatcher;
+import org.sonar.java.matcher.TypeCriteria;
 import org.sonar.java.model.ExpressionUtils;
 import org.sonar.plugins.java.api.IssuableSubscriptionVisitor;
 import org.sonar.plugins.java.api.tree.ClassTree;
@@ -37,7 +38,7 @@ import org.sonar.plugins.java.api.tree.Tree.Kind;
 public class ThreadStartedInConstructorCheck extends IssuableSubscriptionVisitor {
 
   private static final MethodMatcher THREAD_START = MethodMatcher.create()
-    .typeDefinition("java.lang.Thread")
+    .typeDefinition(TypeCriteria.subtypeOf("java.lang.Thread"))
     .name("start")
     .withoutParameter();
 

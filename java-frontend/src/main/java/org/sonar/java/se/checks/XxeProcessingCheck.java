@@ -99,7 +99,7 @@ public class XxeProcessingCheck extends SECheck {
   // TransformerFactory
   private static final String TRANSFORMER_FACTORY = "javax.xml.transform.TransformerFactory";
   private static final MethodMatcher TRANSFORMER_FACTORY_NEW_INSTANCE = MethodMatcher.create()
-    .typeDefinition(TRANSFORMER_FACTORY)
+    .typeDefinition(TypeCriteria.subtypeOf(TRANSFORMER_FACTORY))
     .name(NEW_INSTANCE)
     .withAnyParameters();
 

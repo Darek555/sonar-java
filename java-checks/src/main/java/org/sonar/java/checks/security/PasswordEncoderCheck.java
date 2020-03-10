@@ -24,6 +24,7 @@ import java.util.List;
 import org.sonar.check.Rule;
 import org.sonar.java.matcher.MethodMatcher;
 import org.sonar.java.matcher.MethodMatcherCollection;
+import org.sonar.java.matcher.TypeCriteria;
 import org.sonar.plugins.java.api.IssuableSubscriptionVisitor;
 import org.sonar.plugins.java.api.tree.BaseTreeVisitor;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
@@ -34,17 +35,17 @@ import org.sonar.plugins.java.api.tree.Tree;
 public class PasswordEncoderCheck extends IssuableSubscriptionVisitor {
 
   private static final MethodMatcher JDBC_AUTHENTICATION = MethodMatcher.create()
-    .typeDefinition("org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder")
+    .typeDefinition(TypeCriteria.subtypeOf("org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder"))
     .name("jdbcAuthentication")
     .withoutParameter();
 
   private static final MethodMatcher USER_DETAIL_SERVICE = MethodMatcher.create()
-    .typeDefinition("org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder")
+    .typeDefinition(TypeCriteria.subtypeOf("org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder"))
     .name("userDetailsService")
     .withAnyParameters();
 
   private static final MethodMatcher PASSWORD_ENCODER_SETTER = MethodMatcher.create()
-    .typeDefinition("org.springframework.security.config.annotation.authentication.configurers.userdetails.AbstractDaoAuthenticationConfigurer")
+    .typeDefinition(TypeCriteria.subtypeOf("org.springframework.security.config.annotation.authentication.configurers.userdetails.AbstractDaoAuthenticationConfigurer"))
     .name("passwordEncoder")
     .withAnyParameters();
 

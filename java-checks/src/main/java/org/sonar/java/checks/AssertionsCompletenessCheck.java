@@ -59,10 +59,10 @@ public class AssertionsCompletenessCheck extends BaseTreeVisitor implements Java
   private static final String TRUTH_SUPERTYPE = "com.google.common.truth.TestVerb";
   private static final String JAVA6_ABSTRACT_SOFT_ASSERT = "org.assertj.core.api.Java6AbstractStandardSoftAssertions";
   private static final MethodMatcher MOCKITO_VERIFY = MethodMatcher.create()
-    .typeDefinition("org.mockito.Mockito").name("verify").withAnyParameters();
+    .typeDefinition(TypeCriteria.subtypeOf("org.mockito.Mockito")).name("verify").withAnyParameters();
   private static final MethodMatcherCollection ASSERTJ_ASSERT_ALL = MethodMatcherCollection.create(
     MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf("org.assertj.core.api.SoftAssertions")).name("assertAll").withAnyParameters(),
-    MethodMatcher.create().typeDefinition("org.assertj.core.api.Java6SoftAssertions").name("assertAll").withAnyParameters());
+    MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf("org.assertj.core.api.Java6SoftAssertions")).name("assertAll").withAnyParameters());
   private static final MethodMatcher ASSERTJ_ASSERT_THAT = MethodMatcher.create()
     .typeDefinition(TypeCriteria.subtypeOf("org.assertj.core.api.AbstractSoftAssertions"))
     .name(NameCriteria.startsWith("assertThat"))
@@ -109,7 +109,7 @@ public class AssertionsCompletenessCheck extends BaseTreeVisitor implements Java
   private JavaFileScannerContext context;
 
   private static MethodMatcher assertThatOnType(String type) {
-    return MethodMatcher.create().typeDefinition(type).name("assertThat").addParameter(TypeCriteria.anyType());
+    return MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf(type)).name("assertThat").addParameter(TypeCriteria.anyType());
   }
 
   private static MethodMatcher methodWithName(String superType, NameCriteria nameCriteria) {

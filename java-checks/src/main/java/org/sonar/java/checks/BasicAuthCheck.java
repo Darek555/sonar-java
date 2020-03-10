@@ -25,6 +25,7 @@ import org.sonar.check.Rule;
 import org.sonar.java.checks.helpers.ExpressionsHelper;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
 import org.sonar.java.matcher.MethodMatcher;
+import org.sonar.java.matcher.TypeCriteria;
 import org.sonar.java.model.ExpressionUtils;
 import org.sonar.plugins.java.api.tree.Arguments;
 import org.sonar.plugins.java.api.tree.BinaryExpressionTree;
@@ -41,11 +42,11 @@ public class BasicAuthCheck extends AbstractMethodDetection {
   @Override
   protected List<MethodMatcher> getMethodInvocationMatchers() {
     return Arrays.asList(
-      MethodMatcher.create().typeDefinition("org.apache.http.message.AbstractHttpMessage").name("setHeader").withAnyParameters(),
-      MethodMatcher.create().typeDefinition("org.apache.http.message.AbstractHttpMessage").name("addHeader").addParameter(LANG_STRING).addParameter(LANG_STRING),
-      MethodMatcher.create().typeDefinition("org.apache.http.message.BasicHeader").name("<init>").addParameter(LANG_STRING).addParameter(LANG_STRING),
-      MethodMatcher.create().typeDefinition("java.net.URLConnection").name("setRequestProperty").withAnyParameters(),
-      MethodMatcher.create().typeDefinition("java.net.URLConnection").name("addRequestProperty").withAnyParameters()
+      MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf("org.apache.http.message.AbstractHttpMessage")).name("setHeader").withAnyParameters(),
+      MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf("org.apache.http.message.AbstractHttpMessage")).name("addHeader").addParameter(LANG_STRING).addParameter(LANG_STRING),
+      MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf("org.apache.http.message.BasicHeader")).name("<init>").addParameter(LANG_STRING).addParameter(LANG_STRING),
+      MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf("java.net.URLConnection")).name("setRequestProperty").withAnyParameters(),
+      MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf("java.net.URLConnection")).name("addRequestProperty").withAnyParameters()
       );
   }
 

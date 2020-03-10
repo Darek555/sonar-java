@@ -48,6 +48,7 @@ import org.sonar.java.cfg.CFG;
 import org.sonar.java.cfg.LiveVariables;
 import org.sonar.java.matcher.MethodMatcher;
 import org.sonar.java.matcher.MethodMatcherCollection;
+import org.sonar.java.matcher.TypeCriteria;
 import org.sonar.java.model.ExpressionUtils;
 import org.sonar.java.model.JavaTree;
 import org.sonar.java.model.Sema;
@@ -119,13 +120,17 @@ public class ExplodedGraphWalker {
 
   private static final MethodMatcher SYSTEM_EXIT_MATCHER = MethodMatcher.create().typeDefinition("java.lang.System").name("exit").addParameter("int");
   private static final String JAVA_LANG_OBJECT = "java.lang.Object";
-  private static final MethodMatcher OBJECT_WAIT_MATCHER = MethodMatcher.create().typeDefinition(JAVA_LANG_OBJECT).name("wait").withAnyParameters();
-  private static final MethodMatcher GET_CLASS_MATCHER = MethodMatcher.create().typeDefinition(JAVA_LANG_OBJECT).name("getClass").withoutParameter();
+  private static final MethodMatcher JAVA_LANG_OBJECT_SUBTYPE = MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf(JAVA_LANG_OBJECT));
+  private static final MethodMatcherCollection OBJECT_WAIT_MATCHER = MethodMatcherCollection.create(
+    JAVA_LANG_OBJECT_SUBTYPE.copy().name("wait").withoutParameter(),
+    JAVA_LANG_OBJECT_SUBTYPE.copy().name("wait").parameters("long"),
+    JAVA_LANG_OBJECT_SUBTYPE.copy().name("wait").parameters("long", "int"));
+  private static final MethodMatcher GET_CLASS_MATCHER = JAVA_LANG_OBJECT_SUBTYPE.copy().name("getClass").withoutParameter();
   private static final MethodMatcher THREAD_SLEEP_MATCHER = MethodMatcher.create().typeDefinition("java.lang.Thread").name("sleep").withAnyParameters();
   private static final MethodMatcher EQUALS = MethodMatcher.create().name("equals").parameters(JAVA_LANG_OBJECT);
   public static final MethodMatcherCollection EQUALS_METHODS = MethodMatcherCollection.create(
     EQUALS,
-    MethodMatcher.create().name("equals").typeDefinition("java.util.Objects").withAnyParameters());
+    MethodMatcher.create().typeDefinition("java.util.Objects").name("equals").withAnyParameters());
 
   private final AlwaysTrueOrFalseExpressionCollector alwaysTrueOrFalseExpressionCollector;
   private MethodTree methodTree;
@@ -737,7 +742,7 @@ public class ExplodedGraphWalker {
   private ProgramState handleSpecialMethods(ProgramState ps, MethodInvocationTree mit) {
     if (isAnnotatedNonNull(mit.symbol())) {
       return ps.addConstraint(ps.peekValue(), ObjectConstraint.NOT_NULL);
-    } else if (OBJECT_WAIT_MATCHER.matches(mit)) {
+    } else if (OBJECT_WAIT_MATCHER.anyMatch(mit)) {
       return ps.resetFieldValues(constraintManager, false);
     }
     return ps;

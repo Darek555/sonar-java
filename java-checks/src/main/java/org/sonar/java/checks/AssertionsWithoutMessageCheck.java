@@ -45,7 +45,7 @@ public class AssertionsWithoutMessageCheck extends AbstractMethodDetection {
 
   private static final String GENERIC_ASSERT = "org.fest.assertions.GenericAssert";
   private static final MethodMatcher FEST_AS_METHOD = MethodMatcher.create()
-    .typeDefinition(GENERIC_ASSERT).name("as").addParameter("java.lang.String");
+    .typeDefinition(TypeCriteria.subtypeOf(GENERIC_ASSERT)).name("as").addParameter("java.lang.String");
   private static final Set<String> ASSERT_METHODS_WITH_ONE_PARAM = ImmutableSet.of("assertNull", "assertNotNull");
   private static final Set<String> ASSERT_METHODS_WITH_TWO_PARAMS = ImmutableSet.of("assertEquals", "assertSame", "assertNotSame", "assertThat");
   private static final Set<String> JUNIT5_ASSERT_METHODS_IGNORED = ImmutableSet.of("assertAll", "assertLinesMatch");

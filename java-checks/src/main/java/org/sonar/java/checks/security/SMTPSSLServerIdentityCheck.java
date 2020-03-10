@@ -52,7 +52,7 @@ public class SMTPSSLServerIdentityCheck extends AbstractMethodDetection {
   ));
 
   private static final MethodMatcher ENABLING_SSL_METHODS = MethodMatcher.create()
-    .typeDefinition(TypeCriteria.is(APACHE_EMAIL))
+    .typeDefinition(TypeCriteria.subtypeOf(APACHE_EMAIL))
     .name(ENABLING_SSL_METHOD_NAMES::contains)
     .addParameter(BOOLEAN);
 
@@ -112,7 +112,7 @@ public class SMTPSSLServerIdentityCheck extends AbstractMethodDetection {
     private boolean isSecured = false;
 
     private static final MethodMatcher SET_SSL_CHECK_SERVER_ID = MethodMatcher.create()
-      .typeDefinition(APACHE_EMAIL)
+      .typeDefinition(TypeCriteria.subtypeOf(APACHE_EMAIL))
       .name("setSSLCheckServerIdentity")
       .addParameter(BOOLEAN);
 

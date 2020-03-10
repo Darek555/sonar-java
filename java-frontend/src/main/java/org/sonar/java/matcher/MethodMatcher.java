@@ -38,8 +38,7 @@ import org.sonar.plugins.java.api.tree.Tree;
 
 public class MethodMatcher {
 
-  private TypeCriteria typeDefinition;
-  private TypeCriteria callSite;
+  private TypeCriteria typeCriteria;
   private NameCriteria methodName;
 
   private ParametersCriteria parameters;
@@ -51,8 +50,7 @@ public class MethodMatcher {
 
   public MethodMatcher copy() {
     MethodMatcher copy = new MethodMatcher();
-    copy.typeDefinition = typeDefinition;
-    copy.callSite = callSite;
+    copy.typeCriteria = typeCriteria;
     copy.methodName = methodName;
     copy.parameterTypes = parameterTypes == null ? null : new ArrayList<>(parameterTypes);
     copy.parameters = parameterTypes == null ? null : ParametersCriteria.of(copy.parameterTypes);
@@ -72,19 +70,19 @@ public class MethodMatcher {
   }
 
   public MethodMatcher typeDefinition(TypeCriteria typeDefinition) {
-    Preconditions.checkState(this.typeDefinition == null);
-    this.typeDefinition = typeDefinition;
+    Preconditions.checkState(this.typeCriteria == null);
+    this.typeCriteria = typeDefinition;
     return this;
   }
 
   public MethodMatcher typeDefinition(String fullyQualifiedTypeName) {
-    Preconditions.checkState(typeDefinition == null);
-    this.typeDefinition = TypeCriteria.is(fullyQualifiedTypeName);
+    Preconditions.checkState(typeCriteria == null);
+    this.typeCriteria = TypeCriteria.is(fullyQualifiedTypeName);
     return this;
   }
 
   public MethodMatcher callSite(TypeCriteria callSite) {
-    this.callSite = callSite;
+    this.typeCriteria = callSite;
     return this;
   }
 
@@ -185,11 +183,12 @@ public class MethodMatcher {
 
   private boolean isSearchedMethod(MethodSymbol symbol, @Nullable Type callSiteType) {
     boolean result = nameAcceptable(symbol) && parametersAcceptable(symbol);
-    if (typeDefinition != null) {
-      result &= typeDefinition.test(symbol.owner().type());
-    }
-    if (callSite != null) {
-      result &= callSiteType != null && callSite.test(callSiteType);
+    if (result && typeCriteria != null) {
+      Symbol owner = symbol.owner();
+      if (callSiteType == null && owner != null) {
+        callSiteType = owner.type();
+      }
+      result = callSiteType != null && typeCriteria.test(callSiteType);
     }
     return result;
   }

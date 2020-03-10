@@ -230,7 +230,7 @@ public class MethodMatcherTest {
     assertThat(matches.get(objectToStringWithAnyParam)).containsExactly(6, 10, 11, 14, 39);
     assertThat(matches.get(integerToString)).containsExactly(19);
     assertThat(matches.get(foo)).containsExactly(35, 36);
-    assertThat(matches.get(callSiteIsTest)).containsExactly(6, 10, 11, 14, 18, 22, 38, 39);
+    assertThat(matches.get(callSiteIsTest)).containsExactly(6, 10, 11, 14, 18, 22, 35, 36, 38, 39);
   }
 
   @Test

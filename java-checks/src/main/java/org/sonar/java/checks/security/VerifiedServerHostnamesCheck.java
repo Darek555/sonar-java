@@ -67,7 +67,7 @@ public class VerifiedServerHostnamesCheck extends IssuableSubscriptionVisitor {
     "setStartTLSEnabled",
     "setStartTLSRequired"));
   private static final MethodMatcher ENABLING_SSL_METHODS = MethodMatcher.create()
-    .typeDefinition(APACHE_EMAIL)
+    .typeDefinition(TypeCriteria.subtypeOf(APACHE_EMAIL))
     .name(ENABLING_SSL_METHOD_NAMES::contains)
     .addParameter("boolean");
   private static final MethodMatcher HASHTABLE_PUT = MethodMatcher.create()
@@ -196,7 +196,7 @@ public class VerifiedServerHostnamesCheck extends IssuableSubscriptionVisitor {
     private Symbol variable;
 
     private static final MethodMatcher SET_SSL_CHECK_SERVER_ID = MethodMatcher.create()
-      .typeDefinition(APACHE_EMAIL)
+      .typeDefinition(TypeCriteria.subtypeOf(APACHE_EMAIL))
       .name("setSSLCheckServerIdentity")
       .addParameter("boolean");
 

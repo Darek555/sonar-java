@@ -26,6 +26,7 @@ import com.google.common.collect.Iterables;
 import org.sonar.check.Rule;
 import org.sonar.java.matcher.MethodMatcher;
 import org.sonar.java.matcher.MethodMatcherCollection;
+import org.sonar.java.matcher.TypeCriteria;
 import org.sonar.java.se.CheckerContext;
 import org.sonar.java.se.ExplodedGraph;
 import org.sonar.java.se.Flow;
@@ -79,7 +80,7 @@ public class StreamConsumedCheck extends SECheck {
     baseStreamMethod("onClose").withAnyParameters());
 
   private static MethodMatcher baseStreamMethod(String methodName) {
-    return MethodMatcher.create().typeDefinition("java.util.stream.BaseStream").name(methodName);
+    return MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf("java.util.stream.BaseStream")).name(methodName);
   }
 
   @Override
