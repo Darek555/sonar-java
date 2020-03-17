@@ -77,6 +77,9 @@ public class MethodMatchersBuilder implements MethodMatchers.Builder {
 
   @Override
   public Builder ofAnyType() {
+    if (typePredicate != null) {
+      throw new IllegalStateException("Incompatible 'any type' added to others type predicates.");
+    }
     return ofType(type -> true);
   }
 
@@ -115,6 +118,9 @@ public class MethodMatchersBuilder implements MethodMatchers.Builder {
 
   @Override
   public Builder anyName() {
+    if (namePredicate != null) {
+      throw new IllegalStateException("Incompatible 'any name' added to others name predicates.");
+    }
     return name(n -> true);
   }
 

@@ -19,6 +19,7 @@
  */
 package org.sonar.plugins.java.api.semantic;
 
+import com.google.common.annotations.Beta;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
@@ -30,43 +31,65 @@ import org.sonar.plugins.java.api.tree.MethodTree;
 import org.sonar.plugins.java.api.tree.NewClassTree;
 
 /**
+ * <pre>
  * Helper interface to help to identify method with given Type, Name and Parameter lists.
  *
- * The starting point to define a MethodMatcher is {@link #create()}.
- * It is required to provide at least the following:
+ * The starting point to define a MethodMatchers is {@link #create()}.
+ * It is required to provide at least one of the following:
  *
- * - a type definition
- * - a method name
- * - a list of parameters
+ * - a type definition, 1 or more call to:
+ *   - ofSubType(String fullyQualifiedTypeName)
+ *   - ofSubTypes(String... fullyQualifiedTypeNames)
+ *   - ofType(String fullyQualifiedTypeName)
+ *   - ofTypes(String... fullyQualifiedTypeNames)
+ *   - ofType(Predicate<Type> typePredicate)
+ *   - ofAnyType()                  // same as ofType(type -> true)
  *
- * If any of the three is missing, throw an Exception.
- * For any of the three elements above, you can specify that any name/type is accepted by using the predicate name -> true.
- * It is also possible to define a name/type multiple times, to emmatch one method OR another.
+ * - a method name, 1 or more call to:
+ *   - name(String methodName)
+ *   - names(String... names)
+ *   - startWithName(String name)
+ *   - constructor()
+ *   - name(Predicate<String> namePredicate)
+ *   - anyName()                    // same as name(name -> true)
+ *
+ * - a list of parameters, 1 or more call to:
+ *   - withoutParameters()
+ *   - withParameters(String... parametersType)
+ *   - withParameters(Predicate<Type>... parametersType)
+ *   - withParameters(Predicate<List<Type>> parametersType)
+ *   - startWithParameters(String... parametersType)
+ *   - startWithParameters(Predicate<Type>... parametersType)
+ *   - withAnyParameters()          // same as withParameters((List<Type> parameters) -> true)
+ *
+ * If any of the three is missing, the matcher throws an Exception.
+ * It is also possible to define a name/type/parameters multiple times, to match one method OR another.
  *
  * Examples:
  *
  * - match method "a" and "b" from any type, and without parameters
- * MethodMatcher.create().ofAnyType().names("a", "b").withParameters();
- * alternatively
- * MethodMatcher.create().ofAnyType().name("a").name("b").withParameters();
+ *     MethodMatchers.create().ofAnyType().names("a", "b").withoutParameters();
+ *   alternatively
+ *     MethodMatchers.create().ofAnyType().name("a").name("b").withoutParameters();
  *
  * - match method "a" and "b" from (subtype) of A, and "b" and "c" from B, with any parameters:
- * MethodMatcher.create().ofSubType("A").names("a", "b").startWithParameters().or(
- * MethodMatcher.create().ofSubType("B").names("b", "c").startWithParameters());
+ *     MethodMatchers.or(
+ *       MethodMatchers.create().ofSubType("A").names("a", "b").withAnyParameters(),
+ *       MethodMatchers.create().ofSubType("B").names("b", "c").withAnyParameters());
  *
  * - match method "f" with any type and with:
- *   MethodMatcher.create().ofAnyType().name("f")
- *  - one parameter of type either int or long
- *    .withParameters("int").withParameters("long");
- *  - one parameter of type int or one parameter of type long with any other number of parameters
- *    .withParameters("int").startWithParameters("long");
+ *     MethodMatchers.create().ofAnyType().name("f")
+ *     - one parameter of type either int or long
+ *        .withParameters("int").withParameters("long");
+ *     - one parameter of type int or one parameter of type long with any other number of parameters
+ *        .withParameters("int").startWithParameters("long");
  *
  * - match any method with any type, with parameter int, any, int
- *   MethodMatcher.create().anyName().withParameters(t-> t.is("int"), t -> true, t -> t.is("int"));
+ *   MethodMatchers.create().ofAnyType().anyName().withParameters(t-> t.is("int"), t -> true, t -> t.is("int"));
  *
- * TODO: add more example
- *
- */
+ * </pre>
+ *  */
+@Beta
 public interface MethodMatchers {
 
   boolean matches(NewClassTree newClassTree);
@@ -85,7 +108,7 @@ public interface MethodMatchers {
    * Combine multiple method matcher. The matcher will match any of the given matcher.
    */
   static MethodMatchers or(MethodMatchers... matchers) {
-    return new MethodMatchersList(Arrays.asList(matchers));
+    return or(Arrays.asList(matchers));
   }
 
   static MethodMatchers or(List<MethodMatchers> matchers) {
