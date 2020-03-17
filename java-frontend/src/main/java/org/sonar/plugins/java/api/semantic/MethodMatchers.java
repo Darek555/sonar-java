@@ -102,7 +102,7 @@ public interface MethodMatchers {
     MethodMatchers.Builder ofSubType(String fullyQualifiedTypeName);
 
     /**
-     * Match any of the type and sub-type of the fully qualified name.
+     * Match any of the type and sub-type of the fully qualified names.
      */
     MethodMatchers.Builder ofSubTypes(String... fullyQualifiedTypeNames);
 
@@ -115,6 +115,11 @@ public interface MethodMatchers {
      * Match the fully qualified name type, but not the subtype.
      */
     MethodMatchers.Builder ofType(String fullyQualifiedTypeName);
+
+    /**
+     * Match any of the fully qualified name types, but not the subtype.
+     */
+    MethodMatchers.Builder ofTypes(String... fullyQualifiedTypeNames);
 
     /**
      * Match a type matching a predicate.

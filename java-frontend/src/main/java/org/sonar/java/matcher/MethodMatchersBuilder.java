@@ -86,6 +86,15 @@ public class MethodMatchersBuilder implements MethodMatchers.Builder {
   }
 
   @Override
+  public Builder ofTypes(String... fullyQualifiedTypeNames) {
+    Builder builder = this;
+    for (String name : fullyQualifiedTypeNames) {
+      builder = builder.ofType(name);
+    }
+    return builder;
+  }
+
+  @Override
   public Builder ofType(Predicate<Type> typePredicate) {
     return new MethodMatchersBuilder(or(this.typePredicate, typePredicate), namePredicate, parametersPredicate);
   }
@@ -116,7 +125,7 @@ public class MethodMatchersBuilder implements MethodMatchers.Builder {
 
   @Override
   public Builder constructor() {
-    return name("<inti>");
+    return name("<init>");
   }
 
   @Override

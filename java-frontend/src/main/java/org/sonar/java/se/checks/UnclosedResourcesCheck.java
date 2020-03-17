@@ -31,8 +31,6 @@ import org.apache.commons.lang.StringUtils;
 import org.sonar.check.Rule;
 import org.sonar.check.RuleProperty;
 import org.sonar.java.cfg.CFG;
-import org.sonar.java.matcher.MethodMatcher;
-import org.sonar.java.matcher.MethodMatcherCollection;
 import org.sonar.java.model.ExpressionUtils;
 import org.sonar.java.se.CheckerContext;
 import org.sonar.java.se.ExplodedGraph;
@@ -45,6 +43,7 @@ import org.sonar.java.se.constraint.ConstraintManager;
 import org.sonar.java.se.constraint.ObjectConstraint;
 import org.sonar.java.se.symbolicvalues.SymbolicValue;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.semantic.Type;
 import org.sonar.plugins.java.api.tree.Arguments;
@@ -96,24 +95,19 @@ public class UnclosedResourcesCheck extends SECheck {
   private static final String JAVA_SQL_CONNECTION = "java.sql.Connection";
   private static final String JAVA_NIO_FILE_FILES = "java.nio.file.Files";
 
-  private static final MethodMatcherCollection JDBC_RESOURCE_CREATIONS = MethodMatcherCollection.create(
-    MethodMatcher.create().typeDefinition(JAVA_SQL_CONNECTION).name("createStatement").withAnyParameters(),
-    MethodMatcher.create().typeDefinition(JAVA_SQL_CONNECTION).name("prepareStatement").withAnyParameters(),
-    MethodMatcher.create().typeDefinition(JAVA_SQL_CONNECTION).name("prepareCall").withAnyParameters(),
-    MethodMatcher.create().typeDefinition(JAVA_SQL_STATEMENT).name("executeQuery").addParameter("java.lang.String"),
-    MethodMatcher.create().typeDefinition(JAVA_SQL_STATEMENT).name("getResultSet").withoutParameter(),
-    MethodMatcher.create().typeDefinition(JAVA_SQL_STATEMENT).name("getGeneratedKeys").withoutParameter(),
-    MethodMatcher.create().typeDefinition("java.sql.PreparedStatement").name("executeQuery").withoutParameter(),
-    MethodMatcher.create().typeDefinition("javax.sql.DataSource").name("getConnection").withAnyParameters(),
-    MethodMatcher.create().typeDefinition("java.sql.DriverManager").name("getConnection").withAnyParameters()
+  private static final MethodMatchers JDBC_RESOURCE_CREATIONS = MethodMatchers.or(
+    MethodMatchers.create().ofType(JAVA_SQL_CONNECTION).names("createStatement", "prepareStatement", "prepareCall").withAnyParameters(),
+    MethodMatchers.create().ofType(JAVA_SQL_STATEMENT).name("executeQuery").withParameters("java.lang.String"),
+    MethodMatchers.create().ofType(JAVA_SQL_STATEMENT).names("getResultSet", "getGeneratedKeys").withoutParameters(),
+    MethodMatchers.create().ofType("java.sql.PreparedStatement").name("executeQuery").withoutParameters(),
+    MethodMatchers.create().ofType("javax.sql.DataSource").name("getConnection").withAnyParameters(),
+    MethodMatchers.create().ofType("java.sql.DriverManager").name("getConnection").withAnyParameters()
   );
 
-  private static final MethodMatcherCollection STREAMS_BACKED_BY_RESOURCE = MethodMatcherCollection.create(
-    MethodMatcher.create().typeDefinition(JAVA_NIO_FILE_FILES).name("lines").withAnyParameters(),
-    MethodMatcher.create().typeDefinition(JAVA_NIO_FILE_FILES).name("newDirectoryStream").withAnyParameters(),
-    MethodMatcher.create().typeDefinition(JAVA_NIO_FILE_FILES).name("list").withAnyParameters(),
-    MethodMatcher.create().typeDefinition(JAVA_NIO_FILE_FILES).name("find").withAnyParameters(),
-    MethodMatcher.create().typeDefinition(JAVA_NIO_FILE_FILES).name("walk").withAnyParameters()
+  private static final MethodMatchers STREAMS_BACKED_BY_RESOURCE = MethodMatchers.or(
+    MethodMatchers.create().ofType(JAVA_NIO_FILE_FILES)
+      .names("lines", "newDirectoryStream", "list", "find", "walk")
+      .withAnyParameters()
   );
 
   private static final String STREAM_TOP_HIERARCHY = "java.util.stream.BaseStream";
@@ -128,9 +122,10 @@ public class UnclosedResourcesCheck extends SECheck {
     "org.springframework.context.ConfigurableApplicationContext"
   };
 
-  private static final MethodMatcherCollection CLOSEABLE_EXCEPTIONS = MethodMatcherCollection.create(
-    MethodMatcher.create().typeDefinition("java.nio.file.FileSystems").name("getDefault").withoutParameter()
-  );
+  private static final MethodMatchers CLOSEABLE_EXCEPTIONS = MethodMatchers.create()
+    .ofType("java.nio.file.FileSystems")
+    .name("getDefault")
+    .withoutParameters();
 
   @Override
   public void init(MethodTree methodTree, CFG cfg) {
@@ -482,16 +477,16 @@ public class UnclosedResourcesCheck extends SECheck {
       return !isWithinTryHeader(mit)
         && !excludedByRuleOption(mit.symbolType())
         && !handledByFramework(mit)
-        && (JDBC_RESOURCE_CREATIONS.anyMatch(mit)
-          || STREAMS_BACKED_BY_RESOURCE.anyMatch(mit)
-          || (needsClosing(mit.symbolType()) && !CLOSEABLE_EXCEPTIONS.anyMatch(mit) && mitHeuristics(mit)));
+        && (JDBC_RESOURCE_CREATIONS.matches(mit)
+          || STREAMS_BACKED_BY_RESOURCE.matches(mit)
+          || (needsClosing(mit.symbolType()) && !CLOSEABLE_EXCEPTIONS.matches(mit) && mitHeuristics(mit)));
     }
 
     private boolean handledByFramework(MethodInvocationTree mit) {
       // according to spring documentation, no leak is expected:
       // "Implementations do not need to concern themselves with SQLExceptions that may be thrown from operations
       // they attempt. The JdbcTemplate class will catch and handle SQLExceptions appropriately."
-      return JDBC_RESOURCE_CREATIONS.anyMatch(mit)
+      return JDBC_RESOURCE_CREATIONS.matches(mit)
         && (visitedMethodOwnerType.isSubtypeOf("org.springframework.jdbc.core.PreparedStatementCreator")
           || visitedMethodOwnerType.isSubtypeOf("org.springframework.jdbc.core.CallableStatementCreator"));
     }

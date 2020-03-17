@@ -25,8 +25,6 @@ import java.util.List;
 import java.util.Objects;
 import javax.annotation.Nullable;
 import org.sonar.check.Rule;
-import org.sonar.java.matcher.MethodMatcher;
-import org.sonar.java.matcher.MethodMatcherCollection;
 import org.sonar.java.se.CheckerContext;
 import org.sonar.java.se.ProgramState;
 import org.sonar.java.se.constraint.BooleanConstraint;
@@ -34,6 +32,7 @@ import org.sonar.java.se.constraint.Constraint;
 import org.sonar.java.se.constraint.ConstraintManager;
 import org.sonar.java.se.constraint.ObjectConstraint;
 import org.sonar.java.se.symbolicvalues.SymbolicValue;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.ExpressionTree;
 import org.sonar.plugins.java.api.tree.IdentifierTree;
@@ -44,17 +43,16 @@ import org.sonar.plugins.java.api.tree.Tree;
 @Rule(key = "S3655")
 public class OptionalGetBeforeIsPresentCheck extends SECheck {
 
+  private static final MethodMatchers.Builder JAVA_UTIL_OPTIONAL = MethodMatchers.create().ofType("java.util.Optional");
   private static final ExceptionalYieldChecker EXCEPTIONAL_YIELD_CHECKER = new ExceptionalYieldChecker(
     "\"NoSuchElementException\" will be thrown when invoking method \"%s()\" without verifying Optional parameter.");
-  private static final MethodMatcher OPTIONAL_GET = optionalMethod("get").withoutParameter();
-  private static final MethodMatcher OPTIONAL_ORELSE = optionalMethod("orElse").withAnyParameters();
-  private static final MethodMatcherCollection OPTIONAL_TEST_METHODS = MethodMatcherCollection.create(
-    optionalMethod("isPresent").withoutParameter(),
-    optionalMethod("isEmpty").withoutParameter());
-  private static final MethodMatcher OPTIONAL_EMPTY = optionalMethod("empty").withoutParameter();
-  private static final MethodMatcher OPTIONAL_OF = optionalMethod("of").withAnyParameters();
-  private static final MethodMatcher OPTIONAL_OF_NULLABLE = optionalMethod("ofNullable").withAnyParameters();
-  private static final MethodMatcher OPTIONAL_FILTER = optionalMethod("filter").withAnyParameters();
+  private static final MethodMatchers OPTIONAL_GET = JAVA_UTIL_OPTIONAL.name("get").withoutParameters();
+  private static final MethodMatchers OPTIONAL_ORELSE = JAVA_UTIL_OPTIONAL.name("orElse").withAnyParameters();
+  private static final MethodMatchers OPTIONAL_TEST_METHODS = JAVA_UTIL_OPTIONAL.names("isPresent", "isEmpty").withoutParameters();
+  private static final MethodMatchers OPTIONAL_EMPTY = JAVA_UTIL_OPTIONAL.name("empty").withoutParameters();
+  private static final MethodMatchers OPTIONAL_OF = JAVA_UTIL_OPTIONAL.name("of").withAnyParameters();
+  private static final MethodMatchers OPTIONAL_OF_NULLABLE = JAVA_UTIL_OPTIONAL.name("ofNullable").withAnyParameters();
+  private static final MethodMatchers OPTIONAL_FILTER = JAVA_UTIL_OPTIONAL.name("filter").withAnyParameters();
 
   private enum OptionalConstraint implements Constraint {
     PRESENT, NOT_PRESENT;
@@ -68,10 +66,6 @@ public class OptionalGetBeforeIsPresentCheck extends SECheck {
     public boolean hasPreciseValue() {
       return this == NOT_PRESENT;
     }
-  }
-
-  private static MethodMatcher optionalMethod(String methodName) {
-    return MethodMatcher.create().typeDefinition("java.util.Optional").name(methodName);
   }
 
   @Override
@@ -212,7 +206,7 @@ public class OptionalGetBeforeIsPresentCheck extends SECheck {
     @Override
     public void visitMethodInvocation(MethodInvocationTree tree) {
       SymbolicValue peek = programState.peekValue();
-      if (OPTIONAL_TEST_METHODS.anyMatch(tree)) {
+      if (OPTIONAL_TEST_METHODS.matches(tree)) {
         constraintManager.setValueFactory(() -> new OptionalTestMethodSymbolicValue(peek, tree.symbol()));
       } else if (OPTIONAL_GET.matches(tree) && presenceHasNotBeenChecked(peek)) {
         context.addExceptionalYield(peek, programState, "java.util.NoSuchElementException", check);

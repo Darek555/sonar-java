@@ -19,27 +19,26 @@
  */
 package org.sonar.java.se.checks;
 
+import java.util.Collections;
 import org.sonar.check.Rule;
-import org.sonar.java.matcher.MethodMatcher;
 import org.sonar.java.se.CheckerContext;
 import org.sonar.java.se.Flow;
 import org.sonar.java.se.ProgramState;
 import org.sonar.java.se.constraint.BooleanConstraint;
 import org.sonar.java.se.constraint.Constraint;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.IdentifierTree;
 import org.sonar.plugins.java.api.tree.MemberSelectExpressionTree;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 import org.sonar.plugins.java.api.tree.NewClassTree;
 import org.sonar.plugins.java.api.tree.Tree;
 
-import java.util.Collections;
-
 @Rule(key = "S2689")
 public class ObjectOutputStreamCheck extends SECheck {
 
-  private static final MethodMatcher FILES_NEW_OUTPUT_STREAM = MethodMatcher.create()
-    .typeDefinition("java.nio.file.Files")
+  private static final MethodMatchers FILES_NEW_OUTPUT_STREAM = MethodMatchers.create()
+    .ofType("java.nio.file.Files")
     .name("newOutputStream")
     .withAnyParameters();
 

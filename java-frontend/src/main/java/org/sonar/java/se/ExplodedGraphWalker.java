@@ -46,9 +46,6 @@ import org.sonar.api.utils.log.Loggers;
 import org.sonar.java.DebugCheck;
 import org.sonar.java.cfg.CFG;
 import org.sonar.java.cfg.LiveVariables;
-import org.sonar.java.matcher.MethodMatcher;
-import org.sonar.java.matcher.MethodMatcherCollection;
-import org.sonar.java.matcher.TypeCriteria;
 import org.sonar.java.model.ExpressionUtils;
 import org.sonar.java.model.JavaTree;
 import org.sonar.java.model.Sema;
@@ -71,6 +68,7 @@ import org.sonar.java.se.xproc.BehaviorCache;
 import org.sonar.java.se.xproc.MethodBehavior;
 import org.sonar.java.se.xproc.MethodYield;
 import org.sonar.plugins.java.api.JavaFileScanner;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.semantic.Type;
 import org.sonar.plugins.java.api.tree.ArrayAccessExpressionTree;
@@ -118,19 +116,19 @@ public class ExplodedGraphWalker {
   @VisibleForTesting
   static final int MAX_EXEC_PROGRAM_POINT = 2;
 
-  private static final MethodMatcher SYSTEM_EXIT_MATCHER = MethodMatcher.create().typeDefinition("java.lang.System").name("exit").addParameter("int");
+  private static final MethodMatchers SYSTEM_EXIT_MATCHER = MethodMatchers.create().ofType("java.lang.System").name("exit").withParameters("int");
   private static final String JAVA_LANG_OBJECT = "java.lang.Object";
-  private static final MethodMatcher JAVA_LANG_OBJECT_SUBTYPE = MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf(JAVA_LANG_OBJECT));
-  private static final MethodMatcherCollection OBJECT_WAIT_MATCHER = MethodMatcherCollection.create(
-    JAVA_LANG_OBJECT_SUBTYPE.copy().name("wait").withoutParameter(),
-    JAVA_LANG_OBJECT_SUBTYPE.copy().name("wait").parameters("long"),
-    JAVA_LANG_OBJECT_SUBTYPE.copy().name("wait").parameters("long", "int"));
-  private static final MethodMatcher GET_CLASS_MATCHER = JAVA_LANG_OBJECT_SUBTYPE.copy().name("getClass").withoutParameter();
-  private static final MethodMatcher THREAD_SLEEP_MATCHER = MethodMatcher.create().typeDefinition("java.lang.Thread").name("sleep").withAnyParameters();
-  private static final MethodMatcher EQUALS = MethodMatcher.create().name("equals").parameters(JAVA_LANG_OBJECT);
-  public static final MethodMatcherCollection EQUALS_METHODS = MethodMatcherCollection.create(
+  private static final MethodMatchers.Builder JAVA_LANG_OBJECT_SUBTYPE = MethodMatchers.create().ofSubType(JAVA_LANG_OBJECT);
+  private static final MethodMatchers OBJECT_WAIT_MATCHER = JAVA_LANG_OBJECT_SUBTYPE.name("wait")
+    .withoutParameters()
+    .withParameters("long")
+    .withParameters("long", "int");
+  private static final MethodMatchers GET_CLASS_MATCHER = JAVA_LANG_OBJECT_SUBTYPE.name("getClass").withoutParameters();
+  private static final MethodMatchers THREAD_SLEEP_MATCHER = MethodMatchers.create().ofType("java.lang.Thread").name("sleep").withAnyParameters();
+  private static final MethodMatchers EQUALS = MethodMatchers.create().ofAnyType().name("equals").withParameters(JAVA_LANG_OBJECT);
+  public static final MethodMatchers EQUALS_METHODS = MethodMatchers.or(
     EQUALS,
-    MethodMatcher.create().typeDefinition("java.util.Objects").name("equals").withAnyParameters());
+    MethodMatchers.create().ofType("java.util.Objects").name("equals").withAnyParameters());
 
   private final AlwaysTrueOrFalseExpressionCollector alwaysTrueOrFalseExpressionCollector;
   private MethodTree methodTree;
@@ -699,7 +697,7 @@ public class ExplodedGraphWalker {
     final SymbolicValue resultValue = constraintManager.createMethodSymbolicValue(mit, unstack.valuesAndSymbols);
     if (methodInvokedBehavior != null
       && methodInvokedBehavior.isComplete()
-      && !EQUALS_METHODS.anyMatch(mit)) {
+      && !EQUALS_METHODS.matches(mit)) {
       List<SymbolicValue> invocationArguments = invocationArguments(unstack.values);
       List<Type> invocationTypes = mit.arguments().stream().map(ExpressionTree::symbolType).collect(Collectors.toList());
 
@@ -742,7 +740,7 @@ public class ExplodedGraphWalker {
   private ProgramState handleSpecialMethods(ProgramState ps, MethodInvocationTree mit) {
     if (isAnnotatedNonNull(mit.symbol())) {
       return ps.addConstraint(ps.peekValue(), ObjectConstraint.NOT_NULL);
-    } else if (OBJECT_WAIT_MATCHER.anyMatch(mit)) {
+    } else if (OBJECT_WAIT_MATCHER.matches(mit)) {
       return ps.resetFieldValues(constraintManager, false);
     }
     return ps;

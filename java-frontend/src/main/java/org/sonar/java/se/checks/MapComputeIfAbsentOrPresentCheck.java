@@ -21,11 +21,14 @@ package org.sonar.java.se.checks;
 
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
-
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.sonar.check.Rule;
 import org.sonar.java.JavaVersionAwareVisitor;
 import org.sonar.java.cfg.CFG;
-import org.sonar.java.matcher.MethodMatcher;
 import org.sonar.java.matcher.TypeCriteria;
 import org.sonar.java.model.ExpressionUtils;
 import org.sonar.java.se.CheckerContext;
@@ -38,6 +41,7 @@ import org.sonar.java.se.constraint.ObjectConstraint;
 import org.sonar.java.se.symbolicvalues.SymbolicValue;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.JavaVersion;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.BinaryExpressionTree;
 import org.sonar.plugins.java.api.tree.ExpressionTree;
@@ -46,17 +50,12 @@ import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 import org.sonar.plugins.java.api.tree.MethodTree;
 import org.sonar.plugins.java.api.tree.Tree;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 @Rule(key = "S3824")
 public class MapComputeIfAbsentOrPresentCheck extends SECheck implements JavaVersionAwareVisitor {
 
-  private static final MethodMatcher MAP_GET = mapMethod("get", TypeCriteria.anyType());
-  private static final MethodMatcher MAP_PUT = mapMethod("put", TypeCriteria.anyType(), TypeCriteria.anyType());
+  private static final MethodMatchers.Builder JAVA_UTIL_MAP = MethodMatchers.create().ofSubType("java.util.Map");
+  private static final MethodMatchers MAP_GET = JAVA_UTIL_MAP.name("get").withParameters(TypeCriteria.anyType());
+  private static final MethodMatchers MAP_PUT = JAVA_UTIL_MAP.name("put").withParameters(TypeCriteria.anyType(), TypeCriteria.anyType());
 
   private final Multimap<SymbolicValue, MapGetInvocation> mapGetInvocations = LinkedListMultimap.create();
   private final List<CheckIssue> checkIssues = new ArrayList<>();
@@ -70,10 +69,6 @@ public class MapComputeIfAbsentOrPresentCheck extends SECheck implements JavaVer
   public void init(MethodTree methodTree, CFG cfg) {
     mapGetInvocations.clear();
     checkIssues.clear();
-  }
-
-  private static MethodMatcher mapMethod(String methodName, TypeCriteria... parameterTypes) {
-    return MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf("java.util.Map")).name(methodName).parameters(parameterTypes);
   }
 
   @Override

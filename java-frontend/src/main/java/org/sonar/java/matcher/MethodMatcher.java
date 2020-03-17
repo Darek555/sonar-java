@@ -29,7 +29,7 @@ import org.sonar.plugins.java.api.tree.MethodReferenceTree;
 import org.sonar.plugins.java.api.tree.MethodTree;
 import org.sonar.plugins.java.api.tree.NewClassTree;
 
-public class MethodMatcher {
+public class MethodMatcher implements MethodMatchers {
 
   private MethodMatchers internalMatcher;
 
@@ -155,26 +155,31 @@ public class MethodMatcher {
     }
   }
 
+  @Override
   public boolean matches(NewClassTree newClassTree) {
     checkInternalMatcher();
     return internalMatcher.matches(newClassTree);
   }
 
+  @Override
   public boolean matches(MethodInvocationTree mit) {
     checkInternalMatcher();
     return internalMatcher.matches(mit);
   }
 
+  @Override
   public boolean matches(MethodTree methodTree) {
     checkInternalMatcher();
     return internalMatcher.matches(methodTree);
   }
 
+  @Override
   public boolean matches(MethodReferenceTree methodReferenceTree) {
     checkInternalMatcher();
     return internalMatcher.matches(methodReferenceTree);
   }
 
+  @Override
   public boolean matches(Symbol symbol) {
     checkInternalMatcher();
     return internalMatcher.matches(symbol);
