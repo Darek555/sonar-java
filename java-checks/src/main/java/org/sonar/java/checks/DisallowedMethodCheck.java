@@ -19,14 +19,13 @@
  */
 package org.sonar.java.checks;
 
-import java.util.Collections;
-import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.sonar.check.Rule;
 import org.sonar.check.RuleProperty;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
 import org.sonar.java.matcher.MethodMatcher;
 import org.sonar.java.model.ExpressionUtils;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 
 @Rule(key = "S2253")
@@ -45,9 +44,9 @@ public class DisallowedMethodCheck extends AbstractMethodDetection {
   private boolean allOverloads = false;
 
   @Override
-  protected List<MethodMatcher> getMethodInvocationMatchers() {
+  protected MethodMatchers getMethodInvocationMatchers() {
     if (StringUtils.isEmpty(methodName)) {
-      return Collections.emptyList();
+      return MethodMatchers.empty();
     }
     MethodMatcher invocationMatcher = MethodMatcher.create().name(methodName);
     if (StringUtils.isNotEmpty(className)) {
@@ -65,7 +64,7 @@ public class DisallowedMethodCheck extends AbstractMethodDetection {
         }
       }
     }
-    return Collections.singletonList(invocationMatcher);
+    return invocationMatcher;
   }
 
   @Override

@@ -19,13 +19,12 @@
  */
 package org.sonar.java.checks;
 
-import java.util.Arrays;
-import java.util.List;
 import org.sonar.check.Rule;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
 import org.sonar.java.matcher.MethodMatcher;
 import org.sonar.java.matcher.TypeCriteria;
 import org.sonar.java.model.ExpressionUtils;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 import org.sonar.plugins.java.api.tree.MethodReferenceTree;
 
@@ -33,9 +32,9 @@ import org.sonar.plugins.java.api.tree.MethodReferenceTree;
 public class WaitOnConditionCheck extends AbstractMethodDetection {
 
   @Override
-  protected List<MethodMatcher> getMethodInvocationMatchers() {
+  protected MethodMatchers getMethodInvocationMatchers() {
     TypeCriteria conditionSubType = TypeCriteria.subtypeOf("java.util.concurrent.locks.Condition");
-    return Arrays.asList(
+    return MethodMatchers.or(
       MethodMatcher.create().callSite(conditionSubType).name("wait").withoutParameter(),
       MethodMatcher.create().callSite(conditionSubType).name("wait").addParameter("long"),
       MethodMatcher.create().callSite(conditionSubType).name("wait").addParameter("long").addParameter("int"));

@@ -19,13 +19,12 @@
  */
 package org.sonar.java.checks;
 
-import java.util.Collections;
-import java.util.List;
 import org.sonar.check.Rule;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
 import org.sonar.java.matcher.MethodMatcher;
 import org.sonar.java.matcher.MethodMatcherCollection;
 import org.sonar.java.model.ExpressionUtils;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.BaseTreeVisitor;
 import org.sonar.plugins.java.api.tree.ExpressionTree;
 import org.sonar.plugins.java.api.tree.MemberSelectExpressionTree;
@@ -36,8 +35,8 @@ import org.sonar.plugins.java.api.tree.Tree;
 public class ClassComparedByNameCheck extends AbstractMethodDetection {
 
   @Override
-  protected List<MethodMatcher> getMethodInvocationMatchers() {
-    return Collections.singletonList(MethodMatcher.create().typeDefinition("java.lang.String").name("equals").withAnyParameters());
+  protected MethodMatchers getMethodInvocationMatchers() {
+    return MethodMatcher.create().typeDefinition("java.lang.String").name("equals").withAnyParameters();
   }
 
   @Override

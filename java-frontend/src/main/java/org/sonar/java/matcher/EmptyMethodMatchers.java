@@ -17,29 +17,51 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package org.sonar.java.checks;
+package org.sonar.java.matcher;
 
-import org.sonar.check.Rule;
-import org.sonar.java.checks.methods.AbstractMethodDetection;
-import org.sonar.java.matcher.MethodMatcher;
-import org.sonar.java.model.ExpressionUtils;
 import org.sonar.plugins.java.api.semantic.MethodMatchers;
-import org.sonar.plugins.java.api.semantic.Type;
+import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
+import org.sonar.plugins.java.api.tree.MethodReferenceTree;
+import org.sonar.plugins.java.api.tree.MethodTree;
+import org.sonar.plugins.java.api.tree.NewClassTree;
 
-@Rule(key = "S2127")
-public class LongBitsToDoubleOnIntCheck extends AbstractMethodDetection {
+public class EmptyMethodMatchers implements MethodMatchers {
 
-  @Override
-  protected MethodMatchers getMethodInvocationMatchers() {
-    return MethodMatcher.create().typeDefinition("java.lang.Double").name("longBitsToDouble").addParameter("long");
+  private EmptyMethodMatchers() {
+  }
+
+  public static EmptyMethodMatchers getInstance() {
+    return LazyHolder.INSTANCE;
+  }
+
+  private static class LazyHolder {
+    private static final EmptyMethodMatchers INSTANCE = new EmptyMethodMatchers();
   }
 
   @Override
-  protected void onMethodInvocationFound(MethodInvocationTree mit) {
-    Type symbolType = mit.arguments().get(0).symbolType();
-    if (!(symbolType.is("long") || symbolType.is("java.lang.Long"))) {
-      reportIssue(ExpressionUtils.methodName(mit), "Remove this \"Double.longBitsToDouble\" call.");
-    }
+  public boolean matches(NewClassTree newClassTree) {
+    return false;
   }
+
+  @Override
+  public boolean matches(MethodInvocationTree mit) {
+    return false;
+  }
+
+  @Override
+  public boolean matches(MethodTree methodTree) {
+    return false;
+  }
+
+  @Override
+  public boolean matches(MethodReferenceTree methodReferenceTree) {
+    return false;
+  }
+
+  @Override
+  public boolean matches(Symbol symbol) {
+    return false;
+  }
+
 }

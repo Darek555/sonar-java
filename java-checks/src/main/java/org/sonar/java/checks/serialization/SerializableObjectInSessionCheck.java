@@ -19,14 +19,13 @@
  */
 package org.sonar.java.checks.serialization;
 
-import java.util.Collections;
-import java.util.List;
 import org.sonar.check.Rule;
 import org.sonar.java.checks.helpers.ExpressionsHelper;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
 import org.sonar.java.matcher.MethodMatcher;
 import org.sonar.java.matcher.TypeCriteria;
 import org.sonar.java.model.JUtils;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.semantic.Type;
 import org.sonar.plugins.java.api.tree.ExpressionTree;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
@@ -35,9 +34,9 @@ import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 public class SerializableObjectInSessionCheck extends AbstractMethodDetection {
 
   @Override
-  protected List<MethodMatcher> getMethodInvocationMatchers() {
-    return Collections.singletonList(MethodMatcher.create().typeDefinition("javax.servlet.http.HttpSession")
-      .name("setAttribute").addParameter("java.lang.String").addParameter(TypeCriteria.anyType()));
+  protected MethodMatchers getMethodInvocationMatchers() {
+    return MethodMatcher.create().typeDefinition("javax.servlet.http.HttpSession")
+      .name("setAttribute").addParameter("java.lang.String").addParameter(TypeCriteria.anyType());
   }
 
   @Override

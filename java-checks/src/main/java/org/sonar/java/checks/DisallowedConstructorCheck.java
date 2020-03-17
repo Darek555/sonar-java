@@ -19,13 +19,12 @@
  */
 package org.sonar.java.checks;
 
-import java.util.Collections;
-import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.sonar.check.Rule;
 import org.sonar.check.RuleProperty;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
 import org.sonar.java.matcher.MethodMatcher;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.NewClassTree;
 
 @Rule(key = "S4011")
@@ -41,10 +40,10 @@ public class DisallowedConstructorCheck extends AbstractMethodDetection {
   private boolean allOverloads = false;
 
   @Override
-  protected List<MethodMatcher> getMethodInvocationMatchers() {
+  protected MethodMatchers getMethodInvocationMatchers() {
     MethodMatcher invocationMatcher = MethodMatcher.create().name("<init>");
     if (StringUtils.isEmpty(className)) {
-      return Collections.emptyList();
+      return MethodMatchers.empty();
     }
     invocationMatcher.typeDefinition(className);
     if (allOverloads) {
@@ -59,7 +58,7 @@ public class DisallowedConstructorCheck extends AbstractMethodDetection {
         }
       }
     }
-    return Collections.singletonList(invocationMatcher);
+    return invocationMatcher;
   }
 
   @Override

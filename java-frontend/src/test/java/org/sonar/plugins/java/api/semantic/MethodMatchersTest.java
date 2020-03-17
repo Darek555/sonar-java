@@ -234,6 +234,10 @@ public class MethodMatchersTest {
       MethodMatchers.create().ofType("pkg.A").constructor().withParameters("int"),
       MethodMatchers.create().ofType("pkg.A").name("f").withParameters("int"))))
       .containsExactly(4, 5, 7, 8);
+
+    // empty
+    assertThat(findMatchesOnTree(source, MethodMatchers.empty())).isEmpty();
+    assertThat(findMatchesOnSymbol(source, MethodMatchers.empty())).isEmpty();
   }
 
   @Test

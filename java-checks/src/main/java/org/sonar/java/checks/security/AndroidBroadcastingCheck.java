@@ -19,12 +19,11 @@
  */
 package org.sonar.java.checks.security;
 
-import java.util.Arrays;
-import java.util.List;
 import org.sonar.check.Rule;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
 import org.sonar.java.matcher.MethodMatcher;
 import org.sonar.java.matcher.MethodMatcherCollection;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 
 import static org.sonar.plugins.java.api.tree.Tree.Kind.NULL_LITERAL;
@@ -50,8 +49,8 @@ public class AndroidBroadcastingCheck extends AbstractMethodDetection {
   }
 
   @Override
-  protected List<MethodMatcher> getMethodInvocationMatchers() {
-    return Arrays.asList(
+  protected MethodMatchers getMethodInvocationMatchers() {
+    return MethodMatchers.or(
       SEND_BROADCAST,
       SEND_BROADCAST_AS_USER,
       SEND_ORDERED_BROADCAST,

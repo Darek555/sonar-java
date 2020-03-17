@@ -19,11 +19,10 @@
  */
 package org.sonar.java.checks;
 
-import java.util.Collections;
-import java.util.List;
 import org.sonar.check.Rule;
 import org.sonar.java.matcher.MethodMatcher;
 import org.sonar.java.model.ExpressionUtils;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 
 @Rule(key = "S2276")
@@ -37,7 +36,7 @@ public class ThreadSleepCheck extends AbstractInSynchronizeChecker {
   }
 
   @Override
-  protected List<MethodMatcher> getMethodInvocationMatchers() {
-    return Collections.singletonList(MethodMatcher.create().typeDefinition("java.lang.Thread").name("sleep").withAnyParameters());
+  protected MethodMatchers getMethodInvocationMatchers() {
+    return MethodMatcher.create().typeDefinition("java.lang.Thread").name("sleep").withAnyParameters();
   }
 }

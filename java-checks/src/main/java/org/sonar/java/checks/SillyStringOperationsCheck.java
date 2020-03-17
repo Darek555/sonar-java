@@ -19,16 +19,12 @@
  */
 package org.sonar.java.checks;
 
-import static java.lang.String.format;
-import java.util.Arrays;
-import java.util.List;
-
 import javax.annotation.CheckForNull;
-
 import org.sonar.check.Rule;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
 import org.sonar.java.matcher.MethodMatcher;
 import org.sonar.java.matcher.TypeCriteria;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.Arguments;
 import org.sonar.plugins.java.api.tree.ExpressionTree;
@@ -36,6 +32,8 @@ import org.sonar.plugins.java.api.tree.IdentifierTree;
 import org.sonar.plugins.java.api.tree.MemberSelectExpressionTree;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 import org.sonar.plugins.java.api.tree.Tree.Kind;
+
+import static java.lang.String.format;
 
 @Rule(key = "S2121")
 public class SillyStringOperationsCheck extends AbstractMethodDetection {
@@ -45,8 +43,8 @@ public class SillyStringOperationsCheck extends AbstractMethodDetection {
   private static final MethodMatcher STRING_LENGTH = MethodMatcher.create().typeDefinition(STRING).name("length").withoutParameter();
 
   @Override
-  protected List<MethodMatcher> getMethodInvocationMatchers() {
-    return Arrays.asList(
+  protected MethodMatchers getMethodInvocationMatchers() {
+    return MethodMatchers.or(
         MethodMatcher.create().typeDefinition(STRING).name("contains")
           .addParameter(TypeCriteria.subtypeOf(CHAR_SEQUENCE)),
         MethodMatcher.create().typeDefinition(STRING).name("compareTo")

@@ -30,6 +30,7 @@ import org.sonar.java.checks.methods.AbstractMethodDetection;
 import org.sonar.java.matcher.MethodMatcher;
 import org.sonar.java.matcher.MethodMatcherCollection;
 import org.sonar.java.model.ExpressionUtils;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.ExpressionTree;
 import org.sonar.plugins.java.api.tree.IdentifierTree;
 import org.sonar.plugins.java.api.tree.LambdaExpressionTree;
@@ -70,7 +71,7 @@ public class PreferStreamAnyMatchCheck extends AbstractMethodDetection {
     .name("booleanValue").withoutParameter();
 
   @Override
-  protected List<MethodMatcher> getMethodInvocationMatchers() {
+  protected MethodMatchers getMethodInvocationMatchers() {
     List<MethodMatcher> matchers = new ArrayList<>();
     Stream.of("java.util.Optional", "java.util.OptionalInt", "java.util.OptionalLong", "java.util.OptionalDouble")
       .map(type -> MethodMatcher.create().typeDefinition(type).name("isPresent").withoutParameter())
@@ -78,7 +79,7 @@ public class PreferStreamAnyMatchCheck extends AbstractMethodDetection {
     STREAM_TYPES.stream()
       .map(type -> MethodMatcher.create().typeDefinition(type).name("anyMatch").addParameter("java.util.function.Predicate"))
       .forEach(matchers::add);
-    return matchers;
+    return MethodMatchers.or(matchers);
   }
 
   @Override

@@ -20,14 +20,12 @@
 package org.sonar.java.checks;
 
 import com.google.common.collect.Iterables;
-
-import java.util.Collections;
-import java.util.List;
 import org.sonar.check.Rule;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
 import org.sonar.java.matcher.MethodMatcher;
 import org.sonar.java.model.ExpressionUtils;
 import org.sonar.java.model.JUtils;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.semantic.Type;
 import org.sonar.plugins.java.api.tree.ExpressionTree;
 import org.sonar.plugins.java.api.tree.IdentifierTree;
@@ -43,10 +41,10 @@ public class SillyEqualsCheck extends AbstractMethodDetection {
   private static final String MESSAGE = "Remove this call to \"equals\"; comparisons between unrelated types always return false.";
 
   @Override
-  protected List<MethodMatcher> getMethodInvocationMatchers() {
-    return Collections.singletonList(MethodMatcher.create()
+  protected MethodMatchers getMethodInvocationMatchers() {
+    return MethodMatcher.create()
       .name("equals")
-      .addParameter(JAVA_LANG_OBJECT));
+      .addParameter(JAVA_LANG_OBJECT);
   }
 
   @Override

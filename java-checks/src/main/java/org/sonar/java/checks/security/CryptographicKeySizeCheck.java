@@ -20,8 +20,6 @@
 package org.sonar.java.checks.security;
 
 import com.google.common.collect.ImmutableMap;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
@@ -34,6 +32,7 @@ import org.sonar.java.checks.methods.AbstractMethodDetection;
 import org.sonar.java.matcher.MethodMatcher;
 import org.sonar.java.model.ExpressionUtils;
 import org.sonar.java.model.LiteralUtils;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.BaseTreeVisitor;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
@@ -67,8 +66,8 @@ public class CryptographicKeySizeCheck extends AbstractMethodDetection {
   private static final MethodMatcher KEY_PAIR_GEN_INITIALIZE_WITH_SOURCE = KEY_PAIR_GEN_INITIALIZE.copy().addParameter("java.security.SecureRandom");
 
   @Override
-  protected List<MethodMatcher> getMethodInvocationMatchers() {
-    return Arrays.asList(
+  protected MethodMatchers getMethodInvocationMatchers() {
+    return MethodMatchers.or(
       MethodMatcher.create().typeDefinition(KEY_GENERATOR).name(GET_INSTANCE_METHOD).addParameter(STRING),
       MethodMatcher.create().typeDefinition(KEY_PAIR_GENERATOR).name(GET_INSTANCE_METHOD).addParameter(STRING),
       MethodMatcher.create().typeDefinition(EC_GEN_PARAMETER_SPEC).name("<init>").addParameter(STRING));

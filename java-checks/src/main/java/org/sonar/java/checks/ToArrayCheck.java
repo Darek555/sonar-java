@@ -24,13 +24,11 @@ import org.sonar.java.checks.methods.AbstractMethodDetection;
 import org.sonar.java.matcher.MethodMatcher;
 import org.sonar.java.matcher.TypeCriteria;
 import org.sonar.java.model.JUtils;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.semantic.Type;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 import org.sonar.plugins.java.api.tree.Tree;
 import org.sonar.plugins.java.api.tree.TypeCastTree;
-
-import java.util.Collections;
-import java.util.List;
 
 @Rule(key = "S3020")
 public class ToArrayCheck extends AbstractMethodDetection {
@@ -39,8 +37,8 @@ public class ToArrayCheck extends AbstractMethodDetection {
     .name("toArray").withoutParameter();
 
   @Override
-  protected List<MethodMatcher> getMethodInvocationMatchers() {
-    return Collections.singletonList(COLLECTION_TO_ARRAY);
+  protected MethodMatchers getMethodInvocationMatchers() {
+    return COLLECTION_TO_ARRAY;
   }
 
   @Override

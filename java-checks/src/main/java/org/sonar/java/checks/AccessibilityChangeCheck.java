@@ -19,13 +19,12 @@
  */
 package org.sonar.java.checks;
 
-import java.util.Arrays;
-import java.util.List;
 import org.sonar.check.Rule;
 import org.sonar.java.checks.helpers.ExpressionsHelper;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
 import org.sonar.java.matcher.MethodMatcher;
 import org.sonar.java.matcher.TypeCriteria;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.Arguments;
 import org.sonar.plugins.java.api.tree.ExpressionTree;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
@@ -34,7 +33,7 @@ import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 public class AccessibilityChangeCheck extends AbstractMethodDetection {
 
   private static final String JAVA_LANG_REFLECT_FIELD = "java.lang.reflect.Field";
-  private static final List<MethodMatcher> METHOD_MATCHERS = Arrays.asList(
+  private static final MethodMatchers METHOD_MATCHERS = MethodMatchers.or(
     MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf("java.lang.reflect.AccessibleObject")).name("setAccessible").withAnyParameters(),
     MethodMatcher.create().typeDefinition(JAVA_LANG_REFLECT_FIELD).name("set").withAnyParameters(),
     MethodMatcher.create().typeDefinition(JAVA_LANG_REFLECT_FIELD).name("setBoolean").withAnyParameters(),
@@ -48,7 +47,7 @@ public class AccessibilityChangeCheck extends AbstractMethodDetection {
   );
 
   @Override
-  protected List<MethodMatcher> getMethodInvocationMatchers() {
+  protected MethodMatchers getMethodInvocationMatchers() {
     return METHOD_MATCHERS;
   }
 

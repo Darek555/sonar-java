@@ -19,14 +19,13 @@
  */
 package org.sonar.java.checks.security;
 
-import java.util.Collections;
-import java.util.List;
 import org.sonar.check.Rule;
 import org.sonar.java.checks.helpers.ExpressionsHelper;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
 import org.sonar.java.matcher.MethodMatcher;
 import org.sonar.java.model.ExpressionUtils;
 import org.sonar.java.model.LiteralUtils;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.Arguments;
 import org.sonar.plugins.java.api.tree.BaseTreeVisitor;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
@@ -40,12 +39,11 @@ public class SecureXmlTransformerCheck extends AbstractMethodDetection {
   private static final String TRANSFORMER_FACTORY_CLASS_NAME = "javax.xml.transform.TransformerFactory";
 
   @Override
-  protected List<MethodMatcher> getMethodInvocationMatchers() {
-    return Collections.singletonList(
-      MethodMatcher.create()
+  protected MethodMatchers getMethodInvocationMatchers() {
+    return MethodMatcher.create()
         .typeDefinition(subtypeOf(TRANSFORMER_FACTORY_CLASS_NAME))
         .name("newInstance")
-        .withAnyParameters());
+        .withAnyParameters();
   }
 
   @Override

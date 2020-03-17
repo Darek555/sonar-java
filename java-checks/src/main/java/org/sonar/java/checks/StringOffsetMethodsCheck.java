@@ -19,13 +19,12 @@
  */
 package org.sonar.java.checks;
 
-import java.util.Arrays;
-import java.util.List;
 import org.sonar.check.Rule;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
 import org.sonar.java.matcher.MethodMatcher;
 import org.sonar.java.matcher.TypeCriteria;
 import org.sonar.java.model.ExpressionUtils;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.ExpressionTree;
 import org.sonar.plugins.java.api.tree.MemberSelectExpressionTree;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
@@ -39,8 +38,8 @@ public class StringOffsetMethodsCheck extends AbstractMethodDetection {
   private static final MethodMatcher SUBSTRING = MethodMatcher.create().typeDefinition(JAVA_LANG_STRING).name("substring").parameters(INT);
 
   @Override
-  protected List<MethodMatcher> getMethodInvocationMatchers() {
-    return Arrays.asList(
+  protected MethodMatchers getMethodInvocationMatchers() {
+    return MethodMatchers.or(
       MethodMatcher.create().typeDefinition(JAVA_LANG_STRING).name("indexOf").parameters(JAVA_LANG_STRING),
       MethodMatcher.create().typeDefinition(JAVA_LANG_STRING).name("indexOf").parameters(INT),
       MethodMatcher.create().typeDefinition(JAVA_LANG_STRING).name("lastIndexOf").parameters(JAVA_LANG_STRING),

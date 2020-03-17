@@ -19,16 +19,14 @@
  */
 package org.sonar.java.checks;
 
-import com.google.common.collect.Lists;
 import org.sonar.check.Rule;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
 import org.sonar.java.matcher.MethodMatcher;
 import org.sonar.java.matcher.NameCriteria;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.ExpressionTree;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 import org.sonar.plugins.java.api.tree.Tree;
-
-import java.util.List;
 
 @Rule(key = "S2701")
 public class BooleanLiteralInAssertionsCheck extends AbstractMethodDetection {
@@ -36,8 +34,8 @@ public class BooleanLiteralInAssertionsCheck extends AbstractMethodDetection {
   private static final String ASSERT = "assert";
 
   @Override
-  protected List<MethodMatcher> getMethodInvocationMatchers() {
-    return Lists.newArrayList(
+  protected MethodMatchers getMethodInvocationMatchers() {
+    return MethodMatchers.or(
       MethodMatcher.create().typeDefinition("org.junit.Assert").name(NameCriteria.startsWith(ASSERT)).withAnyParameters(),
       MethodMatcher.create().typeDefinition("org.junit.jupiter.api.Assertions").name(NameCriteria.startsWith(ASSERT)).withAnyParameters(),
       MethodMatcher.create().typeDefinition("junit.framework.Assert").name(NameCriteria.startsWith(ASSERT)).withAnyParameters(),

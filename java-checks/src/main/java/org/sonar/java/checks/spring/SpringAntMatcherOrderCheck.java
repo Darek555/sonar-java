@@ -33,6 +33,7 @@ import org.sonar.java.checks.methods.AbstractMethodDetection;
 import org.sonar.java.matcher.MethodMatcher;
 import org.sonar.java.matcher.TypeCriteria;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.ExpressionTree;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 import org.sonar.plugins.java.api.tree.Tree;
@@ -48,11 +49,11 @@ public class SpringAntMatcherOrderCheck extends AbstractMethodDetection {
     .addParameter("java.lang.String[]");
 
   @Override
-  protected List<MethodMatcher> getMethodInvocationMatchers() {
-    return Collections.singletonList(MethodMatcher.create()
+  protected MethodMatchers getMethodInvocationMatchers() {
+    return MethodMatcher.create()
       .typeDefinition(TypeCriteria.is("org.springframework.security.config.annotation.web.builders.HttpSecurity"))
       .name("authorizeRequests")
-      .withAnyParameters());
+      .withAnyParameters();
   }
 
   @Override

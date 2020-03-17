@@ -21,7 +21,6 @@ package org.sonar.java.checks;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -36,6 +35,7 @@ import org.sonar.java.matcher.MethodMatcher;
 import org.sonar.java.matcher.TypeCriteria;
 import org.sonar.java.model.ExpressionUtils;
 import org.sonar.java.model.LiteralUtils;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.ExpressionTree;
 import org.sonar.plugins.java.api.tree.IdentifierTree;
 import org.sonar.plugins.java.api.tree.LiteralTree;
@@ -147,7 +147,7 @@ public class DeprecatedHashAlgorithmCheck extends AbstractMethodDetection {
     .build();
 
   @Override
-  protected List<MethodMatcher> getMethodInvocationMatchers() {
+  protected MethodMatchers getMethodInvocationMatchers() {
     ArrayList<MethodMatcher> matchers = new ArrayList<>();
     matchers
       .add(MethodMatcher.create()
@@ -182,7 +182,7 @@ public class DeprecatedHashAlgorithmCheck extends AbstractMethodDetection {
         .name(methodName)
         .withoutParameter());
     }
-    return matchers;
+    return MethodMatchers.or(matchers);
   }
 
   @Override

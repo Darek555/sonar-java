@@ -19,17 +19,16 @@
  */
 package org.sonar.java.checks;
 
-import java.util.Arrays;
-import java.util.List;
 import org.sonar.check.Rule;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
 import org.sonar.java.matcher.MethodMatcher;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 
 @Rule(key = "S4512")
 public class PopulateBeansCheck extends AbstractMethodDetection {
 
-  private static final List<MethodMatcher> METHOD_MATCHERS = Arrays.asList(
+  private static final MethodMatchers METHOD_MATCHERS = MethodMatchers.or(
     MethodMatcher.create().typeDefinition("org.apache.commons.beanutils.BeanUtils").name("populate").withAnyParameters(),
     MethodMatcher.create().typeDefinition("org.apache.commons.beanutils.BeanUtils").name("setProperty").withAnyParameters(),
     MethodMatcher.create().typeDefinition("org.apache.commons.beanutils.BeanUtilsBean").name("populate").withAnyParameters(),
@@ -38,7 +37,7 @@ public class PopulateBeansCheck extends AbstractMethodDetection {
     MethodMatcher.create().typeDefinition("org.springframework.beans.PropertyAccessor").name("setPropertyValues").withAnyParameters());
 
   @Override
-  protected List<MethodMatcher> getMethodInvocationMatchers() {
+  protected MethodMatchers getMethodInvocationMatchers() {
     return METHOD_MATCHERS;
   }
 

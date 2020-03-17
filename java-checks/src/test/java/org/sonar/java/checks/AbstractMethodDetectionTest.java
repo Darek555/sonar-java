@@ -20,7 +20,6 @@
 package org.sonar.java.checks;
 
 import com.google.common.collect.ImmutableList;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -31,6 +30,7 @@ import org.sonar.java.checks.methods.AbstractMethodDetection;
 import org.sonar.java.matcher.MethodMatcher;
 import org.sonar.java.model.JavaTree;
 import org.sonar.java.model.VisitorsBridge;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 import org.sonar.plugins.java.api.tree.MethodReferenceTree;
 
@@ -80,8 +80,8 @@ public class AbstractMethodDetectionTest {
     }
 
     @Override
-    protected List<MethodMatcher> getMethodInvocationMatchers() {
-      return methodInvocationMatchers;
+    protected MethodMatchers getMethodInvocationMatchers() {
+      return MethodMatchers.or(methodInvocationMatchers);
     }
 
     @Override

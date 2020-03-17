@@ -19,11 +19,10 @@
  */
 package org.sonar.java.checks.security;
 
-import java.util.Arrays;
-import java.util.List;
 import org.sonar.check.Rule;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
 import org.sonar.java.matcher.MethodMatcher;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 
 import static org.sonar.plugins.java.api.tree.Tree.Kind.NULL_LITERAL;
@@ -35,8 +34,8 @@ public class EnvVariablesHotspotCheck extends AbstractMethodDetection {
     MethodMatcher.create().typeDefinition("java.lang.Runtime").name("exec").withAnyParameters();
 
   @Override
-  protected List<MethodMatcher> getMethodInvocationMatchers() {
-    return Arrays.asList(
+  protected MethodMatchers getMethodInvocationMatchers() {
+    return MethodMatchers.or(
       MethodMatcher.create().typeDefinition("java.lang.System").name("getenv").withAnyParameters(),
       MethodMatcher.create().typeDefinition("java.lang.ProcessBuilder").name("environment").withoutParameter(),
       RUNTIME_EXEC

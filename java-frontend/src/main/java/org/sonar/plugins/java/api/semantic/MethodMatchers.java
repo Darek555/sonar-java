@@ -23,6 +23,7 @@ import com.google.common.annotations.Beta;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
+import org.sonar.java.matcher.EmptyMethodMatchers;
 import org.sonar.java.matcher.MethodMatchersBuilder;
 import org.sonar.java.matcher.MethodMatchersList;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
@@ -111,8 +112,12 @@ public interface MethodMatchers {
     return or(Arrays.asList(matchers));
   }
 
-  static MethodMatchers or(List<MethodMatchers> matchers) {
+  static MethodMatchers or(List<? extends MethodMatchers> matchers) {
     return new MethodMatchersList(matchers);
+  }
+
+  static MethodMatchers empty() {
+    return EmptyMethodMatchers.getInstance();
   }
 
   interface Builder extends MethodMatchers {

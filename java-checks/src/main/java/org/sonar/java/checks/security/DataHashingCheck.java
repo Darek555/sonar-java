@@ -29,6 +29,7 @@ import org.sonar.java.checks.helpers.ExpressionsHelper;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
 import org.sonar.java.matcher.MethodMatcher;
 import org.sonar.java.model.ExpressionUtils;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 import org.sonar.plugins.java.api.tree.NewClassTree;
 
@@ -40,7 +41,7 @@ public class DataHashingCheck extends AbstractMethodDetection {
   private static final String SECRET_KEY_FACTORY = "javax.crypto.SecretKeyFactory";
 
   @Override
-  protected List<MethodMatcher> getMethodInvocationMatchers() {
+  protected MethodMatchers getMethodInvocationMatchers() {
     List<MethodMatcher> matchers = new ArrayList<>();
     matchers.add(MethodMatcher.create().typeDefinition("java.security.MessageDigest").name("getInstance").withAnyParameters());
     matchers.add(MethodMatcher.create().typeDefinition(DIGEST_UTILS).name("<init>").withAnyParameters());
@@ -54,7 +55,7 @@ public class DataHashingCheck extends AbstractMethodDetection {
         .map(alg -> MethodMatcher.create().typeDefinition("com.google.common.hash.Hashing").name(alg).withoutParameter())
         .collect(Collectors.toList()));
     matchers.add(MethodMatcher.create().typeDefinition(SECRET_KEY_FACTORY).name("getInstance").withAnyParameters());
-    return matchers;
+    return MethodMatchers.or(matchers);
   }
 
   @Override

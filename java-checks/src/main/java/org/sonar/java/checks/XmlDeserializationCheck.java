@@ -27,6 +27,7 @@ import org.sonar.check.Rule;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
 import org.sonar.java.matcher.MethodMatcher;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.BaseTreeVisitor;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 import org.sonar.plugins.java.api.tree.NewClassTree;
@@ -40,10 +41,8 @@ public class XmlDeserializationCheck extends AbstractMethodDetection {
   private static final String MESSAGE = "Make sure deserializing with XMLDecoder is safe here.";
 
   @Override
-  protected List<MethodMatcher> getMethodInvocationMatchers() {
-    return Collections.singletonList(
-      MethodMatcher.create().typeDefinition("java.beans.XMLDecoder").name("<init>").withAnyParameters()
-    );
+  protected MethodMatchers getMethodInvocationMatchers() {
+    return MethodMatcher.create().typeDefinition("java.beans.XMLDecoder").name("<init>").withAnyParameters();
   }
 
   @Override

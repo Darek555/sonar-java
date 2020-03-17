@@ -20,12 +20,11 @@
 package org.sonar.java.checks;
 
 import java.math.BigInteger;
-import java.util.Arrays;
-import java.util.List;
 import org.sonar.check.Rule;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
 import org.sonar.java.matcher.MethodMatcher;
 import org.sonar.java.model.LiteralUtils;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.ExpressionTree;
 import org.sonar.plugins.java.api.tree.LiteralTree;
 import org.sonar.plugins.java.api.tree.NewClassTree;
@@ -40,8 +39,8 @@ public class StringPrimitiveConstructorCheck extends AbstractMethodDetection {
   private static final BigInteger MAX_BIG_INTEGER_VALUE = BigInteger.valueOf(Long.MAX_VALUE);
 
   @Override
-  protected List<MethodMatcher> getMethodInvocationMatchers() {
-    return Arrays.asList(
+  protected MethodMatchers getMethodInvocationMatchers() {
+    return MethodMatchers.or(
       MethodMatcher.create().typeDefinition(STRING).name(INIT).withoutParameter(),
       MethodMatcher.create().typeDefinition(STRING).name(INIT).addParameter(STRING),
       MethodMatcher.create().typeDefinition("java.lang.Byte").name(INIT).addParameter("byte"),

@@ -19,14 +19,13 @@
  */
 package org.sonar.java.checks.security;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 import org.sonar.check.Rule;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
 import org.sonar.java.matcher.MethodMatcher;
 import org.sonar.java.matcher.TypeCriteria;
 import org.sonar.java.model.ExpressionUtils;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.ExpressionTree;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 import org.sonar.plugins.java.api.tree.Tree;
@@ -50,12 +49,11 @@ public class IntegerToHexStringCheck extends AbstractMethodDetection {
     .addParameter(TypeCriteria.is("java.lang.CharSequence"));
 
   @Override
-  protected List<MethodMatcher> getMethodInvocationMatchers() {
-    return Collections.singletonList(
-      MethodMatcher.create()
+  protected MethodMatchers getMethodInvocationMatchers() {
+    return MethodMatcher.create()
         .typeDefinition(TypeCriteria.is("java.lang.Integer"))
         .name("toHexString")
-        .addParameter(TypeCriteria.is("int")));
+        .addParameter(TypeCriteria.is("int"));
   }
 
   @Override

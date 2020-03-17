@@ -19,11 +19,10 @@
  */
 package org.sonar.java.checks.security;
 
-import java.util.Collections;
-import java.util.List;
 import org.sonar.check.Rule;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
 import org.sonar.java.matcher.MethodMatcher;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.ExpressionTree;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 
@@ -31,12 +30,11 @@ import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 public class OpenSAML2AuthenticationBypassCheck extends AbstractMethodDetection {
 
   @Override
-  protected List<MethodMatcher> getMethodInvocationMatchers() {
-    return Collections.singletonList(
-      MethodMatcher.create()
+  protected MethodMatchers getMethodInvocationMatchers() {
+    return MethodMatcher.create()
         .typeDefinition(type -> type.isSubtypeOf("org.opensaml.xml.parse.BasicParserPool") || type.isSubtypeOf("org.opensaml.xml.parse.StaticBasicParserPool"))
         .name("setIgnoreComments")
-        .addParameter("boolean"));
+        .addParameter("boolean");
   }
 
   @Override

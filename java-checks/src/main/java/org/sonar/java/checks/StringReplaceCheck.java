@@ -19,11 +19,10 @@
  */
 package org.sonar.java.checks;
 
-import java.util.Collections;
-import java.util.List;
 import org.sonar.check.Rule;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
 import org.sonar.java.matcher.MethodMatcher;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.ExpressionTree;
 import org.sonar.plugins.java.api.tree.MemberSelectExpressionTree;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
@@ -35,11 +34,11 @@ public class StringReplaceCheck extends AbstractMethodDetection {
   private static final char[] REGEX_META = ".$|([{^?*+\\".toCharArray();
 
   @Override
-  protected List<MethodMatcher> getMethodInvocationMatchers() {
-    return Collections.singletonList(MethodMatcher.create().typeDefinition(LANG_STRING)
+  protected MethodMatchers getMethodInvocationMatchers() {
+    return MethodMatcher.create().typeDefinition(LANG_STRING)
       .name("replaceAll")
       .addParameter(LANG_STRING)
-      .addParameter(LANG_STRING));
+      .addParameter(LANG_STRING);
   }
 
   @Override

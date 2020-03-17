@@ -23,13 +23,11 @@ import org.sonar.check.Rule;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
 import org.sonar.java.matcher.MethodMatcher;
 import org.sonar.java.model.LiteralUtils;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.ExpressionTree;
 import org.sonar.plugins.java.api.tree.LiteralTree;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 import org.sonar.plugins.java.api.tree.Tree;
-
-import java.util.Arrays;
-import java.util.List;
 
 @Rule(key = "S3027")
 public class StringMethodsOnSingleCharCheck extends AbstractMethodDetection {
@@ -37,8 +35,8 @@ public class StringMethodsOnSingleCharCheck extends AbstractMethodDetection {
   private static final String STRING = "java.lang.String";
 
   @Override
-  protected List<MethodMatcher> getMethodInvocationMatchers() {
-    return Arrays.asList(
+  protected MethodMatchers getMethodInvocationMatchers() {
+    return MethodMatchers.or(
       MethodMatcher.create().typeDefinition(STRING).name("indexOf").addParameter(STRING),
       MethodMatcher.create().typeDefinition(STRING).name("indexOf").addParameter(STRING).addParameter("int"),
       MethodMatcher.create().typeDefinition(STRING).name("lastIndexOf").addParameter(STRING),

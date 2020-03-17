@@ -19,12 +19,11 @@
  */
 package org.sonar.java.checks;
 
-import com.google.common.collect.Lists;
-import java.util.List;
 import org.sonar.check.Rule;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
 import org.sonar.java.matcher.MethodMatcher;
 import org.sonar.java.matcher.NameCriteria;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 import org.sonar.plugins.java.api.tree.Tree;
 import org.sonar.plugins.java.api.tree.Tree.Kind;
@@ -33,8 +32,8 @@ import org.sonar.plugins.java.api.tree.Tree.Kind;
 public class AssertionFailInCatchBlockCheck extends AbstractMethodDetection {
 
   @Override
-  protected List<MethodMatcher> getMethodInvocationMatchers() {
-    return Lists.newArrayList(
+  protected MethodMatchers getMethodInvocationMatchers() {
+    return MethodMatchers.or(
       MethodMatcher.create().typeDefinition("org.junit.Assert").name("fail").withAnyParameters(),
       MethodMatcher.create().typeDefinition("org.junit.jupiter.api.Assertions").name("fail").withAnyParameters(),
       MethodMatcher.create().typeDefinition("junit.framework.Assert").name(NameCriteria.startsWith("fail")).withAnyParameters(),

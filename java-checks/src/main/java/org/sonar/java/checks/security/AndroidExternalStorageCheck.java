@@ -19,19 +19,18 @@
  */
 package org.sonar.java.checks.security;
 
-import java.util.Arrays;
-import java.util.List;
 import org.sonar.check.Rule;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
 import org.sonar.java.matcher.MethodMatcher;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 
 @Rule(key = "S5324")
 public class AndroidExternalStorageCheck extends AbstractMethodDetection {
 
   @Override
-  protected List<MethodMatcher> getMethodInvocationMatchers() {
-    return Arrays.asList(
+  protected MethodMatchers getMethodInvocationMatchers() {
+    return MethodMatchers.or(
       MethodMatcher.create().typeDefinition("android.os.Environment").name("getExternalStorageDirectory").withAnyParameters(),
       MethodMatcher.create().typeDefinition("android.os.Environment").name("getExternalStoragePublicDirectory").withAnyParameters(),
       MethodMatcher.create().typeDefinition("android.content.Context").name("getExternalFilesDir").withAnyParameters(),

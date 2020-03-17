@@ -19,14 +19,13 @@
  */
 package org.sonar.java.checks;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.sonar.check.Rule;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
 import org.sonar.java.matcher.MethodMatcher;
 import org.sonar.java.model.ExpressionUtils;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.AssignmentExpressionTree;
 import org.sonar.plugins.java.api.tree.ExpressionTree;
@@ -45,8 +44,8 @@ public class RegexPatternsNeedlesslyCheck extends AbstractMethodDetection {
   private static final MethodMatcher SPLIT_MATCHER = MethodMatcher.create().typeDefinition(STRING).name("split").withAnyParameters();
 
   @Override
-  protected List<MethodMatcher> getMethodInvocationMatchers() {
-    return Arrays.asList(
+  protected MethodMatchers getMethodInvocationMatchers() {
+    return MethodMatchers.or(
       MethodMatcher.create().typeDefinition(PATTERN).name("compile").addParameter(STRING),
       MethodMatcher.create().typeDefinition(STRING).name("matches").withAnyParameters(),
       SPLIT_MATCHER,

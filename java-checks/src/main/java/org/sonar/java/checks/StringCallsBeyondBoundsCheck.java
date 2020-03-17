@@ -19,15 +19,12 @@
  */
 package org.sonar.java.checks;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.function.BiPredicate;
-
 import javax.annotation.CheckForNull;
-
 import org.sonar.check.Rule;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
 import org.sonar.java.matcher.MethodMatcher;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.Arguments;
 import org.sonar.plugins.java.api.tree.ExpressionTree;
 import org.sonar.plugins.java.api.tree.IdentifierTree;
@@ -43,8 +40,8 @@ public class StringCallsBeyondBoundsCheck extends AbstractMethodDetection {
     MethodMatcher.create().typeDefinition(STRING).name("length").withoutParameter();
 
   @Override
-  protected List<MethodMatcher> getMethodInvocationMatchers() {
-    return Arrays.asList(
+  protected MethodMatchers getMethodInvocationMatchers() {
+    return MethodMatchers.or(
       MethodMatcher.create().typeDefinition(STRING).name("charAt").addParameter("int"),
       MethodMatcher.create().typeDefinition(STRING).name("codePointAt").addParameter("int"),
       MethodMatcher.create().typeDefinition(STRING).name("codePointBefore").addParameter("int"),

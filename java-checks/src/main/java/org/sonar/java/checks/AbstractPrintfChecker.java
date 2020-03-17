@@ -37,6 +37,7 @@ import org.sonar.java.matcher.MethodMatcher;
 import org.sonar.java.matcher.MethodMatcherCollection;
 import org.sonar.java.matcher.TypeCriteria;
 import org.sonar.java.model.LiteralUtils;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.semantic.Type;
 import org.sonar.plugins.java.api.tree.Arguments;
 import org.sonar.plugins.java.api.tree.ExpressionTree;
@@ -77,7 +78,7 @@ public abstract class AbstractPrintfChecker extends AbstractMethodDetection {
 
 
   @Override
-  protected List<MethodMatcher> getMethodInvocationMatchers() {
+  protected MethodMatchers getMethodInvocationMatchers() {
     ArrayList<MethodMatcher> matchers = new ArrayList<>(slf4jMethods());
     matchers.addAll(log4jMethods());
     matchers.addAll(Arrays.asList(
@@ -91,7 +92,7 @@ public abstract class AbstractPrintfChecker extends AbstractMethodDetection {
       JAVA_UTIL_LOGGER_LOG_LEVEL_STRING,
       JAVA_UTIL_LOGGER_LOG_LEVEL_STRING_ANY
       ));
-    return matchers;
+    return MethodMatchers.or(matchers);
   }
 
   private static Collection<MethodMatcher> slf4jMethods() {

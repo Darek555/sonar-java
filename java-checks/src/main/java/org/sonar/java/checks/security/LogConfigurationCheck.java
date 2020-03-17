@@ -25,6 +25,7 @@ import org.sonar.check.Rule;
 import org.sonar.java.checks.helpers.ExpressionsHelper;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
 import org.sonar.java.matcher.MethodMatcher;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.ClassTree;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 import org.sonar.plugins.java.api.tree.NewClassTree;
@@ -46,8 +47,8 @@ public class LogConfigurationCheck extends AbstractMethodDetection {
   }
 
   @Override
-  protected List<MethodMatcher> getMethodInvocationMatchers() {
-    return Arrays.asList(
+  protected MethodMatchers getMethodInvocationMatchers() {
+    return MethodMatchers.or(
       MethodMatcher.create().typeDefinition("org.apache.logging.log4j.core.config.builder.api.ConfigurationBuilderFactory").name("newConfigurationBuilder").withoutParameter(),
       MethodMatcher.create().typeDefinition(LOG4J_CONFIGURATOR).name("setAllLevels").withAnyParameters(),
       MethodMatcher.create().typeDefinition(LOG4J_CONFIGURATOR).name(SET_LEVEL).withAnyParameters(),

@@ -19,8 +19,6 @@
  */
 package org.sonar.java.checks.security;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -29,6 +27,7 @@ import org.sonar.java.checks.helpers.ExpressionsHelper;
 import org.sonar.java.checks.helpers.JavaPropertiesHelper;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
 import org.sonar.java.matcher.MethodMatcher;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.ExpressionTree;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 
@@ -38,12 +37,11 @@ public class EncryptionAlgorithmCheck extends AbstractMethodDetection {
   private static final Pattern ALGORITHM_PATTERN = Pattern.compile("(.+)/(.+)/(.+)");
 
   @Override
-  protected List<MethodMatcher> getMethodInvocationMatchers() {
-    return Collections.singletonList(
-      MethodMatcher.create()
+  protected MethodMatchers getMethodInvocationMatchers() {
+    return MethodMatcher.create()
         .typeDefinition("javax.crypto.Cipher")
         .name("getInstance")
-        .withAnyParameters());
+        .withAnyParameters();
   }
 
   @Override

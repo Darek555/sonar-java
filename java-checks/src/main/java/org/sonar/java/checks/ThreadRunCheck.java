@@ -19,13 +19,12 @@
  */
 package org.sonar.java.checks;
 
-import java.util.Collections;
-import java.util.List;
 import org.sonar.check.Rule;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
 import org.sonar.java.matcher.MethodMatcher;
 import org.sonar.java.matcher.TypeCriteria;
 import org.sonar.java.model.ExpressionUtils;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 import org.sonar.plugins.java.api.tree.MethodTree;
 import org.sonar.plugins.java.api.tree.Tree;
@@ -36,8 +35,8 @@ public class ThreadRunCheck extends AbstractMethodDetection {
     .withAnyParameters();
 
   @Override
-  protected List<MethodMatcher> getMethodInvocationMatchers() {
-    return Collections.singletonList(THREAD_RUN_METHOD_MATCHER);
+  protected MethodMatchers getMethodInvocationMatchers() {
+    return THREAD_RUN_METHOD_MATCHER;
   }
 
   @Override

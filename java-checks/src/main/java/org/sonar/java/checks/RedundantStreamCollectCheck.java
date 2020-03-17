@@ -21,7 +21,6 @@ package org.sonar.java.checks;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -29,6 +28,7 @@ import org.sonar.check.Rule;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
 import org.sonar.java.matcher.MethodMatcher;
 import org.sonar.java.model.ExpressionUtils;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.ExpressionTree;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 import org.sonar.plugins.java.api.tree.Tree;
@@ -64,10 +64,10 @@ public class RedundantStreamCollectCheck extends AbstractMethodDetection {
     .build();
 
   @Override
-  protected List<MethodMatcher> getMethodInvocationMatchers() {
-    return STREAM_TYPES.stream()
+  protected MethodMatchers getMethodInvocationMatchers() {
+    return MethodMatchers.or(STREAM_TYPES.stream()
       .map(type -> MethodMatcher.create().typeDefinition(type).name("collect").addParameter("java.util.stream.Collector"))
-      .collect(Collectors.toList());
+      .collect(Collectors.toList()));
   }
 
   @Override

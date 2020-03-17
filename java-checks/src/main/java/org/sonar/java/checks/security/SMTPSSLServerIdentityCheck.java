@@ -21,7 +21,6 @@ package org.sonar.java.checks.security;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import org.sonar.check.Rule;
 import org.sonar.java.checks.helpers.ExpressionsHelper;
@@ -30,6 +29,7 @@ import org.sonar.java.matcher.MethodMatcher;
 import org.sonar.java.matcher.TypeCriteria;
 import org.sonar.java.model.ExpressionUtils;
 import org.sonar.java.model.LiteralUtils;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.Arguments;
 import org.sonar.plugins.java.api.tree.BaseTreeVisitor;
 import org.sonar.plugins.java.api.tree.ExpressionTree;
@@ -62,8 +62,8 @@ public class SMTPSSLServerIdentityCheck extends AbstractMethodDetection {
     .withAnyParameters();
 
   @Override
-  protected List<MethodMatcher> getMethodInvocationMatchers() {
-    return Arrays.asList(ENABLING_SSL_METHODS, HASHTABLE_PUT);
+  protected MethodMatchers getMethodInvocationMatchers() {
+    return MethodMatchers.or(ENABLING_SSL_METHODS, HASHTABLE_PUT);
   }
 
   @Override

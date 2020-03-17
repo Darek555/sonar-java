@@ -19,8 +19,6 @@
  */
 package org.sonar.java.checks.security;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nullable;
 import org.sonar.check.Rule;
@@ -29,6 +27,7 @@ import org.sonar.java.matcher.MethodMatcher;
 import org.sonar.java.matcher.TypeCriteria;
 import org.sonar.java.model.ExpressionUtils;
 import org.sonar.java.model.LiteralUtils;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.Arguments;
 import org.sonar.plugins.java.api.tree.BaseTreeVisitor;
@@ -49,9 +48,9 @@ public class XxeActiveMQCheck extends AbstractMethodDetection {
   private static final String MQ_CONNECTION_FACTORY_CLASS_NAME = "org.apache.activemq.ActiveMQConnectionFactory";
 
   @Override
-  protected List<MethodMatcher> getMethodInvocationMatchers() {
-    return Collections.singletonList(MethodMatcher.create().typeDefinition(MQ_CONNECTION_FACTORY_CLASS_NAME)
-      .name(CONSTRUCTOR).withAnyParameters());
+  protected MethodMatchers getMethodInvocationMatchers() {
+    return MethodMatcher.create().typeDefinition(MQ_CONNECTION_FACTORY_CLASS_NAME)
+      .name(CONSTRUCTOR).withAnyParameters();
   }
 
   @Override

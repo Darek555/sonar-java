@@ -19,11 +19,10 @@
  */
 package org.sonar.java.checks;
 
-import java.util.Arrays;
-import java.util.List;
 import org.sonar.check.Rule;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
 import org.sonar.java.matcher.MethodMatcher;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.ExpressionTree;
 import org.sonar.plugins.java.api.tree.IdentifierTree;
 import org.sonar.plugins.java.api.tree.MemberSelectExpressionTree;
@@ -39,8 +38,8 @@ public class PredictableSeedCheck extends AbstractMethodDetection {
   private static final MethodMatcher GET_BYTES = MethodMatcher.create().typeDefinition("java.lang.String").name("getBytes").withAnyParameters();
 
   @Override
-  protected List<MethodMatcher> getMethodInvocationMatchers() {
-    return Arrays.asList(
+  protected MethodMatchers getMethodInvocationMatchers() {
+    return MethodMatchers.or(
       MethodMatcher.create().typeDefinition(JAVA_SECURITY_SECURE_RANDOM).name("<init>").parameters("byte[]"),
       MethodMatcher.create().typeDefinition(JAVA_SECURITY_SECURE_RANDOM).name("setSeed").parameters("byte[]"),
       MethodMatcher.create().typeDefinition(JAVA_SECURITY_SECURE_RANDOM).name("setSeed").parameters("long")

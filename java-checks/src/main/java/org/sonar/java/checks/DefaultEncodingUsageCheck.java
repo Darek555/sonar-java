@@ -33,6 +33,7 @@ import org.sonar.java.matcher.MethodMatcherCollection;
 import org.sonar.java.matcher.TypeCriteria;
 import org.sonar.java.model.ExpressionUtils;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.semantic.Type;
 import org.sonar.plugins.java.api.tree.Arguments;
@@ -150,7 +151,7 @@ public class DefaultEncodingUsageCheck extends AbstractMethodDetection {
   }
 
   @Override
-  protected List<MethodMatcher> getMethodInvocationMatchers() {
+  protected MethodMatchers getMethodInvocationMatchers() {
     ArrayList<MethodMatcher> matchers = new ArrayList<>(Arrays.asList(
       method(JAVA_LANG_STRING, "getBytes").withoutParameter(),
       method(JAVA_LANG_STRING, "getBytes").parameters(INT, INT, BYTE_ARRAY, INT),
@@ -185,7 +186,7 @@ public class DefaultEncodingUsageCheck extends AbstractMethodDetection {
     matchers.addAll(COMMONS_IO);
     matchers.addAll(COMMONS_IO_WITH_CHARSET);
     matchers.addAll(FILEUTILS_WRITE_WITH_CHARSET);
-    return matchers;
+    return MethodMatchers.or(matchers);
   }
 
   private static MethodMatcher method(String type, String methodName) {

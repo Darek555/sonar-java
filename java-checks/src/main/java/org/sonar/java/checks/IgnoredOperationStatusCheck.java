@@ -24,12 +24,10 @@ import org.sonar.java.checks.methods.AbstractMethodDetection;
 import org.sonar.java.matcher.MethodMatcher;
 import org.sonar.java.matcher.NameCriteria;
 import org.sonar.java.matcher.TypeCriteria;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 import org.sonar.plugins.java.api.tree.Tree;
 import org.sonar.plugins.java.api.tree.VariableTree;
-
-import java.util.Arrays;
-import java.util.List;
 
 @Rule(key = "S899")
 public class IgnoredOperationStatusCheck extends AbstractMethodDetection {
@@ -39,8 +37,8 @@ public class IgnoredOperationStatusCheck extends AbstractMethodDetection {
   private static final TypeCriteria SUBTYPE_OF_BLOCKING_QUEUE = TypeCriteria.subtypeOf("java.util.concurrent.BlockingQueue");
 
   @Override
-  protected List<MethodMatcher> getMethodInvocationMatchers() {
-    return Arrays.asList(
+  protected MethodMatchers getMethodInvocationMatchers() {
+    return MethodMatchers.or(
       MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf("java.util.concurrent.locks.Lock")).name("tryLock").withoutParameter(),
 
       MethodMatcher.create().typeDefinition(FILE).name("delete").withoutParameter(),

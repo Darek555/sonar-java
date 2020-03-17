@@ -19,10 +19,14 @@
  */
 package org.sonar.java.checks;
 
+import java.util.List;
+import java.util.Optional;
+import javax.annotation.CheckForNull;
 import org.sonar.check.Rule;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
 import org.sonar.java.matcher.MethodMatcher;
 import org.sonar.java.matcher.TypeCriteria;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.BlockTree;
 import org.sonar.plugins.java.api.tree.ExpressionStatementTree;
 import org.sonar.plugins.java.api.tree.ExpressionTree;
@@ -34,12 +38,6 @@ import org.sonar.plugins.java.api.tree.MethodReferenceTree;
 import org.sonar.plugins.java.api.tree.StatementTree;
 import org.sonar.plugins.java.api.tree.Tree;
 
-import javax.annotation.CheckForNull;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
 @Rule(key = "S2203")
 public class CollectInsteadOfForeachCheck extends AbstractMethodDetection {
 
@@ -48,8 +46,8 @@ public class CollectInsteadOfForeachCheck extends AbstractMethodDetection {
   private static final MethodMatcher ADD = MethodMatcher.create().typeDefinition(SUBTYPE_OF_LIST).name("add").withAnyParameters();
 
   @Override
-  protected List<MethodMatcher> getMethodInvocationMatchers() {
-    return Collections.singletonList(FOREACH);
+  protected MethodMatchers getMethodInvocationMatchers() {
+    return FOREACH;
   }
 
   @Override

@@ -35,6 +35,7 @@ import org.sonar.java.JavaVersionAwareVisitor;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
 import org.sonar.java.matcher.MethodMatcher;
 import org.sonar.plugins.java.api.JavaVersion;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.Arguments;
 import org.sonar.plugins.java.api.tree.ExpressionTree;
@@ -135,7 +136,7 @@ public class StandardCharsetsConstantsCheck extends AbstractMethodDetection impl
   }
 
   @Override
-  protected List<MethodMatcher> getMethodInvocationMatchers() {
+  protected MethodMatchers getMethodInvocationMatchers() {
     List<MethodMatcher> matchers = new ArrayList<>(Arrays.asList(
       method(JAVA_NIO_CHARSET, "forName").parameters(JAVA_LANG_STRING),
       method(JAVA_LANG_STRING, "getBytes").parameters(JAVA_LANG_STRING),
@@ -188,7 +189,7 @@ public class StandardCharsetsConstantsCheck extends AbstractMethodDetection impl
       matchers.add(constructor(JAVA_UTIL_SCANNER).parameters(JAVA_NIO_FILE_PATH, JAVA_LANG_STRING));
       matchers.add(constructor(JAVA_UTIL_SCANNER).parameters(JAVA_NIO_CHANNELS_READABLEBYTECHANNEL, JAVA_LANG_STRING));
     }
-    return matchers;
+    return MethodMatchers.or(matchers);
   }
 
   private static MethodMatcher method(String type, String name) {

@@ -19,14 +19,13 @@
  */
 package org.sonar.java.checks;
 
-import java.util.Arrays;
-import java.util.List;
 import org.sonar.check.Rule;
 import org.sonar.java.checks.helpers.ExpressionsHelper;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
 import org.sonar.java.matcher.MethodMatcher;
 import org.sonar.java.matcher.TypeCriteria;
 import org.sonar.java.model.ExpressionUtils;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.Arguments;
 import org.sonar.plugins.java.api.tree.BinaryExpressionTree;
 import org.sonar.plugins.java.api.tree.ExpressionTree;
@@ -40,8 +39,8 @@ public class BasicAuthCheck extends AbstractMethodDetection {
   private static final String LANG_STRING = "java.lang.String";
 
   @Override
-  protected List<MethodMatcher> getMethodInvocationMatchers() {
-    return Arrays.asList(
+  protected MethodMatchers getMethodInvocationMatchers() {
+    return MethodMatchers.or(
       MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf("org.apache.http.message.AbstractHttpMessage"))
         .name("setHeader").withAnyParameters(),
       MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf("org.apache.http.message.AbstractHttpMessage"))
