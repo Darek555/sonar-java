@@ -22,21 +22,16 @@ package org.sonar.java.matcher;
 import com.google.common.base.Preconditions;
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.CheckForNull;
-import javax.annotation.Nullable;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.semantic.Symbol;
-import org.sonar.plugins.java.api.semantic.Symbol.MethodSymbol;
-import org.sonar.plugins.java.api.semantic.Type;
-import org.sonar.plugins.java.api.tree.ExpressionTree;
-import org.sonar.plugins.java.api.tree.IdentifierTree;
-import org.sonar.plugins.java.api.tree.MemberSelectExpressionTree;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 import org.sonar.plugins.java.api.tree.MethodReferenceTree;
 import org.sonar.plugins.java.api.tree.MethodTree;
 import org.sonar.plugins.java.api.tree.NewClassTree;
-import org.sonar.plugins.java.api.tree.Tree;
 
 public class MethodMatcher {
+
+  private MethodMatchers internalMatcher;
 
   private TypeCriteria typeCriteria;
   private NameCriteria methodName;
@@ -54,35 +49,51 @@ public class MethodMatcher {
     copy.methodName = methodName;
     copy.parameterTypes = parameterTypes == null ? null : new ArrayList<>(parameterTypes);
     copy.parameters = parameterTypes == null ? null : ParametersCriteria.of(copy.parameterTypes);
+    copy.updateInternalMatcher();
     return copy;
+  }
+
+  private void updateInternalMatcher() {
+    if (methodName != null && parameters != null) {
+      if (typeCriteria != null) {
+        internalMatcher = MethodMatchers.create().ofType(typeCriteria).name(methodName).withParameters(parameters);
+      } else {
+        internalMatcher = MethodMatchers.create().ofAnyType().name(methodName).withParameters(parameters);
+      }
+    }
   }
 
   public MethodMatcher name(String methodName) {
     Preconditions.checkState(this.methodName == null);
     this.methodName = NameCriteria.is(methodName);
+    updateInternalMatcher();
     return this;
   }
 
   public MethodMatcher name(NameCriteria methodName) {
     Preconditions.checkState(this.methodName == null);
     this.methodName = methodName;
+    updateInternalMatcher();
     return this;
   }
 
   public MethodMatcher typeDefinition(TypeCriteria typeDefinition) {
     Preconditions.checkState(this.typeCriteria == null);
     this.typeCriteria = typeDefinition;
+    updateInternalMatcher();
     return this;
   }
 
   public MethodMatcher typeDefinition(String fullyQualifiedTypeName) {
     Preconditions.checkState(typeCriteria == null);
     this.typeCriteria = TypeCriteria.is(fullyQualifiedTypeName);
+    updateInternalMatcher();
     return this;
   }
 
   public MethodMatcher callSite(TypeCriteria callSite) {
     this.typeCriteria = callSite;
+    updateInternalMatcher();
     return this;
   }
 
@@ -98,6 +109,7 @@ public class MethodMatcher {
       Preconditions.checkState(parameterTypes != null, "parameters is already initialized and doesn't support addParameter.");
     }
     parameterTypes.add(parameterTypeCriteria);
+    updateInternalMatcher();
     return this;
   }
 
@@ -108,6 +120,7 @@ public class MethodMatcher {
     for (String type : parameterTypes) {
       addParameter(type);
     }
+    updateInternalMatcher();
     return this;
   }
 
@@ -118,97 +131,53 @@ public class MethodMatcher {
     for (TypeCriteria type : parameterTypes) {
       addParameter(type);
     }
+    updateInternalMatcher();
     return this;
   }
 
   public MethodMatcher withAnyParameters() {
     Preconditions.checkState(parameters == null);
     parameters = ParametersCriteria.any();
+    updateInternalMatcher();
     return this;
   }
 
   public MethodMatcher withoutParameter() {
     Preconditions.checkState(parameters == null);
     parameters = ParametersCriteria.none();
+    updateInternalMatcher();
     return this;
   }
 
+  private void checkInternalMatcher() {
+    if (internalMatcher == null) {
+      throw new IllegalStateException("MethodMatcher is not fully initialized.");
+    }
+  }
+
   public boolean matches(NewClassTree newClassTree) {
-    return matches(newClassTree.constructorSymbol(), null);
+    checkInternalMatcher();
+    return internalMatcher.matches(newClassTree);
   }
 
   public boolean matches(MethodInvocationTree mit) {
-    IdentifierTree id = getIdentifier(mit);
-    return matches(id.symbol(), getCallSiteType(mit));
+    checkInternalMatcher();
+    return internalMatcher.matches(mit);
   }
 
   public boolean matches(MethodTree methodTree) {
-    MethodSymbol symbol = methodTree.symbol();
-    Symbol.TypeSymbol enclosingClass = symbol.enclosingClass();
-    return enclosingClass != null && matches(symbol, enclosingClass.type());
+    checkInternalMatcher();
+    return internalMatcher.matches(methodTree);
   }
 
   public boolean matches(MethodReferenceTree methodReferenceTree) {
-    return matches(methodReferenceTree.method().symbol(), getCallSiteType(methodReferenceTree));
+    checkInternalMatcher();
+    return internalMatcher.matches(methodReferenceTree);
   }
 
   public boolean matches(Symbol symbol) {
-    return matches(symbol, null);
-  }
-
-  private boolean matches(Symbol symbol, @Nullable Type callSiteType) {
-    return symbol.isMethodSymbol() && isSearchedMethod((MethodSymbol) symbol, callSiteType);
-  }
-
-  @CheckForNull
-  private static Type getCallSiteType(MethodReferenceTree referenceTree) {
-    Tree expression = referenceTree.expression();
-    if(expression instanceof ExpressionTree) {
-      return ((ExpressionTree) expression).symbolType();
-    }
-    return null;
-  }
-
-  @CheckForNull
-  private static Type getCallSiteType(MethodInvocationTree mit) {
-    ExpressionTree methodSelect = mit.methodSelect();
-    // methodSelect can only be Tree.Kind.IDENTIFIER or Tree.Kind.MEMBER_SELECT
-    if (methodSelect.is(Tree.Kind.IDENTIFIER)) {
-      Symbol.TypeSymbol enclosingClassSymbol = ((IdentifierTree) methodSelect).symbol().enclosingClass();
-      return enclosingClassSymbol != null ? enclosingClassSymbol.type() : null;
-    } else {
-      return ((MemberSelectExpressionTree) methodSelect).expression().symbolType();
-    }
-  }
-
-  private boolean isSearchedMethod(MethodSymbol symbol, @Nullable Type callSiteType) {
-    boolean result = nameAcceptable(symbol) && parametersAcceptable(symbol);
-    if (result && typeCriteria != null) {
-      Symbol owner = symbol.owner();
-      if (callSiteType == null && owner != null) {
-        callSiteType = owner.type();
-      }
-      result = callSiteType != null && typeCriteria.test(callSiteType);
-    }
-    return result;
-  }
-
-  private boolean nameAcceptable(MethodSymbol symbol) {
-    Preconditions.checkState(methodName != null);
-    return methodName.test(symbol.name());
-  }
-
-  private boolean parametersAcceptable(MethodSymbol methodSymbol) {
-    Preconditions.checkState(parameters != null);
-    return parameters.test(methodSymbol.parameterTypes());
-  }
-
-  private static IdentifierTree getIdentifier(MethodInvocationTree mit) {
-    // methodSelect can only be Tree.Kind.IDENTIFIER or Tree.Kind.MEMBER_SELECT
-    if (mit.methodSelect().is(Tree.Kind.IDENTIFIER)) {
-      return (IdentifierTree) mit.methodSelect();
-    }
-    return ((MemberSelectExpressionTree) mit.methodSelect()).identifier();
+    checkInternalMatcher();
+    return internalMatcher.matches(symbol);
   }
 
 }
