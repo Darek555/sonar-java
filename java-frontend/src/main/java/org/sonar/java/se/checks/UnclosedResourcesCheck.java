@@ -98,7 +98,7 @@ public class UnclosedResourcesCheck extends SECheck {
   private static final MethodMatchers JDBC_RESOURCE_CREATIONS = MethodMatchers.or(
     MethodMatchers.create().ofType(JAVA_SQL_CONNECTION).names("createStatement", "prepareStatement", "prepareCall").withAnyParameters(),
     MethodMatchers.create().ofType(JAVA_SQL_STATEMENT).name("executeQuery").withParameters("java.lang.String"),
-    MethodMatchers.create().ofType(JAVA_SQL_STATEMENT).names("getResultSet", "getGeneratedKeys").withoutParameters(),
+    MethodMatchers.create().ofType(JAVA_SQL_STATEMENT).names(PreStatementVisitor.GET_RESULT_SET, "getGeneratedKeys").withoutParameters(),
     MethodMatchers.create().ofType("java.sql.PreparedStatement").name("executeQuery").withoutParameters(),
     MethodMatchers.create().ofType("javax.sql.DataSource").name("getConnection").withAnyParameters(),
     MethodMatchers.create().ofType("java.sql.DriverManager").name("getConnection").withAnyParameters()
