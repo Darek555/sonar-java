@@ -209,7 +209,7 @@ public class ImmediateReverseBoxingCheck extends IssuableSubscriptionVisitor {
       } else {
         typeCriteria = TypeCriteria.subtypeOf("java.lang.Number");
       }
-      matchers.add(MethodMatcher.create().callSite(typeCriteria).name(primitiveType + "Value").withoutParameter());
+      matchers.add(MethodMatcher.create().typeDefinition(typeCriteria).name(primitiveType + "Value").withoutParameter());
     }
     return MethodMatchers.or(matchers);
   }

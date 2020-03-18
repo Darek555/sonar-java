@@ -91,12 +91,6 @@ public class MethodMatcher implements MethodMatchers {
     return this;
   }
 
-  public MethodMatcher callSite(TypeCriteria callSite) {
-    this.typeCriteria = callSite;
-    updateInternalMatcher();
-    return this;
-  }
-
   public MethodMatcher addParameter(String fullyQualifiedTypeParameterName) {
     return addParameter(TypeCriteria.is(fullyQualifiedTypeParameterName));
   }

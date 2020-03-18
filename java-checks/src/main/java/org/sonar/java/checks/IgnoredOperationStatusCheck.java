@@ -49,18 +49,18 @@ public class IgnoredOperationStatusCheck extends AbstractMethodDetection {
       MethodMatcher.create().typeDefinition(FILE).name(NameCriteria.startsWith("is")).withoutParameter(),
       MethodMatcher.create().typeDefinition(FILE).name(NameCriteria.startsWith("set")).withAnyParameters(),
 
-      MethodMatcher.create().callSite(TypeCriteria.subtypeOf("java.util.Iterator")).name("hasNext").withoutParameter(),
-      MethodMatcher.create().callSite(TypeCriteria.subtypeOf("java.util.Enumeration")).name("hasMoreElements").withoutParameter(),
+      MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf("java.util.Iterator")).name("hasNext").withoutParameter(),
+      MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf("java.util.Enumeration")).name("hasMoreElements").withoutParameter(),
 
-      MethodMatcher.create().callSite(SUBTYPE_OF_CONDITION).name("await").addParameter("long").addParameter("java.util.concurrent.TimeUnit"),
-      MethodMatcher.create().callSite(SUBTYPE_OF_CONDITION).name("awaitUntil").addParameter("java.util.Date"),
-      MethodMatcher.create().callSite(SUBTYPE_OF_CONDITION).name("awaitNanos").addParameter("long"),
+      MethodMatcher.create().typeDefinition(SUBTYPE_OF_CONDITION).name("await").addParameter("long").addParameter("java.util.concurrent.TimeUnit"),
+      MethodMatcher.create().typeDefinition(SUBTYPE_OF_CONDITION).name("awaitUntil").addParameter("java.util.Date"),
+      MethodMatcher.create().typeDefinition(SUBTYPE_OF_CONDITION).name("awaitNanos").addParameter("long"),
 
       MethodMatcher.create().typeDefinition("java.util.concurrent.CountDownLatch").name("await").addParameter("long").addParameter("java.util.concurrent.TimeUnit"),
       MethodMatcher.create().typeDefinition("java.util.concurrent.Semaphore").name("tryAcquire").withAnyParameters(),
 
-      MethodMatcher.create().callSite(SUBTYPE_OF_BLOCKING_QUEUE).name("offer").withAnyParameters(),
-      MethodMatcher.create().callSite(SUBTYPE_OF_BLOCKING_QUEUE).name("remove").withAnyParameters());
+      MethodMatcher.create().typeDefinition(SUBTYPE_OF_BLOCKING_QUEUE).name("offer").withAnyParameters(),
+      MethodMatcher.create().typeDefinition(SUBTYPE_OF_BLOCKING_QUEUE).name("remove").withAnyParameters());
   }
 
   @Override

@@ -47,8 +47,8 @@ public class SQLInjectionCheck extends IssuableSubscriptionVisitor {
   private static final String SPRING_JDBC_OPERATIONS = "org.springframework.jdbc.core.JdbcOperations";
 
   private static final MethodMatchers SQL_INJECTION_SUSPECTS = MethodMatchers.or(
-    MethodMatcher.create().callSite(TypeCriteria.subtypeOf("org.hibernate.Session")).name("createQuery").withAnyParameters(),
-    MethodMatcher.create().callSite(TypeCriteria.subtypeOf("org.hibernate.Session")).name("createSQLQuery").withAnyParameters(),
+    MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf("org.hibernate.Session")).name("createQuery").withAnyParameters(),
+    MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf("org.hibernate.Session")).name("createSQLQuery").withAnyParameters(),
 
     matcherBuilder(JAVA_SQL_STATEMENT).name("executeQuery").withAnyParameters(),
     matcherBuilder(JAVA_SQL_STATEMENT).name("execute").withAnyParameters(),
