@@ -68,24 +68,24 @@ public class PublicStaticMutableMembersCheck extends IssuableSubscriptionVisitor
   private static final String DECORATE = "decorate";
   // java.util and apache commons
   private static final MethodMatchers UNMODIFIABLE_METHOD_CALLS = MethodMatchers.or(
-    MethodMatcher.create().typeDefinition("java.util.Collections").name(NameCriteria.startsWith("singleton")).withAnyParameters(),
-    MethodMatcher.create().typeDefinition("java.util.Collections").name(NameCriteria.startsWith("empty")).withAnyParameters(),
-    MethodMatcher.create().typeDefinition(TypeCriteria.anyType()).name(NameCriteria.startsWith("unmodifiable")).withAnyParameters(),
+    MethodMatcher.create().ofType("java.util.Collections").name(NameCriteria.startsWith("singleton")).withAnyParameters(),
+    MethodMatcher.create().ofType("java.util.Collections").name(NameCriteria.startsWith("empty")).withAnyParameters(),
+    MethodMatcher.create().ofType(TypeCriteria.anyType()).name(NameCriteria.startsWith("unmodifiable")).withAnyParameters(),
        // Java 9
-    MethodMatcher.create().typeDefinition("java.util.Set").name("of").withAnyParameters(),
-    MethodMatcher.create().typeDefinition("java.util.List").name("of").withAnyParameters(),
-    MethodMatcher.create().typeDefinition("java.util.Map").name("of").withAnyParameters(),
+    MethodMatcher.create().ofType("java.util.Set").name("of").withAnyParameters(),
+    MethodMatcher.create().ofType("java.util.List").name("of").withAnyParameters(),
+    MethodMatcher.create().ofType("java.util.Map").name("of").withAnyParameters(),
       // apache commons 3.X
-    MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf("org.apache.commons.collections.map.UnmodifiableMap")).name(DECORATE).withAnyParameters(),
-    MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf("org.apache.commons.collections.set.UnmodifiableSet")).name(DECORATE).withAnyParameters(),
-    MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf("org.apache.commons.collections.list.UnmodifiableList")).name(DECORATE).withAnyParameters(),
+    MethodMatcher.create().ofType(TypeCriteria.subtypeOf("org.apache.commons.collections.map.UnmodifiableMap")).name(DECORATE).withAnyParameters(),
+    MethodMatcher.create().ofType(TypeCriteria.subtypeOf("org.apache.commons.collections.set.UnmodifiableSet")).name(DECORATE).withAnyParameters(),
+    MethodMatcher.create().ofType(TypeCriteria.subtypeOf("org.apache.commons.collections.list.UnmodifiableList")).name(DECORATE).withAnyParameters(),
       // apache commons 4.X
-    MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf("org.apache.commons.collections4.map.UnmodifiableMap")).name(DECORATE).withAnyParameters(),
-    MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf("org.apache.commons.collections4.set.UnmodifiableSet")).name(DECORATE).withAnyParameters(),
-    MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf("org.apache.commons.collections4.list.UnmodifiableList")).name(DECORATE).withAnyParameters());
+    MethodMatcher.create().ofType(TypeCriteria.subtypeOf("org.apache.commons.collections4.map.UnmodifiableMap")).name(DECORATE).withAnyParameters(),
+    MethodMatcher.create().ofType(TypeCriteria.subtypeOf("org.apache.commons.collections4.set.UnmodifiableSet")).name(DECORATE).withAnyParameters(),
+    MethodMatcher.create().ofType(TypeCriteria.subtypeOf("org.apache.commons.collections4.list.UnmodifiableList")).name(DECORATE).withAnyParameters());
 
   private static final MethodMatcher ARRAYS_AS_LIST = MethodMatcher.create()
-    .typeDefinition("java.util.Arrays").name("asList").withAnyParameters();
+    .ofType("java.util.Arrays").name("asList").withAnyParameters();
 
   private static final Set<String> ACCEPTED_TYPES = ImmutableSet.of(
     "com.google.common.collect.ImmutableMap",

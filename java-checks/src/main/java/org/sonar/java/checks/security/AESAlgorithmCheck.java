@@ -35,7 +35,7 @@ public class AESAlgorithmCheck extends AbstractMethodDetection {
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatcher.create()
-        .typeDefinition(TypeCriteria.is("javax.crypto.Cipher"))
+        .ofType(TypeCriteria.is("javax.crypto.Cipher"))
         .name("getInstance")
         .withAnyParameters();
   }

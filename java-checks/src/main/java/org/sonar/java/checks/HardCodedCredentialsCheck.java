@@ -63,22 +63,22 @@ public class HardCodedCredentialsCheck extends IssuableSubscriptionVisitor {
   private static final int MINIMUM_PASSWORD_LENGTH = 1;
 
   private static final MethodMatcher PASSWORD_AUTHENTICATION_CONSTRUCTOR = MethodMatcher.create()
-    .typeDefinition("java.net.PasswordAuthentication")
+    .ofType("java.net.PasswordAuthentication")
     .name("<init>")
     .addParameter(JAVA_LANG_STRING)
     .addParameter("char[]");
 
   private static final MethodMatcher STRING_TO_CHAR_ARRAY = MethodMatcher.create()
-    .typeDefinition(JAVA_LANG_STRING)
+    .ofType(JAVA_LANG_STRING)
     .name("toCharArray")
-    .withoutParameter();
+    .withoutParameters();
 
   private static final MethodMatcher EQUALS_MATCHER = MethodMatcher.create()
     .name("equals")
-    .parameters(JAVA_LANG_OBJECT);
+    .withParameters(JAVA_LANG_OBJECT);
 
   private static final MethodMatcher GET_CONNECTION_MATCHER = MethodMatcher.create()
-    .typeDefinition("java.sql.DriverManager")
+    .ofType("java.sql.DriverManager")
     .name("getConnection").withAnyParameters();
 
   private static final int GET_CONNECTION_PASSWORD_ARGUMENT = 2;

@@ -34,8 +34,8 @@ public class DynamicClassLoadCheck extends AbstractMethodDetection {
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatchers.or(
-      MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf("java.lang.Class")).name("forName").withAnyParameters(),
-      MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf("java.lang.ClassLoader")).name("loadClass").withAnyParameters()
+      MethodMatcher.create().ofType(TypeCriteria.subtypeOf("java.lang.Class")).name("forName").withAnyParameters(),
+      MethodMatcher.create().ofType(TypeCriteria.subtypeOf("java.lang.ClassLoader")).name("loadClass").withAnyParameters()
     );
   }
 

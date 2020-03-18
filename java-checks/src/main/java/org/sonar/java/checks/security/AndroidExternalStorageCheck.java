@@ -31,15 +31,15 @@ public class AndroidExternalStorageCheck extends AbstractMethodDetection {
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatchers.or(
-      MethodMatcher.create().typeDefinition("android.os.Environment").name("getExternalStorageDirectory").withAnyParameters(),
-      MethodMatcher.create().typeDefinition("android.os.Environment").name("getExternalStoragePublicDirectory").withAnyParameters(),
-      MethodMatcher.create().typeDefinition("android.content.Context").name("getExternalFilesDir").withAnyParameters(),
-      MethodMatcher.create().typeDefinition("android.content.Context").name("getExternalFilesDirs").withAnyParameters(),
-      MethodMatcher.create().typeDefinition("android.content.Context").name("getExternalMediaDirs").withAnyParameters(),
-      MethodMatcher.create().typeDefinition("android.content.Context").name("getExternalCacheDir").withAnyParameters(),
-      MethodMatcher.create().typeDefinition("android.content.Context").name("getExternalCacheDirs").withAnyParameters(),
-      MethodMatcher.create().typeDefinition("android.content.Context").name("getObbDir").withAnyParameters(),
-      MethodMatcher.create().typeDefinition("android.content.Context").name("getObbDirs").withAnyParameters()
+      MethodMatcher.create().ofType("android.os.Environment").name("getExternalStorageDirectory").withAnyParameters(),
+      MethodMatcher.create().ofType("android.os.Environment").name("getExternalStoragePublicDirectory").withAnyParameters(),
+      MethodMatcher.create().ofType("android.content.Context").name("getExternalFilesDir").withAnyParameters(),
+      MethodMatcher.create().ofType("android.content.Context").name("getExternalFilesDirs").withAnyParameters(),
+      MethodMatcher.create().ofType("android.content.Context").name("getExternalMediaDirs").withAnyParameters(),
+      MethodMatcher.create().ofType("android.content.Context").name("getExternalCacheDir").withAnyParameters(),
+      MethodMatcher.create().ofType("android.content.Context").name("getExternalCacheDirs").withAnyParameters(),
+      MethodMatcher.create().ofType("android.content.Context").name("getObbDir").withAnyParameters(),
+      MethodMatcher.create().ofType("android.content.Context").name("getObbDirs").withAnyParameters()
     );
   }
 

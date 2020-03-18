@@ -49,45 +49,45 @@ public class ConstantMathCheck extends IssuableSubscriptionVisitor {
   private static final String ROUND = "round";
 
   private static final MethodMatchers CONSTANT_WITH_LITERAL_METHODS = MethodMatchers.or(
-    MethodMatcher.create().typeDefinition(MATH_PACKAGE_NAME).name(ABS).addParameter(DOUBLE),
-    MethodMatcher.create().typeDefinition(MATH_PACKAGE_NAME).name(ABS).addParameter(FLOAT),
-    MethodMatcher.create().typeDefinition(MATH_PACKAGE_NAME).name(ABS).addParameter("int"),
-    MethodMatcher.create().typeDefinition(MATH_PACKAGE_NAME).name(ABS).addParameter("long")
+    MethodMatcher.create().ofType(MATH_PACKAGE_NAME).name(ABS).addParameter(DOUBLE),
+    MethodMatcher.create().ofType(MATH_PACKAGE_NAME).name(ABS).addParameter(FLOAT),
+    MethodMatcher.create().ofType(MATH_PACKAGE_NAME).name(ABS).addParameter("int"),
+    MethodMatcher.create().ofType(MATH_PACKAGE_NAME).name(ABS).addParameter("long")
   );
 
   private static final MethodMatchers TRUNCATION_METHODS = MethodMatchers.or(
-    MethodMatcher.create().typeDefinition(MATH_PACKAGE_NAME).name(CEIL).addParameter(DOUBLE),
-    MethodMatcher.create().typeDefinition(MATH_PACKAGE_NAME).name(CEIL).addParameter(FLOAT),
-    MethodMatcher.create().typeDefinition(MATH_PACKAGE_NAME).name(FLOOR).addParameter(DOUBLE),
-    MethodMatcher.create().typeDefinition(MATH_PACKAGE_NAME).name(FLOOR).addParameter(FLOAT),
-    MethodMatcher.create().typeDefinition(MATH_PACKAGE_NAME).name("rint").addParameter(DOUBLE),
-    MethodMatcher.create().typeDefinition(MATH_PACKAGE_NAME).name(ROUND).addParameter(DOUBLE),
-    MethodMatcher.create().typeDefinition(MATH_PACKAGE_NAME).name(ROUND).addParameter(FLOAT)
+    MethodMatcher.create().ofType(MATH_PACKAGE_NAME).name(CEIL).addParameter(DOUBLE),
+    MethodMatcher.create().ofType(MATH_PACKAGE_NAME).name(CEIL).addParameter(FLOAT),
+    MethodMatcher.create().ofType(MATH_PACKAGE_NAME).name(FLOOR).addParameter(DOUBLE),
+    MethodMatcher.create().ofType(MATH_PACKAGE_NAME).name(FLOOR).addParameter(FLOAT),
+    MethodMatcher.create().ofType(MATH_PACKAGE_NAME).name("rint").addParameter(DOUBLE),
+    MethodMatcher.create().ofType(MATH_PACKAGE_NAME).name(ROUND).addParameter(DOUBLE),
+    MethodMatcher.create().ofType(MATH_PACKAGE_NAME).name(ROUND).addParameter(FLOAT)
   );
 
   private static final MethodMatchers CONSTANT_WITH_ZERO_METHODS = MethodMatchers.or(
-    MethodMatcher.create().typeDefinition(MATH_PACKAGE_NAME).name("atan2").addParameter(DOUBLE).addParameter(DOUBLE),
-    MethodMatcher.create().typeDefinition(MATH_PACKAGE_NAME).name("cos").addParameter(DOUBLE),
-    MethodMatcher.create().typeDefinition(MATH_PACKAGE_NAME).name("cosh").addParameter(DOUBLE),
-    MethodMatcher.create().typeDefinition(MATH_PACKAGE_NAME).name("expm1").addParameter(DOUBLE),
-    MethodMatcher.create().typeDefinition(MATH_PACKAGE_NAME).name("sin").addParameter(DOUBLE),
-    MethodMatcher.create().typeDefinition(MATH_PACKAGE_NAME).name("sinh").addParameter(DOUBLE),
-    MethodMatcher.create().typeDefinition(MATH_PACKAGE_NAME).name("tan").addParameter(DOUBLE),
-    MethodMatcher.create().typeDefinition(MATH_PACKAGE_NAME).name("tanh").addParameter(DOUBLE),
-    MethodMatcher.create().typeDefinition(MATH_PACKAGE_NAME).name("toRadians").addParameter(DOUBLE)
+    MethodMatcher.create().ofType(MATH_PACKAGE_NAME).name("atan2").addParameter(DOUBLE).addParameter(DOUBLE),
+    MethodMatcher.create().ofType(MATH_PACKAGE_NAME).name("cos").addParameter(DOUBLE),
+    MethodMatcher.create().ofType(MATH_PACKAGE_NAME).name("cosh").addParameter(DOUBLE),
+    MethodMatcher.create().ofType(MATH_PACKAGE_NAME).name("expm1").addParameter(DOUBLE),
+    MethodMatcher.create().ofType(MATH_PACKAGE_NAME).name("sin").addParameter(DOUBLE),
+    MethodMatcher.create().ofType(MATH_PACKAGE_NAME).name("sinh").addParameter(DOUBLE),
+    MethodMatcher.create().ofType(MATH_PACKAGE_NAME).name("tan").addParameter(DOUBLE),
+    MethodMatcher.create().ofType(MATH_PACKAGE_NAME).name("tanh").addParameter(DOUBLE),
+    MethodMatcher.create().ofType(MATH_PACKAGE_NAME).name("toRadians").addParameter(DOUBLE)
   );
 
   private static final MethodMatchers CONSTANT_WITH_ZERO_OR_ONE_METHODS = MethodMatchers.or(
-    MethodMatcher.create().typeDefinition(MATH_PACKAGE_NAME).name("acos").addParameter(DOUBLE),
-    MethodMatcher.create().typeDefinition(MATH_PACKAGE_NAME).name("asin").addParameter(DOUBLE),
-    MethodMatcher.create().typeDefinition(MATH_PACKAGE_NAME).name("atan").addParameter(DOUBLE),
-    MethodMatcher.create().typeDefinition(MATH_PACKAGE_NAME).name("cbrt").addParameter(DOUBLE),
-    MethodMatcher.create().typeDefinition(MATH_PACKAGE_NAME).name("exp").addParameter(DOUBLE),
-    MethodMatcher.create().typeDefinition(MATH_PACKAGE_NAME).name("log").addParameter(DOUBLE),
-    MethodMatcher.create().typeDefinition(MATH_PACKAGE_NAME).name("log10").addParameter(DOUBLE),
-    MethodMatcher.create().typeDefinition(MATH_PACKAGE_NAME).name("sqrt").addParameter(DOUBLE),
-    MethodMatcher.create().typeDefinition(MATH_PACKAGE_NAME).name("toDegrees").addParameter(DOUBLE),
-    MethodMatcher.create().typeDefinition(MATH_PACKAGE_NAME).name("exp").addParameter(DOUBLE)
+    MethodMatcher.create().ofType(MATH_PACKAGE_NAME).name("acos").addParameter(DOUBLE),
+    MethodMatcher.create().ofType(MATH_PACKAGE_NAME).name("asin").addParameter(DOUBLE),
+    MethodMatcher.create().ofType(MATH_PACKAGE_NAME).name("atan").addParameter(DOUBLE),
+    MethodMatcher.create().ofType(MATH_PACKAGE_NAME).name("cbrt").addParameter(DOUBLE),
+    MethodMatcher.create().ofType(MATH_PACKAGE_NAME).name("exp").addParameter(DOUBLE),
+    MethodMatcher.create().ofType(MATH_PACKAGE_NAME).name("log").addParameter(DOUBLE),
+    MethodMatcher.create().ofType(MATH_PACKAGE_NAME).name("log10").addParameter(DOUBLE),
+    MethodMatcher.create().ofType(MATH_PACKAGE_NAME).name("sqrt").addParameter(DOUBLE),
+    MethodMatcher.create().ofType(MATH_PACKAGE_NAME).name("toDegrees").addParameter(DOUBLE),
+    MethodMatcher.create().ofType(MATH_PACKAGE_NAME).name("exp").addParameter(DOUBLE)
   );
 
   @Override

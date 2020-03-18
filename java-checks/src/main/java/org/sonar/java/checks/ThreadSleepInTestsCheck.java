@@ -35,6 +35,6 @@ public class ThreadSleepInTestsCheck extends AbstractMethodDetection {
 
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
-    return MethodMatcher.create().typeDefinition("java.lang.Thread").name("sleep").withAnyParameters();
+    return MethodMatcher.create().ofType("java.lang.Thread").name("sleep").withAnyParameters();
   }
 }

@@ -42,14 +42,14 @@ import java.util.List;
 public class KeySetInsteadOfEntrySetCheck extends IssuableSubscriptionVisitor {
 
   private static final MethodMatcher MAP_GET_METHOD = MethodMatcher.create()
-    .typeDefinition(TypeCriteria.subtypeOf("java.util.Map"))
+    .ofType(TypeCriteria.subtypeOf("java.util.Map"))
     .name("get")
     .addParameter("java.lang.Object");
 
   private static final MethodMatcher MAP_KEYSET_METHOD = MethodMatcher.create()
-    .typeDefinition(TypeCriteria.subtypeOf("java.util.Map"))
+    .ofType(TypeCriteria.subtypeOf("java.util.Map"))
     .name("keySet")
-    .withoutParameter();
+    .withoutParameters();
 
   @Override
   public List<Kind> nodesToVisit() {

@@ -31,7 +31,7 @@ public class ResultSetIsLastCheck extends AbstractMethodDetection {
 
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
-    return MethodMatcher.create().typeDefinition("java.sql.ResultSet").name("isLast").withoutParameter();
+    return MethodMatcher.create().ofType("java.sql.ResultSet").name("isLast").withoutParameters();
   }
 
   @Override

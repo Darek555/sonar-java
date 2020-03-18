@@ -33,11 +33,11 @@ public class DataEncryptionCheck extends AbstractMethodDetection {
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatchers.or(
       MethodMatcher.create()
-        .typeDefinition("javax.crypto.Cipher")
+        .ofType("javax.crypto.Cipher")
         .name("getInstance")
         .withAnyParameters(),
       MethodMatcher.create()
-        .typeDefinition("org.apache.commons.crypto.utils.Utils")
+        .ofType("org.apache.commons.crypto.utils.Utils")
         .name("getCipherInstance")
         .withAnyParameters());
   }

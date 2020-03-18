@@ -40,7 +40,7 @@ public class ObjectCreatedOnlyToCallGetClassCheck extends AbstractMethodDetectio
 
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
-    return MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf("java.lang.Object")).name("getClass").withoutParameter();
+    return MethodMatcher.create().ofType(TypeCriteria.subtypeOf("java.lang.Object")).name("getClass").withoutParameters();
   }
 
   @Override

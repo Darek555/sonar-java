@@ -118,7 +118,7 @@ public class CatchOfThrowableOrErrorCheck extends IssuableSubscriptionVisitor {
     }
 
     private static MethodMatcher rethrowMethod() {
-      return MethodMatcher.create().typeDefinition("com.google.common.io.Closer").name("rethrow").addParameter(JAVA_LANG_THROWABLE);
+      return MethodMatcher.create().ofType("com.google.common.io.Closer").name("rethrow").addParameter(JAVA_LANG_THROWABLE);
     }
   }
 

@@ -37,7 +37,7 @@ public class LDAPAuthenticatedConnectionCheck extends AbstractMethodDetection {
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatcher.create()
-        .typeDefinition(TypeCriteria.subtypeOf("java.util.Map"))
+        .ofType(TypeCriteria.subtypeOf("java.util.Map"))
         .name("put")
         .withAnyParameters();
   }

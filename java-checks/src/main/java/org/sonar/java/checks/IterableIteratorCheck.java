@@ -40,7 +40,7 @@ import org.sonar.plugins.java.api.tree.Tree;
 @Rule(key = "S4348")
 public class IterableIteratorCheck extends IssuableSubscriptionVisitor {
 
-  private static final MethodMatcher ITERATOR = MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf("java.lang.Iterable")).name("iterator").withoutParameter();
+  private static final MethodMatcher ITERATOR = MethodMatcher.create().ofType(TypeCriteria.subtypeOf("java.lang.Iterable")).name("iterator").withoutParameters();
 
   @Override
   public List<Tree.Kind> nodesToVisit() {

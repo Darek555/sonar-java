@@ -33,8 +33,8 @@ import org.sonar.plugins.java.api.tree.TypeCastTree;
 @Rule(key = "S3020")
 public class ToArrayCheck extends AbstractMethodDetection {
 
-  private static final MethodMatcher COLLECTION_TO_ARRAY = MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf("java.util.Collection"))
-    .name("toArray").withoutParameter();
+  private static final MethodMatcher COLLECTION_TO_ARRAY = MethodMatcher.create().ofType(TypeCriteria.subtypeOf("java.util.Collection"))
+    .name("toArray").withoutParameters();
 
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {

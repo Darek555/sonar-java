@@ -90,25 +90,25 @@ public class CookieHttpOnlyCheck extends IssuableSubscriptionVisitor {
     ClassName.PLAY_COOKIE_BUILDER);
 
   private static final MethodMatcher PLAY_COOKIE_BUILDER = MethodMatcher.create()
-    .typeDefinition(ClassName.PLAY_COOKIE).name("builder").withAnyParameters();
+    .ofType(ClassName.PLAY_COOKIE).name("builder").withAnyParameters();
 
   private static final List<MethodMatcher> CONSTRUCTORS_WITH_HTTP_ONLY_PARAM = Arrays.asList(
     MethodMatcher.create()
-      .typeDefinition(TypeCriteria.subtypeOf(ClassName.JAX_RS_NEW_COOKIE)).name(CONSTRUCTOR)
-      .parameters(ClassName.JAX_RS_COOKIE, JAVA_LANG_STRING, INT, JAVA_UTIL_DATE, BOOLEAN, BOOLEAN),
+      .ofType(TypeCriteria.subtypeOf(ClassName.JAX_RS_NEW_COOKIE)).name(CONSTRUCTOR)
+      .withParameters(ClassName.JAX_RS_COOKIE, JAVA_LANG_STRING, INT, JAVA_UTIL_DATE, BOOLEAN, BOOLEAN),
     MethodMatcher.create()
-      .typeDefinition(TypeCriteria.subtypeOf(ClassName.JAX_RS_NEW_COOKIE)).name(CONSTRUCTOR)
-      .parameters(JAVA_LANG_STRING, JAVA_LANG_STRING, JAVA_LANG_STRING, JAVA_LANG_STRING, INT, JAVA_LANG_STRING, INT, JAVA_UTIL_DATE, BOOLEAN, BOOLEAN),
+      .ofType(TypeCriteria.subtypeOf(ClassName.JAX_RS_NEW_COOKIE)).name(CONSTRUCTOR)
+      .withParameters(JAVA_LANG_STRING, JAVA_LANG_STRING, JAVA_LANG_STRING, JAVA_LANG_STRING, INT, JAVA_LANG_STRING, INT, JAVA_UTIL_DATE, BOOLEAN, BOOLEAN),
     MethodMatcher.create()
-      .typeDefinition(TypeCriteria.subtypeOf(ClassName.JAX_RS_NEW_COOKIE)).name(CONSTRUCTOR)
-      .parameters(JAVA_LANG_STRING, JAVA_LANG_STRING, JAVA_LANG_STRING, JAVA_LANG_STRING, JAVA_LANG_STRING, INT, BOOLEAN, BOOLEAN),
+      .ofType(TypeCriteria.subtypeOf(ClassName.JAX_RS_NEW_COOKIE)).name(CONSTRUCTOR)
+      .withParameters(JAVA_LANG_STRING, JAVA_LANG_STRING, JAVA_LANG_STRING, JAVA_LANG_STRING, JAVA_LANG_STRING, INT, BOOLEAN, BOOLEAN),
     MethodMatcher.create()
-      .typeDefinition(TypeCriteria.subtypeOf(ClassName.PLAY_COOKIE)).name(CONSTRUCTOR)
-      .parameters(JAVA_LANG_STRING, JAVA_LANG_STRING, "java.lang.Integer", JAVA_LANG_STRING, JAVA_LANG_STRING, BOOLEAN, BOOLEAN));
+      .ofType(TypeCriteria.subtypeOf(ClassName.PLAY_COOKIE)).name(CONSTRUCTOR)
+      .withParameters(JAVA_LANG_STRING, JAVA_LANG_STRING, "java.lang.Integer", JAVA_LANG_STRING, JAVA_LANG_STRING, BOOLEAN, BOOLEAN));
 
   private static final List<MethodMatcher> CONSTRUCTORS_WITH_GOOD_DEFAULT = Arrays.asList(
-    MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf(ClassName.SHIRO_COOKIE)).name(CONSTRUCTOR).withoutParameter(),
-    MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf(ClassName.SHIRO_COOKIE)).name(CONSTRUCTOR).parameters(JAVA_LANG_STRING));
+    MethodMatcher.create().ofType(TypeCriteria.subtypeOf(ClassName.SHIRO_COOKIE)).name(CONSTRUCTOR).withoutParameters(),
+    MethodMatcher.create().ofType(TypeCriteria.subtypeOf(ClassName.SHIRO_COOKIE)).name(CONSTRUCTOR).withParameters(JAVA_LANG_STRING));
 
   @Override
   public void setContext(JavaFileScannerContext context) {

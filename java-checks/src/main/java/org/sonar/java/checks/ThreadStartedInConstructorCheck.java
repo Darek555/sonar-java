@@ -38,9 +38,9 @@ import org.sonar.plugins.java.api.tree.Tree.Kind;
 public class ThreadStartedInConstructorCheck extends IssuableSubscriptionVisitor {
 
   private static final MethodMatcher THREAD_START = MethodMatcher.create()
-    .typeDefinition(TypeCriteria.subtypeOf("java.lang.Thread"))
+    .ofType(TypeCriteria.subtypeOf("java.lang.Thread"))
     .name("start")
-    .withoutParameter();
+    .withoutParameters();
 
   private final Deque<Boolean> inMethodOrStaticInitializerOrFinalClass = new LinkedList<>();
 

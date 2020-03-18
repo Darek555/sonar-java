@@ -35,8 +35,8 @@ public class ObjectDeserializationCheck extends AbstractMethodDetection {
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatchers.or(
-      MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf(OBJECT_INPUT_STREAM)).name("readObject").withoutParameter(),
-      MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf(OBJECT_INPUT_STREAM)).name("readUnshared").withoutParameter()
+      MethodMatcher.create().ofType(TypeCriteria.subtypeOf(OBJECT_INPUT_STREAM)).name("readObject").withoutParameters(),
+      MethodMatcher.create().ofType(TypeCriteria.subtypeOf(OBJECT_INPUT_STREAM)).name("readUnshared").withoutParameters()
     );
   }
 

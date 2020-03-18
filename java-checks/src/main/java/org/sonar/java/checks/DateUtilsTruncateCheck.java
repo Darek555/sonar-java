@@ -51,6 +51,6 @@ public class DateUtilsTruncateCheck extends AbstractMethodDetection implements J
 
   private static MethodMatcher truncateMethodMatcher(String firstParameterType) {
     return MethodMatcher.create()
-      .typeDefinition("org.apache.commons.lang.time.DateUtils").name("truncate").addParameter(firstParameterType).addParameter("int");
+      .ofType("org.apache.commons.lang.time.DateUtils").name("truncate").addParameter(firstParameterType).addParameter("int");
   }
 }

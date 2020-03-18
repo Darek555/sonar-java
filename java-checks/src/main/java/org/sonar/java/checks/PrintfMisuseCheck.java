@@ -40,10 +40,10 @@ import org.sonar.plugins.java.api.tree.VariableTree;
 @Rule(key = "S3457")
 public class PrintfMisuseCheck extends AbstractPrintfChecker {
 
-  private static final MethodMatcher TO_STRING = MethodMatcher.create().typeDefinition(TypeCriteria.anyType()).name("toString").withoutParameter();
+  private static final MethodMatcher TO_STRING = MethodMatcher.create().ofType(TypeCriteria.anyType()).name("toString").withoutParameters();
   private static final MethodMatchers GET_LOGGER = MethodMatchers.or(
-    MethodMatcher.create().typeDefinition(JAVA_UTIL_LOGGING_LOGGER).name("getLogger").parameters(JAVA_LANG_STRING, JAVA_LANG_STRING),
-    MethodMatcher.create().typeDefinition(JAVA_UTIL_LOGGING_LOGGER).name("getAnonymousLogger").parameters(JAVA_LANG_STRING)
+    MethodMatcher.create().ofType(JAVA_UTIL_LOGGING_LOGGER).name("getLogger").withParameters(JAVA_LANG_STRING, JAVA_LANG_STRING),
+    MethodMatcher.create().ofType(JAVA_UTIL_LOGGING_LOGGER).name("getAnonymousLogger").withParameters(JAVA_LANG_STRING)
     );
 
   @Override

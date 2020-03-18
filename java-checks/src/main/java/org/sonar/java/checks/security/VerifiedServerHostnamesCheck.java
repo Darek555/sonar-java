@@ -55,9 +55,9 @@ public class VerifiedServerHostnamesCheck extends IssuableSubscriptionVisitor {
 
   private static final String JAVAX_NET_SSL_HOSTNAME_VERIFIER = "javax.net.ssl.HostnameVerifier";
   private static final MethodMatcher HOSTNAME_VERIFIER = MethodMatcher.create()
-    .typeDefinition(TypeCriteria.subtypeOf(JAVAX_NET_SSL_HOSTNAME_VERIFIER))
+    .ofType(TypeCriteria.subtypeOf(JAVAX_NET_SSL_HOSTNAME_VERIFIER))
     .name("verify")
-    .parameters("java.lang.String", "javax.net.ssl.SSLSession");
+    .withParameters("java.lang.String", "javax.net.ssl.SSLSession");
 
   private static final String APACHE_EMAIL = "org.apache.commons.mail.Email";
   private static final Set<String> ENABLING_SSL_METHOD_NAMES = new HashSet<>(Arrays.asList(
@@ -67,11 +67,11 @@ public class VerifiedServerHostnamesCheck extends IssuableSubscriptionVisitor {
     "setStartTLSEnabled",
     "setStartTLSRequired"));
   private static final MethodMatcher ENABLING_SSL_METHODS = MethodMatcher.create()
-    .typeDefinition(TypeCriteria.subtypeOf(APACHE_EMAIL))
+    .ofType(TypeCriteria.subtypeOf(APACHE_EMAIL))
     .name(ENABLING_SSL_METHOD_NAMES::contains)
     .addParameter("boolean");
   private static final MethodMatcher HASHTABLE_PUT = MethodMatcher.create()
-    .typeDefinition(TypeCriteria.subtypeOf("java.util.Hashtable"))
+    .ofType(TypeCriteria.subtypeOf("java.util.Hashtable"))
     .name("put")
     .withAnyParameters();
 
@@ -196,7 +196,7 @@ public class VerifiedServerHostnamesCheck extends IssuableSubscriptionVisitor {
     private Symbol variable;
 
     private static final MethodMatcher SET_SSL_CHECK_SERVER_ID = MethodMatcher.create()
-      .typeDefinition(TypeCriteria.subtypeOf(APACHE_EMAIL))
+      .ofType(TypeCriteria.subtypeOf(APACHE_EMAIL))
       .name("setSSLCheckServerIdentity")
       .addParameter("boolean");
 

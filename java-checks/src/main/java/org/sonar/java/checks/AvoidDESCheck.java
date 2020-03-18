@@ -35,7 +35,7 @@ public class AvoidDESCheck extends AbstractMethodDetection {
 
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
-    return MethodMatcher.create().typeDefinition("javax.crypto.Cipher").name("getInstance").withAnyParameters();
+    return MethodMatcher.create().ofType("javax.crypto.Cipher").name("getInstance").withAnyParameters();
   }
 
   @Override

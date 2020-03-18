@@ -53,11 +53,11 @@ public class FileCreateTempFileCheck extends BaseTreeVisitor implements JavaFile
 
   private static final String JAVA_IO_FILE = "java.io.File";
   private static final MethodMatcher FILE_CREATE_TEMP_FILE = MethodMatcher.create()
-    .typeDefinition(JAVA_IO_FILE).name("createTempFile").withAnyParameters();
+    .ofType(JAVA_IO_FILE).name("createTempFile").withAnyParameters();
   private static final MethodMatcher FILE_DELETE = MethodMatcher.create()
-    .typeDefinition(JAVA_IO_FILE).name("delete").withoutParameter();
+    .ofType(JAVA_IO_FILE).name("delete").withoutParameters();
   private static final MethodMatcher FILE_MKDIR = MethodMatcher.create()
-    .typeDefinition(JAVA_IO_FILE).name("mkdir").withoutParameter();
+    .ofType(JAVA_IO_FILE).name("mkdir").withoutParameters();
 
   private final Deque<Map<Symbol, State>> symbolStack = new LinkedList<>();
   private JavaFileScannerContext context;

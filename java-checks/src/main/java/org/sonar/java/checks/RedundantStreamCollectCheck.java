@@ -39,7 +39,7 @@ public class RedundantStreamCollectCheck extends AbstractMethodDetection {
   private static final Set<String> STREAM_TYPES = ImmutableSet.of("java.util.stream.Stream", "java.util.stream.IntStream", "java.util.stream.LongStream",
     "java.util.stream.DoubleStream");
 
-  private static final MethodMatcher COUNTING = streamCollectorsMatcher().name("counting").withoutParameter();
+  private static final MethodMatcher COUNTING = streamCollectorsMatcher().name("counting").withoutParameters();
   private static final MethodMatcher MAX_BY = streamCollectorsMatcher().name("maxBy").withAnyParameters();
   private static final MethodMatcher MIN_BY = streamCollectorsMatcher().name("minBy").withAnyParameters();
   private static final MethodMatcher MAPPING = streamCollectorsMatcher().name("mapping").withAnyParameters();
@@ -49,7 +49,7 @@ public class RedundantStreamCollectCheck extends AbstractMethodDetection {
   private static final MethodMatcher SUMMING_DOUBLE = streamCollectorsMatcher().name("summingDouble").withAnyParameters();
 
   private static MethodMatcher streamCollectorsMatcher() {
-    return MethodMatcher.create().typeDefinition("java.util.stream.Collectors");
+    return MethodMatcher.create().ofType("java.util.stream.Collectors");
   }
 
   private static final Map<MethodMatcher, String> REPLACEMENTS = ImmutableMap.<MethodMatcher, String>builder()
@@ -66,7 +66,7 @@ public class RedundantStreamCollectCheck extends AbstractMethodDetection {
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatchers.or(STREAM_TYPES.stream()
-      .map(type -> MethodMatcher.create().typeDefinition(type).name("collect").addParameter("java.util.stream.Collector"))
+      .map(type -> MethodMatcher.create().ofType(type).name("collect").addParameter("java.util.stream.Collector"))
       .collect(Collectors.toList()));
   }
 

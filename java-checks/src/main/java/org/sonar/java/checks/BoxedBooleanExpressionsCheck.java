@@ -42,7 +42,7 @@ import org.sonar.plugins.java.api.tree.Tree.Kind;
 @Rule(key = "S5411")
 public class BoxedBooleanExpressionsCheck extends BaseTreeVisitor implements JavaFileScanner {
 
-  private static final MethodMatcher OPTIONAL_ORELSE = MethodMatcher.create().typeDefinition("java.util.Optional").name("orElse").addParameter(TypeCriteria.anyType());
+  private static final MethodMatcher OPTIONAL_ORELSE = MethodMatcher.create().ofType("java.util.Optional").name("orElse").addParameter(TypeCriteria.anyType());
   private static final String BOOLEAN = "java.lang.Boolean";
   private JavaFileScannerContext context;
 

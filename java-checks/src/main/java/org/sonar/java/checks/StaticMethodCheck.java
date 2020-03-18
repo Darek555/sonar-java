@@ -44,15 +44,15 @@ public class StaticMethodCheck extends BaseTreeVisitor implements JavaFileScanne
   private static final String JAVA_IO_SERIALIZABLE = "java.io.Serializable";
   private static final MethodMatchers EXCLUDED_SERIALIZABLE_METHODS = MethodMatchers.or(
     MethodMatcher.create()
-      .typeDefinition(TypeCriteria.subtypeOf(JAVA_IO_SERIALIZABLE)).name("readObject").addParameter(TypeCriteria.subtypeOf("java.io.ObjectInputStream")),
+      .ofType(TypeCriteria.subtypeOf(JAVA_IO_SERIALIZABLE)).name("readObject").addParameter(TypeCriteria.subtypeOf("java.io.ObjectInputStream")),
     MethodMatcher.create()
-      .typeDefinition(TypeCriteria.subtypeOf(JAVA_IO_SERIALIZABLE)).name("writeObject").addParameter(TypeCriteria.subtypeOf("java.io.ObjectOutputStream")),
+      .ofType(TypeCriteria.subtypeOf(JAVA_IO_SERIALIZABLE)).name("writeObject").addParameter(TypeCriteria.subtypeOf("java.io.ObjectOutputStream")),
     MethodMatcher.create()
-      .typeDefinition(TypeCriteria.subtypeOf(JAVA_IO_SERIALIZABLE)).name("readObjectNoData").withoutParameter(),
+      .ofType(TypeCriteria.subtypeOf(JAVA_IO_SERIALIZABLE)).name("readObjectNoData").withoutParameters(),
     MethodMatcher.create()
-      .typeDefinition(TypeCriteria.subtypeOf(JAVA_IO_SERIALIZABLE)).name("writeReplace").withoutParameter(),
+      .ofType(TypeCriteria.subtypeOf(JAVA_IO_SERIALIZABLE)).name("writeReplace").withoutParameters(),
     MethodMatcher.create()
-      .typeDefinition(TypeCriteria.subtypeOf(JAVA_IO_SERIALIZABLE)).name("readResolve").withoutParameter()
+      .ofType(TypeCriteria.subtypeOf(JAVA_IO_SERIALIZABLE)).name("readResolve").withoutParameters()
   );
 
   private JavaFileScannerContext context;

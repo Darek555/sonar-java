@@ -54,7 +54,7 @@ import org.sonar.plugins.java.api.tree.Tree.Kind;
 public class ArrayCopyLoopCheck extends IssuableSubscriptionVisitor {
 
   private static final MethodMatcher COLLECTION_ADD =
-    MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf("java.util.Collection")).name("add").addParameter(TypeCriteria.anyType());
+    MethodMatcher.create().ofType(TypeCriteria.subtypeOf("java.util.Collection")).name("add").addParameter(TypeCriteria.anyType());
 
   @Override
   public List<Kind> nodesToVisit() {

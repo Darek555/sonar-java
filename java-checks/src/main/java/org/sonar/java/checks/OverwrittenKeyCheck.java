@@ -52,8 +52,8 @@ import java.util.stream.Stream;
 @Rule(key = "S4143")
 public class OverwrittenKeyCheck extends IssuableSubscriptionVisitor {
 
-  private static final MethodMatcher MAP_PUT = MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf("java.util.Map")).name("put")
-    .parameters(TypeCriteria.anyType(), TypeCriteria.anyType());
+  private static final MethodMatcher MAP_PUT = MethodMatcher.create().ofType(TypeCriteria.subtypeOf("java.util.Map")).name("put")
+    .withParameters(TypeCriteria.anyType(), TypeCriteria.anyType());
 
   @Override
   public List<Tree.Kind> nodesToVisit() {

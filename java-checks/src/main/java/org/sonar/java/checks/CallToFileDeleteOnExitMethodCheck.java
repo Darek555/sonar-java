@@ -21,7 +21,6 @@ package org.sonar.java.checks;
 
 import org.sonar.check.Rule;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
-import org.sonar.java.matcher.MethodMatcher;
 import org.sonar.java.model.ExpressionUtils;
 import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
@@ -33,7 +32,7 @@ public class CallToFileDeleteOnExitMethodCheck extends AbstractMethodDetection {
 
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
-    return MethodMatcher.create().typeDefinition("java.io.File").name("deleteOnExit").withoutParameter();
+    return MethodMatchers.create().ofType("java.io.File").name("deleteOnExit").withoutParameters();
   }
 
   @Override

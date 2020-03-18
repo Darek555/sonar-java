@@ -37,18 +37,18 @@ public class RandomFloatToIntCheck extends IssuableSubscriptionVisitor {
   private static final String NEXT_FLOAT = "nextFloat";
   private static final String NEXT_DOUBLE = "nextDouble";
 
-  private final MethodMatcher mathRandomMethodMatcher = MethodMatcher.create().typeDefinition("java.lang.Math").name("random").withoutParameter();
+  private final MethodMatcher mathRandomMethodMatcher = MethodMatcher.create().ofType("java.lang.Math").name("random").withoutParameters();
 
   private final MethodMatchers methodMatchers = MethodMatchers.or(
-    MethodMatcher.create().typeDefinition("java.util.Random").name(NEXT_DOUBLE).withoutParameter(),
-    MethodMatcher.create().typeDefinition("java.util.Random").name(NEXT_FLOAT).withoutParameter(),
-    MethodMatcher.create().typeDefinition("java.util.concurrent.ThreadLocalRandom").name(NEXT_DOUBLE).withAnyParameters(),
-    MethodMatcher.create().typeDefinition("org.apache.commons.lang.math.JVMRandom").name(NEXT_DOUBLE).withoutParameter(),
-    MethodMatcher.create().typeDefinition("org.apache.commons.lang.math.JVMRandom").name(NEXT_FLOAT).withoutParameter(),
-    MethodMatcher.create().typeDefinition("org.apache.commons.lang.math.RandomUtils").name(NEXT_DOUBLE).withoutParameter(),
-    MethodMatcher.create().typeDefinition("org.apache.commons.lang.math.RandomUtils").name(NEXT_FLOAT).withoutParameter(),
-    MethodMatcher.create().typeDefinition("org.apache.commons.lang3.RandomUtils").name(NEXT_DOUBLE).withoutParameter(),
-    MethodMatcher.create().typeDefinition("org.apache.commons.lang3.RandomUtils").name(NEXT_FLOAT).withoutParameter()
+    MethodMatcher.create().ofType("java.util.Random").name(NEXT_DOUBLE).withoutParameters(),
+    MethodMatcher.create().ofType("java.util.Random").name(NEXT_FLOAT).withoutParameters(),
+    MethodMatcher.create().ofType("java.util.concurrent.ThreadLocalRandom").name(NEXT_DOUBLE).withAnyParameters(),
+    MethodMatcher.create().ofType("org.apache.commons.lang.math.JVMRandom").name(NEXT_DOUBLE).withoutParameters(),
+    MethodMatcher.create().ofType("org.apache.commons.lang.math.JVMRandom").name(NEXT_FLOAT).withoutParameters(),
+    MethodMatcher.create().ofType("org.apache.commons.lang.math.RandomUtils").name(NEXT_DOUBLE).withoutParameters(),
+    MethodMatcher.create().ofType("org.apache.commons.lang.math.RandomUtils").name(NEXT_FLOAT).withoutParameters(),
+    MethodMatcher.create().ofType("org.apache.commons.lang3.RandomUtils").name(NEXT_DOUBLE).withoutParameters(),
+    MethodMatcher.create().ofType("org.apache.commons.lang3.RandomUtils").name(NEXT_FLOAT).withoutParameters()
   );
 
   @Override

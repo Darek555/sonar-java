@@ -65,17 +65,17 @@ public class CookieShouldNotContainSensitiveDataCheck extends AbstractMethodDete
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatchers.or(
       // setters
-      MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf(ClassName.SERVLET_COOKIE)).name(SET_VALUE_METHOD).parameters(JAVA_LANG_STRING),
-      MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf(ClassName.NET_HTTP_COOKIE)).name(SET_VALUE_METHOD).parameters(JAVA_LANG_STRING),
-      MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf(ClassName.SHIRO_COOKIE)).name(SET_VALUE_METHOD).parameters(JAVA_LANG_STRING),
+      MethodMatcher.create().ofType(TypeCriteria.subtypeOf(ClassName.SERVLET_COOKIE)).name(SET_VALUE_METHOD).withParameters(JAVA_LANG_STRING),
+      MethodMatcher.create().ofType(TypeCriteria.subtypeOf(ClassName.NET_HTTP_COOKIE)).name(SET_VALUE_METHOD).withParameters(JAVA_LANG_STRING),
+      MethodMatcher.create().ofType(TypeCriteria.subtypeOf(ClassName.SHIRO_COOKIE)).name(SET_VALUE_METHOD).withParameters(JAVA_LANG_STRING),
       // constructors
-      MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf(ClassName.SERVLET_COOKIE)).name(CONSTRUCTOR).withAnyParameters(),
-      MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf(ClassName.NET_HTTP_COOKIE)).name(CONSTRUCTOR).withAnyParameters(),
-      MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf(ClassName.SHIRO_COOKIE)).name(CONSTRUCTOR).withAnyParameters(),
+      MethodMatcher.create().ofType(TypeCriteria.subtypeOf(ClassName.SERVLET_COOKIE)).name(CONSTRUCTOR).withAnyParameters(),
+      MethodMatcher.create().ofType(TypeCriteria.subtypeOf(ClassName.NET_HTTP_COOKIE)).name(CONSTRUCTOR).withAnyParameters(),
+      MethodMatcher.create().ofType(TypeCriteria.subtypeOf(ClassName.SHIRO_COOKIE)).name(CONSTRUCTOR).withAnyParameters(),
       // javax.ws.rs.core.NewCookie is a subtype of JAX_RS_COOKIE
-      MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf(ClassName.JAX_RS_COOKIE)).name(CONSTRUCTOR).withAnyParameters(),
-      MethodMatcher.create().typeDefinition(ClassName.PLAY_COOKIE).name(BUILDER_METHOD).parameters(JAVA_LANG_STRING, JAVA_LANG_STRING),
-      MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf(ClassName.PLAY_COOKIE_BUILDER)).name(WITH_VALUE_METHOD).parameters(JAVA_LANG_STRING));
+      MethodMatcher.create().ofType(TypeCriteria.subtypeOf(ClassName.JAX_RS_COOKIE)).name(CONSTRUCTOR).withAnyParameters(),
+      MethodMatcher.create().ofType(ClassName.PLAY_COOKIE).name(BUILDER_METHOD).withParameters(JAVA_LANG_STRING, JAVA_LANG_STRING),
+      MethodMatcher.create().ofType(TypeCriteria.subtypeOf(ClassName.PLAY_COOKIE_BUILDER)).name(WITH_VALUE_METHOD).withParameters(JAVA_LANG_STRING));
   }
 
   @Override

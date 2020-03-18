@@ -47,8 +47,8 @@ public class SQLInjectionCheck extends IssuableSubscriptionVisitor {
   private static final String SPRING_JDBC_OPERATIONS = "org.springframework.jdbc.core.JdbcOperations";
 
   private static final MethodMatchers SQL_INJECTION_SUSPECTS = MethodMatchers.or(
-    MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf("org.hibernate.Session")).name("createQuery").withAnyParameters(),
-    MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf("org.hibernate.Session")).name("createSQLQuery").withAnyParameters(),
+    MethodMatcher.create().ofType(TypeCriteria.subtypeOf("org.hibernate.Session")).name("createQuery").withAnyParameters(),
+    MethodMatcher.create().ofType(TypeCriteria.subtypeOf("org.hibernate.Session")).name("createSQLQuery").withAnyParameters(),
 
     matcherBuilder(JAVA_SQL_STATEMENT).name("executeQuery").withAnyParameters(),
     matcherBuilder(JAVA_SQL_STATEMENT).name("execute").withAnyParameters(),
@@ -60,8 +60,8 @@ public class SQLInjectionCheck extends IssuableSubscriptionVisitor {
     matcherBuilder(JAVA_SQL_CONNECTION).name("prepareCall").withAnyParameters(),
     matcherBuilder(JAVA_SQL_CONNECTION).name("nativeSQL").withAnyParameters(),
 
-    MethodMatcher.create().typeDefinition("javax.persistence.EntityManager").name("createNativeQuery").withAnyParameters(),
-    MethodMatcher.create().typeDefinition("javax.persistence.EntityManager").name("createQuery").withAnyParameters(),
+    MethodMatcher.create().ofType("javax.persistence.EntityManager").name("createNativeQuery").withAnyParameters(),
+    MethodMatcher.create().ofType("javax.persistence.EntityManager").name("createQuery").withAnyParameters(),
 
     matcherBuilder(SPRING_JDBC_OPERATIONS).name("batchUpdate").withAnyParameters(),
     matcherBuilder(SPRING_JDBC_OPERATIONS).name("execute").withAnyParameters(),
@@ -73,8 +73,8 @@ public class SQLInjectionCheck extends IssuableSubscriptionVisitor {
     matcherBuilder(SPRING_JDBC_OPERATIONS).name("queryForInt").withAnyParameters(),
     matcherBuilder(SPRING_JDBC_OPERATIONS).name("queryForLong").withAnyParameters(),
     matcherBuilder(SPRING_JDBC_OPERATIONS).name("update").withAnyParameters(),
-    MethodMatcher.create().typeDefinition("org.springframework.jdbc.core.PreparedStatementCreatorFactory").name("<init>").withAnyParameters(),
-    MethodMatcher.create().typeDefinition("org.springframework.jdbc.core.PreparedStatementCreatorFactory").name("newPreparedStatementCreator").withAnyParameters(),
+    MethodMatcher.create().ofType("org.springframework.jdbc.core.PreparedStatementCreatorFactory").name("<init>").withAnyParameters(),
+    MethodMatcher.create().ofType("org.springframework.jdbc.core.PreparedStatementCreatorFactory").name("newPreparedStatementCreator").withAnyParameters(),
 
     matcherBuilder("javax.jdo.PersistenceManager").name("newQuery").withAnyParameters(),
     matcherBuilder("javax.jdo.Query").name("setFilter").withAnyParameters(),
@@ -82,7 +82,7 @@ public class SQLInjectionCheck extends IssuableSubscriptionVisitor {
   );
 
   private static MethodMatcher matcherBuilder(String typeFQN) {
-    return MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf(typeFQN));
+    return MethodMatcher.create().ofType(TypeCriteria.subtypeOf(typeFQN));
   }
 
   @Override

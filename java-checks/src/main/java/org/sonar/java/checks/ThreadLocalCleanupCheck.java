@@ -37,9 +37,9 @@ public class ThreadLocalCleanupCheck extends IssuableSubscriptionVisitor {
 
   private static final String THREAD_LOCAL = "java.lang.ThreadLocal";
   private static final MethodMatcher THREADLOCAL_SET = MethodMatcher.create()
-    .typeDefinition(THREAD_LOCAL).name("set").addParameter(TypeCriteria.anyType());
+    .ofType(THREAD_LOCAL).name("set").addParameter(TypeCriteria.anyType());
   private static final MethodMatcher THREADLOCAL_REMOVE = MethodMatcher.create()
-    .typeDefinition(THREAD_LOCAL).name("remove").withoutParameter();
+    .ofType(THREAD_LOCAL).name("remove").withoutParameters();
 
   @Override
   public List<Tree.Kind> nodesToVisit() {

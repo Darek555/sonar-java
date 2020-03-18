@@ -42,8 +42,8 @@ import org.sonar.plugins.java.api.tree.Tree;
 public class CollectInsteadOfForeachCheck extends AbstractMethodDetection {
 
   private static final TypeCriteria SUBTYPE_OF_LIST = TypeCriteria.subtypeOf("java.util.List");
-  private static final MethodMatcher FOREACH = MethodMatcher.create().typeDefinition("java.util.stream.Stream").name("forEach").withAnyParameters();
-  private static final MethodMatcher ADD = MethodMatcher.create().typeDefinition(SUBTYPE_OF_LIST).name("add").withAnyParameters();
+  private static final MethodMatcher FOREACH = MethodMatcher.create().ofType("java.util.stream.Stream").name("forEach").withAnyParameters();
+  private static final MethodMatcher ADD = MethodMatcher.create().ofType(SUBTYPE_OF_LIST).name("add").withAnyParameters();
 
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {

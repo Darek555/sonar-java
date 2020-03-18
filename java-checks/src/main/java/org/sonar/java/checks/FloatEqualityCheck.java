@@ -36,8 +36,8 @@ import org.sonar.plugins.java.api.tree.Tree;
 public class FloatEqualityCheck extends IssuableSubscriptionVisitor {
 
   private static final MethodMatchers EQUALS_MATCHER = MethodMatchers.or(
-    MethodMatcher.create().typeDefinition("java.lang.Double").name("equals").parameters("java.lang.Object"),
-    MethodMatcher.create().typeDefinition("java.lang.Float").name("equals").parameters("java.lang.Object")
+    MethodMatcher.create().ofType("java.lang.Double").name("equals").withParameters("java.lang.Object"),
+    MethodMatcher.create().ofType("java.lang.Float").name("equals").withParameters("java.lang.Object")
   );
 
   @Override

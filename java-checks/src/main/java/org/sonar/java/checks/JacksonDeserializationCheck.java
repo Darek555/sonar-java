@@ -42,13 +42,13 @@ public class JacksonDeserializationCheck extends IssuableSubscriptionVisitor {
 
   private static final MethodMatchers ENABLE_DEFAULT_TYPING = MethodMatchers.or(
       MethodMatcher.create()
-          .typeDefinition("com.fasterxml.jackson.databind.ObjectMapper")
+          .ofType("com.fasterxml.jackson.databind.ObjectMapper")
           .name("enableDefaultTyping")
-          .withoutParameter(),
+          .withoutParameters(),
       MethodMatcher.create()
-          .typeDefinition("org.codehaus.jackson.map.ObjectMapper")
+          .ofType("org.codehaus.jackson.map.ObjectMapper")
           .name("enableDefaultTyping")
-          .withoutParameter()
+          .withoutParameters()
       );
   private static final String MESSAGE = "Make sure using this Jackson deserialization configuration is safe here.";
 

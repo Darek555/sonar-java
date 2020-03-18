@@ -64,7 +64,7 @@ public class MethodMatcherTest {
   @Test
   public void should_fail_if_addParameter_is_called_after_withoutParameter() throws Exception {
     MethodMatcher matcher = MethodMatcher.create().name("name")
-      .withoutParameter();
+      .withoutParameters();
     exception.expect(IllegalStateException.class);
     matcher.addParameter("int");
   }
@@ -79,42 +79,42 @@ public class MethodMatcherTest {
   @Test
   public void should_fail_if_withAnyParameters_is_called_after_withoutParameter() throws Exception {
     MethodMatcher matcher = MethodMatcher.create().name("name")
-        .withoutParameter();
+        .withoutParameters();
     exception.expect(IllegalStateException.class);
     matcher.withAnyParameters();
   }
 
   @Test
   public void should_fail_if_withAnyParameters_is_called_after_empty_parameters() throws Exception {
-    MethodMatcher matcher = MethodMatcher.create().name("name").parameters(new String[0]);
+    MethodMatcher matcher = MethodMatcher.create().name("name").withParameters(new String[0]);
     exception.expect(IllegalStateException.class);
     matcher.withAnyParameters();
   }
 
   @Test
   public void should_fail_if_withAnyParameters_is_called_after_parameters() throws Exception {
-    MethodMatcher matcher = MethodMatcher.create().name("name").parameters("int", "int");
+    MethodMatcher matcher = MethodMatcher.create().name("name").withParameters("int", "int");
     exception.expect(IllegalStateException.class);
     matcher.withAnyParameters();
   }
 
   @Test
   public void should_fail_if_withoutParameter_is_called_after_parameters() throws Exception {
-    MethodMatcher matcher = MethodMatcher.create().name("name").parameters("int", "int");
+    MethodMatcher matcher = MethodMatcher.create().name("name").withParameters("int", "int");
     exception.expect(IllegalStateException.class);
-    matcher.withoutParameter();
+    matcher.withoutParameters();
   }
 
   @Test
   public void should_fail_if_withAnyParameters_is_called_after_empty_parameters_TypeCriteria() throws Exception {
-    MethodMatcher matcher = MethodMatcher.create().name("name").parameters(new TypeCriteria[0]);
+    MethodMatcher matcher = MethodMatcher.create().name("name").withParameters(new TypeCriteria[0]);
     exception.expect(IllegalStateException.class);
     matcher.withAnyParameters();
   }
 
   @Test
   public void should_fail_if_withAnyParameters_is_called_after_parameters_TypeCriteria() throws Exception {
-    MethodMatcher matcher = MethodMatcher.create().name("name").parameters(TypeCriteria.is("int"));
+    MethodMatcher matcher = MethodMatcher.create().name("name").withParameters(TypeCriteria.is("int"));
     exception.expect(IllegalStateException.class);
     matcher.withAnyParameters();
   }
@@ -135,16 +135,16 @@ public class MethodMatcherTest {
 
   @Test
   public void should_fail_if_typeDefinition_called_twice() throws Exception {
-    MethodMatcher matcher = MethodMatcher.create().typeDefinition("int");
+    MethodMatcher matcher = MethodMatcher.create().ofType("int");
     exception.expect(IllegalStateException.class);
-    matcher.typeDefinition("long");
+    matcher.ofType("long");
   }
 
   @Test
   public void should_fail_if_typeDefinition_criteria_called_twice() throws Exception {
-    MethodMatcher matcher = MethodMatcher.create().typeDefinition(TypeCriteria.is("int"));
+    MethodMatcher matcher = MethodMatcher.create().ofType(TypeCriteria.is("int"));
     exception.expect(IllegalStateException.class);
-    matcher.typeDefinition(TypeCriteria.anyType());
+    matcher.ofType(TypeCriteria.anyType());
   }
 
   @Test
@@ -168,7 +168,7 @@ public class MethodMatcherTest {
 
   @Test
   public void should_fail_if_name_is_not_defined() throws Exception {
-    MethodMatcher matcher = MethodMatcher.create().withoutParameter();
+    MethodMatcher matcher = MethodMatcher.create().withoutParameters();
     MethodTree tree = methodTreeMock("toString", mock(Symbol.TypeSymbol.class));
     exception.expect(IllegalStateException.class);
     matcher.matches(tree);
@@ -176,7 +176,7 @@ public class MethodMatcherTest {
 
   @Test
   public void does_not_match_without_enclosingClass() throws Exception {
-    MethodMatcher matcher = MethodMatcher.create().name("toString").withoutParameter();
+    MethodMatcher matcher = MethodMatcher.create().name("toString").withoutParameters();
     Symbol.MethodSymbol symbol = mock(Symbol.MethodSymbol.class);
     when(symbol.enclosingClass()).thenReturn(null);
 
@@ -188,7 +188,7 @@ public class MethodMatcherTest {
 
   @Test
   public void does_not_match_without_callSite_enclosingClass() throws Exception {
-    MethodMatcher matcher = MethodMatcher.create().name(NameCriteria.any()).withAnyParameters().typeDefinition(TypeCriteria.anyType());
+    MethodMatcher matcher = MethodMatcher.create().name(NameCriteria.any()).withAnyParameters().ofType(TypeCriteria.anyType());
     Symbol symbol = mock(Symbol.class);
     when(symbol.enclosingClass()).thenReturn(null);
 
@@ -203,12 +203,12 @@ public class MethodMatcherTest {
 
   @Test
   public void detected() {
-    MethodMatcher objectToString = MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf("java.lang.Object")).name("toString").withoutParameter();
-    MethodMatcher objectToStringWithIntParam = MethodMatcher.create().name("toString").parameters("int");
-    MethodMatcher objectToStringWithStringParam = MethodMatcher.create().typeDefinition(TypeCriteria.anyType()).name(NameCriteria.is("toString")).parameters("java.lang.String");
-    MethodMatcher objectToStringWithAnyParam = MethodMatcher.create().typeDefinition(TypeCriteria.is("Test")).name("toString").withAnyParameters();
-    MethodMatcher integerToString = MethodMatcher.create().typeDefinition("java.lang.Integer").name("toString").withoutParameter();
-    MethodMatcher foo = MethodMatcher.create().typeDefinition(TypeCriteria.anyType()).name("foo").withoutParameter();
+    MethodMatcher objectToString = MethodMatcher.create().ofType(TypeCriteria.subtypeOf("java.lang.Object")).name("toString").withoutParameters();
+    MethodMatcher objectToStringWithIntParam = MethodMatcher.create().name("toString").withParameters("int");
+    MethodMatcher objectToStringWithStringParam = MethodMatcher.create().ofType(TypeCriteria.anyType()).name(NameCriteria.is("toString")).withParameters("java.lang.String");
+    MethodMatcher objectToStringWithAnyParam = MethodMatcher.create().ofType(TypeCriteria.is("Test")).name("toString").withAnyParameters();
+    MethodMatcher integerToString = MethodMatcher.create().ofType("java.lang.Integer").name("toString").withoutParameters();
+    MethodMatcher foo = MethodMatcher.create().ofType(TypeCriteria.anyType()).name("foo").withoutParameters();
 
     Map<MethodMatcher, List<Integer>> matches = new HashMap<>();
     matches.put(objectToString, new ArrayList<>());
@@ -232,7 +232,7 @@ public class MethodMatcherTest {
 
   @Test
   public void test_copy() throws Exception {
-    MethodMatcher vanilla = MethodMatcher.create().typeDefinition("Test").name("f").withoutParameter();
+    MethodMatcher vanilla = MethodMatcher.create().ofType("Test").name("f").withoutParameters();
     MethodMatcher copyInt = vanilla.copy().addParameter("int");
     MethodMatcher copyString = vanilla.copy().addParameter("java.lang.String");
     Map<MethodMatcher, List<Integer>> matches = new HashMap<>();

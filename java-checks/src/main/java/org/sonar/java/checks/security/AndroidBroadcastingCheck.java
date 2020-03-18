@@ -44,7 +44,7 @@ public class AndroidBroadcastingCheck extends AbstractMethodDetection {
     SEND_STICKY_BROADCAST_AS_USER, SEND_STICKY_ORDERED_BROADCAST, SEND_STICKY_ORDERED_BROADCAST_AS_USER);
 
   private static MethodMatcher androidContext() {
-    return MethodMatcher.create().typeDefinition("android.content.Context");
+    return MethodMatcher.create().ofType("android.content.Context");
   }
 
   @Override

@@ -41,9 +41,9 @@ public class IteratorNextExceptionCheck extends IssuableSubscriptionVisitor {
 
   private static final MethodMatcher NEXT_INVOCATION_MATCHER =
     MethodMatcher.create()
-      .typeDefinition(TypeCriteria.subtypeOf("java.util.Iterator"))
+      .ofType(TypeCriteria.subtypeOf("java.util.Iterator"))
       .name("next")
-      .withoutParameter();
+      .withoutParameters();
 
   @Override
   public List<Kind> nodesToVisit() {

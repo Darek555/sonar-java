@@ -35,17 +35,17 @@ import org.sonar.plugins.java.api.tree.Tree;
 public class PasswordEncoderCheck extends IssuableSubscriptionVisitor {
 
   private static final MethodMatcher JDBC_AUTHENTICATION = MethodMatcher.create()
-    .typeDefinition(TypeCriteria.subtypeOf("org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder"))
+    .ofType(TypeCriteria.subtypeOf("org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder"))
     .name("jdbcAuthentication")
-    .withoutParameter();
+    .withoutParameters();
 
   private static final MethodMatcher USER_DETAIL_SERVICE = MethodMatcher.create()
-    .typeDefinition(TypeCriteria.subtypeOf("org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder"))
+    .ofType(TypeCriteria.subtypeOf("org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder"))
     .name("userDetailsService")
     .withAnyParameters();
 
   private static final MethodMatcher PASSWORD_ENCODER_SETTER = MethodMatcher.create()
-    .typeDefinition(TypeCriteria.subtypeOf("org.springframework.security.config.annotation.authentication.configurers.userdetails.AbstractDaoAuthenticationConfigurer"))
+    .ofType(TypeCriteria.subtypeOf("org.springframework.security.config.annotation.authentication.configurers.userdetails.AbstractDaoAuthenticationConfigurer"))
     .name("passwordEncoder")
     .withAnyParameters();
 
@@ -82,7 +82,7 @@ public class PasswordEncoderCheck extends IssuableSubscriptionVisitor {
   }
 
   private static MethodMatcher constructorMatcher(String fullyQualifiedName) {
-    return MethodMatcher.create().typeDefinition(fullyQualifiedName).name("<init>");
+    return MethodMatcher.create().ofType(fullyQualifiedName).name("<init>");
   }
 
   static class MethodInvocationVisitor extends BaseTreeVisitor {

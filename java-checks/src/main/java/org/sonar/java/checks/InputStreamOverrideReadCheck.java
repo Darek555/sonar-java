@@ -36,8 +36,8 @@ import org.sonar.plugins.java.api.tree.Tree;
 @Rule(key = "S4929")
 public class InputStreamOverrideReadCheck extends IssuableSubscriptionVisitor {
 
-  private static final MethodMatcher READ_BYTES_INT_INT = MethodMatcher.create().typeDefinition(TypeCriteria.anyType()).name("read").parameters("byte[]", "int", "int");
-  private static final MethodMatcher READ_INT = MethodMatcher.create().typeDefinition(TypeCriteria.anyType()).name("read").parameters("int");
+  private static final MethodMatcher READ_BYTES_INT_INT = MethodMatcher.create().ofType(TypeCriteria.anyType()).name("read").withParameters("byte[]", "int", "int");
+  private static final MethodMatcher READ_INT = MethodMatcher.create().ofType(TypeCriteria.anyType()).name("read").withParameters("int");
 
   @Override
   public List<Tree.Kind> nodesToVisit() {

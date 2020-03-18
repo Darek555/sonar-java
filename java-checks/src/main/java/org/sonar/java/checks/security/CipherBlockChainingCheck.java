@@ -43,13 +43,13 @@ import static org.sonar.java.checks.helpers.ReassignmentFinder.getReassignments;
 public class CipherBlockChainingCheck extends AbstractMethodDetection {
 
   private static final MethodMatcher SECURE_RANDOM_GENERATE_SEED = MethodMatcher.create()
-    .typeDefinition("java.security.SecureRandom")
+    .ofType("java.security.SecureRandom")
     .name("generateSeed")
     .withAnyParameters();
 
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
-    return MethodMatcher.create().typeDefinition("javax.crypto.spec.IvParameterSpec").name("<init>").withAnyParameters();
+    return MethodMatcher.create().ofType("javax.crypto.spec.IvParameterSpec").name("<init>").withAnyParameters();
   }
 
   @Override
@@ -99,7 +99,7 @@ public class CipherBlockChainingCheck extends AbstractMethodDetection {
     }
 
     private static final MethodMatcher SECURE_RANDOM_NEXT_BYTES = MethodMatcher.create()
-      .typeDefinition("java.security.SecureRandom")
+      .ofType("java.security.SecureRandom")
       .name("nextBytes")
       .withAnyParameters();
 

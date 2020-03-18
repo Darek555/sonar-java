@@ -35,7 +35,7 @@ public class HttpRefererCheck extends AbstractMethodDetection {
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatcher.create()
-      .typeDefinition("javax.servlet.http.HttpServletRequest")
+      .ofType("javax.servlet.http.HttpServletRequest")
       .name("getHeader")
       .addParameter("java.lang.String");
   }

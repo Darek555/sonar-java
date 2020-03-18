@@ -54,7 +54,7 @@ public class CollectionMethodsWithLinearComplexityCheck extends IssuableSubscrip
   private static final String CONCURRENT_LINKED_DEQUE = "java.util.concurrent.ConcurrentLinkedDeque";
 
   private static MethodMatcher collectionMethodMatcher() {
-    return MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf("java.util.Collection"));
+    return MethodMatcher.create().ofType(TypeCriteria.subtypeOf("java.util.Collection"));
   }
 
   private static final Map<MethodMatcher, Set<String>> matcherActualTypeMap;
@@ -64,7 +64,7 @@ public class CollectionMethodsWithLinearComplexityCheck extends IssuableSubscrip
     MethodMatcher collectionContains = collectionMethodMatcher().name("contains").addParameter("java.lang.Object");
     builder.put(collectionContains, ImmutableSet.of(ARRAY_LIST, LINKED_LIST, COPY_ON_WRITE_ARRAY_LIST, COPY_ON_WRITE_ARRAY_SET, CONCURRENT_LINKED_QUEUE, CONCURRENT_LINKED_DEQUE));
 
-    MethodMatcher collectionSize = collectionMethodMatcher().name("size").withoutParameter();
+    MethodMatcher collectionSize = collectionMethodMatcher().name("size").withoutParameters();
     builder.put(collectionSize, ImmutableSet.of(CONCURRENT_LINKED_QUEUE, CONCURRENT_LINKED_DEQUE));
 
     MethodMatcher collectionAdd = collectionMethodMatcher().name("add").addParameter(TypeCriteria.anyType());
@@ -73,7 +73,7 @@ public class CollectionMethodsWithLinearComplexityCheck extends IssuableSubscrip
     MethodMatcher collectionRemove = collectionMethodMatcher().name("remove").addParameter("java.lang.Object");
     builder.put(collectionRemove, ImmutableSet.of(ARRAY_LIST, COPY_ON_WRITE_ARRAY_SET, COPY_ON_WRITE_ARRAY_LIST));
 
-    MethodMatcher listGet = MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf("java.util.List")).name("get").addParameter("int");
+    MethodMatcher listGet = MethodMatcher.create().ofType(TypeCriteria.subtypeOf("java.util.List")).name("get").addParameter("int");
     builder.put(listGet, Collections.singleton(LINKED_LIST));
     matcherActualTypeMap = builder.build();
   }

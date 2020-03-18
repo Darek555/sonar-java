@@ -36,10 +36,10 @@ import org.sonar.plugins.java.api.tree.Tree;
 public class StandardInputReadCheck extends IssuableSubscriptionVisitor {
 
   private static final MethodMatchers METHOD_MATCHERS = MethodMatchers.or(
-    MethodMatcher.create().typeDefinition("java.lang.System").name("setIn").withAnyParameters(),
-    MethodMatcher.create().typeDefinition("java.io.Console").name(NameCriteria.startsWith("read")).withAnyParameters());
+    MethodMatcher.create().ofType("java.lang.System").name("setIn").withAnyParameters(),
+    MethodMatcher.create().ofType("java.io.Console").name(NameCriteria.startsWith("read")).withAnyParameters());
 
-  private static final MethodMatcher CLOSE_METHOD = MethodMatcher.create().name("close").withoutParameter();
+  private static final MethodMatcher CLOSE_METHOD = MethodMatcher.create().name("close").withoutParameters();
 
   @Override
   public List<Tree.Kind> nodesToVisit() {

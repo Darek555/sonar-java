@@ -32,9 +32,9 @@ public class GetRequestedSessionIdCheck extends AbstractMethodDetection {
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatcher.create()
-      .typeDefinition("javax.servlet.http.HttpServletRequest")
+      .ofType("javax.servlet.http.HttpServletRequest")
       .name("getRequestedSessionId")
-      .withoutParameter();
+      .withoutParameters();
   }
 
   @Override

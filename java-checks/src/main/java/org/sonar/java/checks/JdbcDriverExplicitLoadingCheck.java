@@ -53,7 +53,7 @@ public class JdbcDriverExplicitLoadingCheck extends AbstractMethodDetection impl
 
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
-    return MethodMatcher.create().typeDefinition("java.lang.Class").name("forName").parameters("java.lang.String");
+    return MethodMatcher.create().ofType("java.lang.Class").name("forName").withParameters("java.lang.String");
   }
 
   @Override

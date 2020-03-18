@@ -33,8 +33,8 @@ public class CookieDomainCheck extends AbstractMethodDetection {
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatchers.or(
-      MethodMatcher.create().typeDefinition("javax.servlet.http.Cookie").name("setDomain").addParameter("java.lang.String"),
-      MethodMatcher.create().typeDefinition("java.net.HttpCookie").name("setDomain").addParameter("java.lang.String")
+      MethodMatcher.create().ofType("javax.servlet.http.Cookie").name("setDomain").addParameter("java.lang.String"),
+      MethodMatcher.create().ofType("java.net.HttpCookie").name("setDomain").addParameter("java.lang.String")
     );
   }
 

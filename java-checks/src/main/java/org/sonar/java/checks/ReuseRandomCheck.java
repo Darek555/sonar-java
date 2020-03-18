@@ -37,7 +37,7 @@ public class ReuseRandomCheck extends AbstractMethodDetection {
 
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
-    return MethodMatcher.create().typeDefinition("java.util.Random").name("<init>").withoutParameter();
+    return MethodMatcher.create().ofType("java.util.Random").name("<init>").withoutParameters();
   }
 
   @Override

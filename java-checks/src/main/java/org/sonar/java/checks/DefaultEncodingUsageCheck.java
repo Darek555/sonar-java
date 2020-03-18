@@ -73,26 +73,26 @@ public class DefaultEncodingUsageCheck extends AbstractMethodDetection {
   private static final String COMMONS_FILEUTILS = "org.apache.commons.io.FileUtils";
 
   private static final List<MethodMatcher> COMMONS_IO = Arrays.asList(
-    method(COMMONS_IOUTILS, "copy").parameters(JAVA_IO_INPUTSTREAM, JAVA_IO_WRITER),
-    method(COMMONS_IOUTILS, "copy").parameters(JAVA_IO_READER, JAVA_IO_OUTPUTSTREAM),
-    method(COMMONS_IOUTILS, "readLines").parameters(JAVA_IO_INPUTSTREAM),
-    method(COMMONS_IOUTILS, "toByteArray").parameters(JAVA_IO_READER),
-    method(COMMONS_IOUTILS, "toCharArray").parameters(JAVA_IO_INPUTSTREAM),
-    method(COMMONS_IOUTILS, "toInputStream").parameters(JAVA_LANG_CHARSEQUENCE),
-    method(COMMONS_IOUTILS, "toInputStream").parameters(JAVA_LANG_STRING),
-    method(COMMONS_IOUTILS, "toString").parameters(BYTE_ARRAY),
-    method(COMMONS_IOUTILS, "toString").parameters("java.net.URI"),
-    method(COMMONS_IOUTILS, "toString").parameters("java.net.URL"),
-    method(COMMONS_IOUTILS, "write").parameters("char[]", JAVA_IO_OUTPUTSTREAM),
+    method(COMMONS_IOUTILS, "copy").withParameters(JAVA_IO_INPUTSTREAM, JAVA_IO_WRITER),
+    method(COMMONS_IOUTILS, "copy").withParameters(JAVA_IO_READER, JAVA_IO_OUTPUTSTREAM),
+    method(COMMONS_IOUTILS, "readLines").withParameters(JAVA_IO_INPUTSTREAM),
+    method(COMMONS_IOUTILS, "toByteArray").withParameters(JAVA_IO_READER),
+    method(COMMONS_IOUTILS, "toCharArray").withParameters(JAVA_IO_INPUTSTREAM),
+    method(COMMONS_IOUTILS, "toInputStream").withParameters(JAVA_LANG_CHARSEQUENCE),
+    method(COMMONS_IOUTILS, "toInputStream").withParameters(JAVA_LANG_STRING),
+    method(COMMONS_IOUTILS, "toString").withParameters(BYTE_ARRAY),
+    method(COMMONS_IOUTILS, "toString").withParameters("java.net.URI"),
+    method(COMMONS_IOUTILS, "toString").withParameters("java.net.URL"),
+    method(COMMONS_IOUTILS, "write").withParameters("char[]", JAVA_IO_OUTPUTSTREAM),
     // TypeCriteria.subtypeOf is used to cover also signatures with String and StringBuffer
-    method(COMMONS_IOUTILS, "write").parameters(TypeCriteria.subtypeOf(JAVA_LANG_CHARSEQUENCE), TypeCriteria.is(JAVA_IO_OUTPUTSTREAM)),
-    method(COMMONS_IOUTILS, "writeLines").parameters("java.util.Collection", JAVA_LANG_STRING, JAVA_IO_OUTPUTSTREAM),
+    method(COMMONS_IOUTILS, "write").withParameters(TypeCriteria.subtypeOf(JAVA_LANG_CHARSEQUENCE), TypeCriteria.is(JAVA_IO_OUTPUTSTREAM)),
+    method(COMMONS_IOUTILS, "writeLines").withParameters("java.util.Collection", JAVA_LANG_STRING, JAVA_IO_OUTPUTSTREAM),
 
-    method(COMMONS_FILEUTILS, "readFileToString").parameters(JAVA_IO_FILE),
-    method(COMMONS_FILEUTILS, "readLines").parameters(JAVA_IO_FILE),
-    method(COMMONS_FILEUTILS, "write").parameters(JAVA_IO_FILE, JAVA_LANG_CHARSEQUENCE),
-    method(COMMONS_FILEUTILS, "write").parameters(JAVA_IO_FILE, JAVA_LANG_CHARSEQUENCE, BOOLEAN),
-    method(COMMONS_FILEUTILS, "writeStringToFile").parameters(JAVA_IO_FILE, JAVA_LANG_STRING)
+    method(COMMONS_FILEUTILS, "readFileToString").withParameters(JAVA_IO_FILE),
+    method(COMMONS_FILEUTILS, "readLines").withParameters(JAVA_IO_FILE),
+    method(COMMONS_FILEUTILS, "write").withParameters(JAVA_IO_FILE, JAVA_LANG_CHARSEQUENCE),
+    method(COMMONS_FILEUTILS, "write").withParameters(JAVA_IO_FILE, JAVA_LANG_CHARSEQUENCE, BOOLEAN),
+    method(COMMONS_FILEUTILS, "writeStringToFile").withParameters(JAVA_IO_FILE, JAVA_LANG_STRING)
   );
 
   private static final List<MethodMatcher> COMMONS_IO_WITH_CHARSET = COMMONS_IO.stream()
@@ -102,8 +102,8 @@ public class DefaultEncodingUsageCheck extends AbstractMethodDetection {
   private static final MethodMatchers COMMONS_IO_CHARSET_MATCHERS = MethodMatchers.or(COMMONS_IO_WITH_CHARSET);
 
   private static final List<MethodMatcher> FILEUTILS_WRITE_WITH_CHARSET = Arrays.asList(
-    method(COMMONS_FILEUTILS, "write").parameters(JAVA_IO_FILE, JAVA_LANG_CHARSEQUENCE, JAVA_LANG_STRING, BOOLEAN),
-    method(COMMONS_FILEUTILS, "write").parameters(JAVA_IO_FILE, JAVA_LANG_CHARSEQUENCE, JAVA_NIO_CHARSET, BOOLEAN)
+    method(COMMONS_FILEUTILS, "write").withParameters(JAVA_IO_FILE, JAVA_LANG_CHARSEQUENCE, JAVA_LANG_STRING, BOOLEAN),
+    method(COMMONS_FILEUTILS, "write").withParameters(JAVA_IO_FILE, JAVA_LANG_CHARSEQUENCE, JAVA_NIO_CHARSET, BOOLEAN)
   );
 
   private static final MethodMatchers FILEUTILS_WRITE_WITH_CHARSET_MATCHERS =
@@ -151,35 +151,35 @@ public class DefaultEncodingUsageCheck extends AbstractMethodDetection {
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
     ArrayList<MethodMatcher> matchers = new ArrayList<>(Arrays.asList(
-      method(JAVA_LANG_STRING, "getBytes").withoutParameter(),
-      method(JAVA_LANG_STRING, "getBytes").parameters(INT, INT, BYTE_ARRAY, INT),
-      constructor(JAVA_LANG_STRING).parameters(BYTE_ARRAY),
-      constructor(JAVA_LANG_STRING).parameters(BYTE_ARRAY, INT, INT),
-      method(JAVA_IO_BYTEARRAYOUTPUTSTREAM, "toString").withoutParameter(),
-      constructor(JAVA_IO_FILEREADER).parameters("java.io.FileDescriptor"),
-      constructor(JAVA_IO_FILEREADER).parameters(JAVA_IO_FILE),
-      constructor(JAVA_IO_FILEREADER).parameters(JAVA_LANG_STRING),
-      constructor(JAVA_IO_FILEWRITER).parameters("java.io.FileDescriptor"),
-      constructor(JAVA_IO_FILEWRITER).parameters(JAVA_IO_FILE),
-      constructor(JAVA_IO_FILEWRITER).parameters(JAVA_IO_FILE, BOOLEAN),
-      constructor(JAVA_IO_FILEWRITER).parameters(JAVA_LANG_STRING),
-      constructor(JAVA_IO_FILEWRITER).parameters(JAVA_LANG_STRING, BOOLEAN),
-      constructor(JAVA_IO_INPUTSTREAMREADER).parameters(JAVA_IO_INPUTSTREAM),
-      constructor(JAVA_IO_OUTPUTSTREAMWRITER).parameters(JAVA_IO_OUTPUTSTREAM),
-      constructor(JAVA_IO_PRINTSTREAM).parameters(JAVA_IO_FILE),
-      constructor(JAVA_IO_PRINTSTREAM).parameters(JAVA_IO_OUTPUTSTREAM),
-      constructor(JAVA_IO_PRINTSTREAM).parameters(JAVA_IO_OUTPUTSTREAM, BOOLEAN),
-      constructor(JAVA_IO_PRINTSTREAM).parameters(JAVA_LANG_STRING),
-      constructor(JAVA_IO_PRINTWRITER).parameters(JAVA_IO_FILE),
-      constructor(JAVA_IO_PRINTWRITER).parameters(JAVA_IO_OUTPUTSTREAM),
-      constructor(JAVA_IO_PRINTWRITER).parameters(JAVA_IO_OUTPUTSTREAM, BOOLEAN),
-      constructor(JAVA_IO_PRINTWRITER).parameters(JAVA_LANG_STRING),
-      constructor(JAVA_UTIL_FORMATTER).parameters(JAVA_LANG_STRING),
-      constructor(JAVA_UTIL_FORMATTER).parameters(JAVA_IO_FILE),
-      constructor(JAVA_UTIL_FORMATTER).parameters(JAVA_IO_OUTPUTSTREAM),
-      constructor(JAVA_UTIL_SCANNER).parameters(JAVA_IO_FILE),
-      constructor(JAVA_UTIL_SCANNER).parameters(JAVA_NIO_FILE_PATH),
-      constructor(JAVA_UTIL_SCANNER).parameters(JAVA_IO_INPUTSTREAM)
+      method(JAVA_LANG_STRING, "getBytes").withoutParameters(),
+      method(JAVA_LANG_STRING, "getBytes").withParameters(INT, INT, BYTE_ARRAY, INT),
+      constructor(JAVA_LANG_STRING).withParameters(BYTE_ARRAY),
+      constructor(JAVA_LANG_STRING).withParameters(BYTE_ARRAY, INT, INT),
+      method(JAVA_IO_BYTEARRAYOUTPUTSTREAM, "toString").withoutParameters(),
+      constructor(JAVA_IO_FILEREADER).withParameters("java.io.FileDescriptor"),
+      constructor(JAVA_IO_FILEREADER).withParameters(JAVA_IO_FILE),
+      constructor(JAVA_IO_FILEREADER).withParameters(JAVA_LANG_STRING),
+      constructor(JAVA_IO_FILEWRITER).withParameters("java.io.FileDescriptor"),
+      constructor(JAVA_IO_FILEWRITER).withParameters(JAVA_IO_FILE),
+      constructor(JAVA_IO_FILEWRITER).withParameters(JAVA_IO_FILE, BOOLEAN),
+      constructor(JAVA_IO_FILEWRITER).withParameters(JAVA_LANG_STRING),
+      constructor(JAVA_IO_FILEWRITER).withParameters(JAVA_LANG_STRING, BOOLEAN),
+      constructor(JAVA_IO_INPUTSTREAMREADER).withParameters(JAVA_IO_INPUTSTREAM),
+      constructor(JAVA_IO_OUTPUTSTREAMWRITER).withParameters(JAVA_IO_OUTPUTSTREAM),
+      constructor(JAVA_IO_PRINTSTREAM).withParameters(JAVA_IO_FILE),
+      constructor(JAVA_IO_PRINTSTREAM).withParameters(JAVA_IO_OUTPUTSTREAM),
+      constructor(JAVA_IO_PRINTSTREAM).withParameters(JAVA_IO_OUTPUTSTREAM, BOOLEAN),
+      constructor(JAVA_IO_PRINTSTREAM).withParameters(JAVA_LANG_STRING),
+      constructor(JAVA_IO_PRINTWRITER).withParameters(JAVA_IO_FILE),
+      constructor(JAVA_IO_PRINTWRITER).withParameters(JAVA_IO_OUTPUTSTREAM),
+      constructor(JAVA_IO_PRINTWRITER).withParameters(JAVA_IO_OUTPUTSTREAM, BOOLEAN),
+      constructor(JAVA_IO_PRINTWRITER).withParameters(JAVA_LANG_STRING),
+      constructor(JAVA_UTIL_FORMATTER).withParameters(JAVA_LANG_STRING),
+      constructor(JAVA_UTIL_FORMATTER).withParameters(JAVA_IO_FILE),
+      constructor(JAVA_UTIL_FORMATTER).withParameters(JAVA_IO_OUTPUTSTREAM),
+      constructor(JAVA_UTIL_SCANNER).withParameters(JAVA_IO_FILE),
+      constructor(JAVA_UTIL_SCANNER).withParameters(JAVA_NIO_FILE_PATH),
+      constructor(JAVA_UTIL_SCANNER).withParameters(JAVA_IO_INPUTSTREAM)
     ));
     matchers.addAll(COMMONS_IO);
     matchers.addAll(COMMONS_IO_WITH_CHARSET);
@@ -188,7 +188,7 @@ public class DefaultEncodingUsageCheck extends AbstractMethodDetection {
   }
 
   private static MethodMatcher method(String type, String methodName) {
-    return MethodMatcher.create().typeDefinition(type).name(methodName);
+    return MethodMatcher.create().ofType(type).name(methodName);
   }
 
   private static MethodMatcher constructor(String type) {

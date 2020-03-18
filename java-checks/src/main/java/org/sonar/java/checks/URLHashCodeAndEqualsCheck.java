@@ -38,8 +38,8 @@ public class URLHashCodeAndEqualsCheck extends IssuableSubscriptionVisitor {
   private static final String JAVA_NET_URL = "java.net.URL";
 
   private static final MethodMatchers URL_MATCHERS = MethodMatchers.or(
-    MethodMatcher.create().typeDefinition(JAVA_NET_URL).name("equals").addParameter("java.lang.Object"),
-    MethodMatcher.create().typeDefinition(JAVA_NET_URL).name("hashCode").withoutParameter());
+    MethodMatcher.create().ofType(JAVA_NET_URL).name("equals").addParameter("java.lang.Object"),
+    MethodMatcher.create().ofType(JAVA_NET_URL).name("hashCode").withoutParameters());
 
   @Override
   public List<Tree.Kind> nodesToVisit() {

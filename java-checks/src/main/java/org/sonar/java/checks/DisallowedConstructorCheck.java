@@ -45,13 +45,13 @@ public class DisallowedConstructorCheck extends AbstractMethodDetection {
     if (StringUtils.isEmpty(className)) {
       return MethodMatchers.empty();
     }
-    invocationMatcher.typeDefinition(className);
+    invocationMatcher.ofType(className);
     if (allOverloads) {
       invocationMatcher.withAnyParameters();
     } else {
       String[] args = StringUtils.split(argumentTypes, ",");
       if (args.length == 0) {
-        invocationMatcher.withoutParameter();
+        invocationMatcher.withoutParameters();
       } else {
         for (String arg : args) {
           invocationMatcher.addParameter(StringUtils.trim(arg));

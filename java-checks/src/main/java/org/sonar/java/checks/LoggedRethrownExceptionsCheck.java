@@ -43,19 +43,19 @@ public class LoggedRethrownExceptionsCheck extends IssuableSubscriptionVisitor {
   private static final String JAVA_UTIL_LOGGING_LOGGER = "java.util.logging.Logger";
   private static final String SLF4J_LOGGER = "org.slf4j.Logger";
   private static final MethodMatchers LOGGING_METHODS = MethodMatchers.or(
-    MethodMatcher.create().typeDefinition(JAVA_UTIL_LOGGING_LOGGER).name("config").withAnyParameters(),
-    MethodMatcher.create().typeDefinition(JAVA_UTIL_LOGGING_LOGGER).name("info").withAnyParameters(),
-    MethodMatcher.create().typeDefinition(JAVA_UTIL_LOGGING_LOGGER).name("log").withAnyParameters(),
-    MethodMatcher.create().typeDefinition(JAVA_UTIL_LOGGING_LOGGER).name("logp").withAnyParameters(),
-    MethodMatcher.create().typeDefinition(JAVA_UTIL_LOGGING_LOGGER).name("logrb").withAnyParameters(),
-    MethodMatcher.create().typeDefinition(JAVA_UTIL_LOGGING_LOGGER).name("throwing").withAnyParameters(),
-    MethodMatcher.create().typeDefinition(JAVA_UTIL_LOGGING_LOGGER).name("severe").withAnyParameters(),
-    MethodMatcher.create().typeDefinition(JAVA_UTIL_LOGGING_LOGGER).name("warning").withAnyParameters(),
-    MethodMatcher.create().typeDefinition(SLF4J_LOGGER).name("debug").withAnyParameters(),
-    MethodMatcher.create().typeDefinition(SLF4J_LOGGER).name("error").withAnyParameters(),
-    MethodMatcher.create().typeDefinition(SLF4J_LOGGER).name("info").withAnyParameters(),
-    MethodMatcher.create().typeDefinition(SLF4J_LOGGER).name("trace").withAnyParameters(),
-    MethodMatcher.create().typeDefinition(SLF4J_LOGGER).name("warn").withAnyParameters()
+    MethodMatcher.create().ofType(JAVA_UTIL_LOGGING_LOGGER).name("config").withAnyParameters(),
+    MethodMatcher.create().ofType(JAVA_UTIL_LOGGING_LOGGER).name("info").withAnyParameters(),
+    MethodMatcher.create().ofType(JAVA_UTIL_LOGGING_LOGGER).name("log").withAnyParameters(),
+    MethodMatcher.create().ofType(JAVA_UTIL_LOGGING_LOGGER).name("logp").withAnyParameters(),
+    MethodMatcher.create().ofType(JAVA_UTIL_LOGGING_LOGGER).name("logrb").withAnyParameters(),
+    MethodMatcher.create().ofType(JAVA_UTIL_LOGGING_LOGGER).name("throwing").withAnyParameters(),
+    MethodMatcher.create().ofType(JAVA_UTIL_LOGGING_LOGGER).name("severe").withAnyParameters(),
+    MethodMatcher.create().ofType(JAVA_UTIL_LOGGING_LOGGER).name("warning").withAnyParameters(),
+    MethodMatcher.create().ofType(SLF4J_LOGGER).name("debug").withAnyParameters(),
+    MethodMatcher.create().ofType(SLF4J_LOGGER).name("error").withAnyParameters(),
+    MethodMatcher.create().ofType(SLF4J_LOGGER).name("info").withAnyParameters(),
+    MethodMatcher.create().ofType(SLF4J_LOGGER).name("trace").withAnyParameters(),
+    MethodMatcher.create().ofType(SLF4J_LOGGER).name("warn").withAnyParameters()
   );
 
   @Override

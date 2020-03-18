@@ -62,7 +62,7 @@ public class IgnoredStreamReturnValueCheck extends IssuableSubscriptionVisitor {
 
   private static MethodMatcher inputStreamInvocationMatcher(String methodName, String parameterType) {
     return MethodMatcher.create()
-      .typeDefinition(TypeCriteria.subtypeOf("java.io.InputStream"))
+      .ofType(TypeCriteria.subtypeOf("java.io.InputStream"))
       .name(methodName)
       .addParameter(parameterType);
   }

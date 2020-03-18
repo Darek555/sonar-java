@@ -37,7 +37,7 @@ import org.sonar.plugins.java.api.tree.VariableTree;
 @Rule(key = "S2160")
 public class EqualsNotOverriddenInSubclassCheck extends IssuableSubscriptionVisitor {
 
-  private static final MethodMatcher EQUALS_MATCHER = MethodMatcher.create().name("equals").parameters("java.lang.Object");
+  private static final MethodMatcher EQUALS_MATCHER = MethodMatcher.create().name("equals").withParameters("java.lang.Object");
 
   @Override
   public List<Tree.Kind> nodesToVisit() {

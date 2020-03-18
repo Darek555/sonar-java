@@ -35,7 +35,7 @@ public class DateFormatWeekYearCheck extends AbstractMethodDetection {
 
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
-    return MethodMatcher.create().typeDefinition("java.text.SimpleDateFormat").name("<init>").withAnyParameters();
+    return MethodMatcher.create().ofType("java.text.SimpleDateFormat").name("<init>").withAnyParameters();
   }
 
   @Override

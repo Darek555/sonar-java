@@ -39,7 +39,7 @@ import org.sonar.plugins.java.api.tree.Tree;
 public class PseudoRandomCheck extends IssuableSubscriptionVisitor {
 
   private static final String MESSAGE = "Make sure that using this pseudorandom number generator is safe here.";
-  private static final MethodMatcher MATH_RANDOM_MATCHER = MethodMatcher.create().typeDefinition("java.lang.Math").name("random").withoutParameter();
+  private static final MethodMatcher MATH_RANDOM_MATCHER = MethodMatcher.create().ofType("java.lang.Math").name("random").withoutParameters();
 
   private static final Set<String> RANDOM_STATIC_TYPES = ImmutableSet.of(
     "java.util.concurrent.ThreadLocalRandom",

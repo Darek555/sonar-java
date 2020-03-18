@@ -33,7 +33,7 @@ import java.util.List;
 public class MethodNamedEqualsCheck extends IssuableSubscriptionVisitor {
 
   private static final String EQUALS = "equals";
-  private static final MethodMatcher EQUALS_MATCHER = MethodMatcher.create().name(EQUALS).parameters("java.lang.Object");
+  private static final MethodMatcher EQUALS_MATCHER = MethodMatcher.create().name(EQUALS).withParameters("java.lang.Object");
 
   @Override
   public List<Tree.Kind> nodesToVisit() {

@@ -44,7 +44,7 @@ public class AssertionsWithoutMessageCheck extends AbstractMethodDetection {
 
   private static final String GENERIC_ASSERT = "org.fest.assertions.GenericAssert";
   private static final MethodMatcher FEST_AS_METHOD = MethodMatcher.create()
-    .typeDefinition(TypeCriteria.subtypeOf(GENERIC_ASSERT)).name("as").addParameter("java.lang.String");
+    .ofType(TypeCriteria.subtypeOf(GENERIC_ASSERT)).name("as").addParameter("java.lang.String");
   private static final Set<String> ASSERT_METHODS_WITH_ONE_PARAM = ImmutableSet.of("assertNull", "assertNotNull");
   private static final Set<String> ASSERT_METHODS_WITH_TWO_PARAMS = ImmutableSet.of("assertEquals", "assertSame", "assertNotSame", "assertThat");
   private static final Set<String> JUNIT5_ASSERT_METHODS_IGNORED = ImmutableSet.of("assertAll", "assertLinesMatch");
@@ -54,13 +54,13 @@ public class AssertionsWithoutMessageCheck extends AbstractMethodDetection {
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatchers.or(
-      MethodMatcher.create().typeDefinition("org.junit.jupiter.api.Assertions").name(NameCriteria.startsWith(ASSERT)).withAnyParameters(),
-      MethodMatcher.create().typeDefinition("org.junit.Assert").name(NameCriteria.startsWith(ASSERT)).withAnyParameters(),
-      MethodMatcher.create().typeDefinition("org.junit.Assert").name("fail").withAnyParameters(),
-      MethodMatcher.create().typeDefinition("junit.framework.Assert").name(NameCriteria.startsWith(ASSERT)).withAnyParameters(),
-      MethodMatcher.create().typeDefinition("junit.framework.Assert").name(NameCriteria.startsWith("fail")).withAnyParameters(),
-      MethodMatcher.create().typeDefinition("org.fest.assertions.Fail").name(NameCriteria.startsWith("fail")).withAnyParameters(),
-      MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf(GENERIC_ASSERT)).name(NameCriteria.any()).withAnyParameters()
+      MethodMatcher.create().ofType("org.junit.jupiter.api.Assertions").name(NameCriteria.startsWith(ASSERT)).withAnyParameters(),
+      MethodMatcher.create().ofType("org.junit.Assert").name(NameCriteria.startsWith(ASSERT)).withAnyParameters(),
+      MethodMatcher.create().ofType("org.junit.Assert").name("fail").withAnyParameters(),
+      MethodMatcher.create().ofType("junit.framework.Assert").name(NameCriteria.startsWith(ASSERT)).withAnyParameters(),
+      MethodMatcher.create().ofType("junit.framework.Assert").name(NameCriteria.startsWith("fail")).withAnyParameters(),
+      MethodMatcher.create().ofType("org.fest.assertions.Fail").name(NameCriteria.startsWith("fail")).withAnyParameters(),
+      MethodMatcher.create().ofType(TypeCriteria.subtypeOf(GENERIC_ASSERT)).name(NameCriteria.any()).withAnyParameters()
     );
   }
 

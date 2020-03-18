@@ -39,7 +39,7 @@ public class EncryptionAlgorithmCheck extends AbstractMethodDetection {
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatcher.create()
-        .typeDefinition("javax.crypto.Cipher")
+        .ofType("javax.crypto.Cipher")
         .name("getInstance")
         .withAnyParameters();
   }

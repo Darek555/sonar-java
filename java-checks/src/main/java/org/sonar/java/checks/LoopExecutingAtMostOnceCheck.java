@@ -50,8 +50,8 @@ import org.sonar.plugins.java.api.tree.WhileStatementTree;
 public class LoopExecutingAtMostOnceCheck extends IssuableSubscriptionVisitor {
 
   private static final MethodMatchers NEXT_ELEMENT = MethodMatchers.or(
-    MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf("java.util.Enumeration")).name("hasMoreElements").withoutParameter(),
-    MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf("java.util.Iterator")).name("hasNext").withoutParameter());
+    MethodMatcher.create().ofType(TypeCriteria.subtypeOf("java.util.Enumeration")).name("hasMoreElements").withoutParameters(),
+    MethodMatcher.create().ofType(TypeCriteria.subtypeOf("java.util.Iterator")).name("hasNext").withoutParameters());
 
   private static final Tree.Kind[] LOOP_KINDS = {
     Tree.Kind.DO_STATEMENT,

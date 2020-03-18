@@ -41,14 +41,14 @@ public class StringMethodsWithLocaleCheck extends AbstractMethodDetection {
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatchers.or(
-      stringMethod().name("toUpperCase").withoutParameter(),
-      stringMethod().name("toLowerCase").withoutParameter(),
+      stringMethod().name("toUpperCase").withoutParameters(),
+      stringMethod().name("toLowerCase").withoutParameters(),
       STRING_FORMAT
     );
   }
 
   private static MethodMatcher stringMethod() {
-    return MethodMatcher.create().typeDefinition(STRING);
+    return MethodMatcher.create().ofType(STRING);
   }
 
   @Override

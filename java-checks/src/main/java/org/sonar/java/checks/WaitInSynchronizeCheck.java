@@ -50,10 +50,10 @@ public class WaitInSynchronizeCheck extends AbstractInSynchronizeChecker {
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatchers.or(
-      MethodMatcher.create().name("wait").withoutParameter(),
+      MethodMatcher.create().name("wait").withoutParameters(),
       MethodMatcher.create().name("wait").addParameter("long"),
       MethodMatcher.create().name("wait").addParameter("long").addParameter("int"),
-      MethodMatcher.create().name("notify").withoutParameter(),
-      MethodMatcher.create().name("notifyAll").withoutParameter());
+      MethodMatcher.create().name("notify").withoutParameters(),
+      MethodMatcher.create().name("notifyAll").withoutParameters());
   }
 }

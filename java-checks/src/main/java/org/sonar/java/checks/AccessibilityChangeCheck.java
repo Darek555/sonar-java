@@ -34,16 +34,16 @@ public class AccessibilityChangeCheck extends AbstractMethodDetection {
 
   private static final String JAVA_LANG_REFLECT_FIELD = "java.lang.reflect.Field";
   private static final MethodMatchers METHOD_MATCHERS = MethodMatchers.or(
-    MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf("java.lang.reflect.AccessibleObject")).name("setAccessible").withAnyParameters(),
-    MethodMatcher.create().typeDefinition(JAVA_LANG_REFLECT_FIELD).name("set").withAnyParameters(),
-    MethodMatcher.create().typeDefinition(JAVA_LANG_REFLECT_FIELD).name("setBoolean").withAnyParameters(),
-    MethodMatcher.create().typeDefinition(JAVA_LANG_REFLECT_FIELD).name("setByte").withAnyParameters(),
-    MethodMatcher.create().typeDefinition(JAVA_LANG_REFLECT_FIELD).name("setChar").withAnyParameters(),
-    MethodMatcher.create().typeDefinition(JAVA_LANG_REFLECT_FIELD).name("setDouble").withAnyParameters(),
-    MethodMatcher.create().typeDefinition(JAVA_LANG_REFLECT_FIELD).name("setFloat").withAnyParameters(),
-    MethodMatcher.create().typeDefinition(JAVA_LANG_REFLECT_FIELD).name("setInt").withAnyParameters(),
-    MethodMatcher.create().typeDefinition(JAVA_LANG_REFLECT_FIELD).name("setLong").withAnyParameters(),
-    MethodMatcher.create().typeDefinition(JAVA_LANG_REFLECT_FIELD).name("setShort").withAnyParameters()
+    MethodMatcher.create().ofType(TypeCriteria.subtypeOf("java.lang.reflect.AccessibleObject")).name("setAccessible").withAnyParameters(),
+    MethodMatcher.create().ofType(JAVA_LANG_REFLECT_FIELD).name("set").withAnyParameters(),
+    MethodMatcher.create().ofType(JAVA_LANG_REFLECT_FIELD).name("setBoolean").withAnyParameters(),
+    MethodMatcher.create().ofType(JAVA_LANG_REFLECT_FIELD).name("setByte").withAnyParameters(),
+    MethodMatcher.create().ofType(JAVA_LANG_REFLECT_FIELD).name("setChar").withAnyParameters(),
+    MethodMatcher.create().ofType(JAVA_LANG_REFLECT_FIELD).name("setDouble").withAnyParameters(),
+    MethodMatcher.create().ofType(JAVA_LANG_REFLECT_FIELD).name("setFloat").withAnyParameters(),
+    MethodMatcher.create().ofType(JAVA_LANG_REFLECT_FIELD).name("setInt").withAnyParameters(),
+    MethodMatcher.create().ofType(JAVA_LANG_REFLECT_FIELD).name("setLong").withAnyParameters(),
+    MethodMatcher.create().ofType(JAVA_LANG_REFLECT_FIELD).name("setShort").withAnyParameters()
   );
 
   @Override

@@ -59,16 +59,16 @@ public class AssertionsCompletenessCheck extends BaseTreeVisitor implements Java
   private static final String TRUTH_SUPERTYPE = "com.google.common.truth.TestVerb";
   private static final String JAVA6_ABSTRACT_SOFT_ASSERT = "org.assertj.core.api.Java6AbstractStandardSoftAssertions";
   private static final MethodMatcher MOCKITO_VERIFY = MethodMatcher.create()
-    .typeDefinition(TypeCriteria.subtypeOf("org.mockito.Mockito")).name("verify").withAnyParameters();
+    .ofType(TypeCriteria.subtypeOf("org.mockito.Mockito")).name("verify").withAnyParameters();
   private static final MethodMatchers ASSERTJ_ASSERT_ALL = MethodMatchers.or(
-    MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf("org.assertj.core.api.SoftAssertions")).name("assertAll").withAnyParameters(),
-    MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf("org.assertj.core.api.Java6SoftAssertions")).name("assertAll").withAnyParameters());
+    MethodMatcher.create().ofType(TypeCriteria.subtypeOf("org.assertj.core.api.SoftAssertions")).name("assertAll").withAnyParameters(),
+    MethodMatcher.create().ofType(TypeCriteria.subtypeOf("org.assertj.core.api.Java6SoftAssertions")).name("assertAll").withAnyParameters());
   private static final MethodMatcher ASSERTJ_ASSERT_THAT = MethodMatcher.create()
-    .typeDefinition(TypeCriteria.subtypeOf("org.assertj.core.api.AbstractSoftAssertions"))
+    .ofType(TypeCriteria.subtypeOf("org.assertj.core.api.AbstractSoftAssertions"))
     .name(NameCriteria.startsWith("assertThat"))
     .withAnyParameters();
   private static final MethodMatcher ASSERTJ_ASSERT_SOFTLY = MethodMatcher.create()
-    .typeDefinition(TypeCriteria.subtypeOf("org.assertj.core.api.SoftAssertions")).name("assertSoftly").withAnyParameters();
+    .ofType(TypeCriteria.subtypeOf("org.assertj.core.api.SoftAssertions")).name("assertSoftly").withAnyParameters();
 
   private static final MethodMatchers FEST_LIKE_ASSERT_THAT = MethodMatchers.or(
     // Fest 1.X
@@ -109,11 +109,11 @@ public class AssertionsCompletenessCheck extends BaseTreeVisitor implements Java
   private JavaFileScannerContext context;
 
   private static MethodMatcher assertThatOnType(String type) {
-    return MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf(type)).name("assertThat").addParameter(TypeCriteria.anyType());
+    return MethodMatcher.create().ofType(TypeCriteria.subtypeOf(type)).name("assertThat").addParameter(TypeCriteria.anyType());
   }
 
   private static MethodMatcher methodWithName(String superType, NameCriteria nameCriteria) {
-    return MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf(superType)).name(nameCriteria).withAnyParameters();
+    return MethodMatcher.create().ofType(TypeCriteria.subtypeOf(superType)).name(nameCriteria).withAnyParameters();
   }
 
   private static boolean isMethodCalledOnJava6AbstractStandardSoftAssertions(MethodInvocationTree mit) {

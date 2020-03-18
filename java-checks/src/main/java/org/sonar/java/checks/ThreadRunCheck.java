@@ -31,7 +31,7 @@ import org.sonar.plugins.java.api.tree.Tree;
 
 @Rule(key = "S1217")
 public class ThreadRunCheck extends AbstractMethodDetection {
-  private static final MethodMatcher THREAD_RUN_METHOD_MATCHER = MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf("java.lang.Thread")).name("run")
+  private static final MethodMatcher THREAD_RUN_METHOD_MATCHER = MethodMatcher.create().ofType(TypeCriteria.subtypeOf("java.lang.Thread")).name("run")
     .withAnyParameters();
 
   @Override

@@ -33,7 +33,7 @@ public class EnumEqualCheck extends AbstractMethodDetection {
 
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
-    return MethodMatcher.create().name("equals").parameters("java.lang.Object");
+    return MethodMatcher.create().name("equals").withParameters("java.lang.Object");
   }
 
   @Override

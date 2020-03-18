@@ -42,7 +42,7 @@ import java.util.List;
 public class EnumMapCheck extends BaseTreeVisitor implements JavaFileScanner {
   private JavaFileScannerContext context;
   private static final String JAVA_UTIL_MAP = "java.util.Map";
-  private static final MethodMatcher mapPut = MethodMatcher.create().typeDefinition(JAVA_UTIL_MAP).name("put").withAnyParameters();
+  private static final MethodMatcher mapPut = MethodMatcher.create().ofType(JAVA_UTIL_MAP).name("put").withAnyParameters();
 
   @Override
   public void scanFile(final JavaFileScannerContext context) {

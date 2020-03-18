@@ -34,7 +34,7 @@ import org.sonar.plugins.java.api.tree.MemberSelectExpressionTree;
 public class CompareObjectWithEqualsCheck extends CompareWithEqualsVisitor {
 
   private static final String JAVA_LANG_OBJECT = "java.lang.Object";
-  private static final MethodMatcher EQUALS_MATCHER = MethodMatcher.create().name("equals").parameters(JAVA_LANG_OBJECT);
+  private static final MethodMatcher EQUALS_MATCHER = MethodMatcher.create().name("equals").withParameters(JAVA_LANG_OBJECT);
 
   @Override
   protected void checkEqualityExpression(BinaryExpressionTree tree) {

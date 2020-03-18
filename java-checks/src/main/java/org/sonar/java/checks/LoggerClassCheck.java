@@ -40,18 +40,18 @@ public class LoggerClassCheck extends IssuableSubscriptionVisitor {
 
   private static final MethodMatchers LOG_FACTORIES = MethodMatchers.or(
     // covers slf4j, log4j, java.util.logging and perhaps many others
-    MethodMatcher.create().typeDefinition(TypeCriteria.anyType()).name("getLogger").addParameter("java.lang.Class"),
-    MethodMatcher.create().typeDefinition(TypeCriteria.anyType()).name("getLogger").addParameter("java.lang.String"),
+    MethodMatcher.create().ofType(TypeCriteria.anyType()).name("getLogger").addParameter("java.lang.Class"),
+    MethodMatcher.create().ofType(TypeCriteria.anyType()).name("getLogger").addParameter("java.lang.String"),
     // Apache commons-logging
-    MethodMatcher.create().typeDefinition("org.apache.commons.logging.LogFactory").name("getLog").addParameter("java.lang.Class"),
-    MethodMatcher.create().typeDefinition("org.apache.commons.logging.LogFactory").name("getLog").addParameter("java.lang.String"),
+    MethodMatcher.create().ofType("org.apache.commons.logging.LogFactory").name("getLog").addParameter("java.lang.Class"),
+    MethodMatcher.create().ofType("org.apache.commons.logging.LogFactory").name("getLog").addParameter("java.lang.String"),
     // sonar-api
-    MethodMatcher.create().typeDefinition("org.sonar.api.utils.log.Loggers").name("get").addParameter("java.lang.Class"),
-    MethodMatcher.create().typeDefinition("org.sonar.api.utils.log.Loggers").name("get").addParameter("java.lang.String")
+    MethodMatcher.create().ofType("org.sonar.api.utils.log.Loggers").name("get").addParameter("java.lang.Class"),
+    MethodMatcher.create().ofType("org.sonar.api.utils.log.Loggers").name("get").addParameter("java.lang.String")
   );
 
   private static final MethodMatcher CLAZZ_GETNAME = MethodMatcher.create()
-    .typeDefinition("java.lang.Class").name("getName").withoutParameter();
+    .ofType("java.lang.Class").name("getName").withoutParameters();
 
   @Override
   public List<Tree.Kind> nodesToVisit() {

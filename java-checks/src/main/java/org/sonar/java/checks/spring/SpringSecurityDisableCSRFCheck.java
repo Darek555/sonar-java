@@ -37,8 +37,8 @@ public class SpringSecurityDisableCSRFCheck extends AbstractMethodDetection {
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatcher.create()
-      .typeDefinition(TypeCriteria.subtypeOf("org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer"))
-      .name("disable").withoutParameter();
+      .ofType(TypeCriteria.subtypeOf("org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer"))
+      .name("disable").withoutParameters();
   }
 
   @Override

@@ -46,9 +46,9 @@ import java.util.List;
 public class CompareToResultTestCheck extends IssuableSubscriptionVisitor {
 
   private static final MethodMatcher COMPARE_TO = MethodMatcher.create()
-    .typeDefinition(TypeCriteria.subtypeOf("java.lang.Comparable"))
+    .ofType(TypeCriteria.subtypeOf("java.lang.Comparable"))
     .name("compareTo")
-    .parameters(TypeCriteria.anyType());
+    .withParameters(TypeCriteria.anyType());
 
   @Override
   public List<Kind> nodesToVisit() {

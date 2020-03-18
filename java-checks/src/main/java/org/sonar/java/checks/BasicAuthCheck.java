@@ -41,13 +41,13 @@ public class BasicAuthCheck extends AbstractMethodDetection {
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatchers.or(
-      MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf("org.apache.http.message.AbstractHttpMessage"))
+      MethodMatcher.create().ofType(TypeCriteria.subtypeOf("org.apache.http.message.AbstractHttpMessage"))
         .name("setHeader").withAnyParameters(),
-      MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf("org.apache.http.message.AbstractHttpMessage"))
+      MethodMatcher.create().ofType(TypeCriteria.subtypeOf("org.apache.http.message.AbstractHttpMessage"))
         .name("addHeader").addParameter(LANG_STRING).addParameter(LANG_STRING),
-      MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf("org.apache.http.message.BasicHeader")).name("<init>").addParameter(LANG_STRING).addParameter(LANG_STRING),
-      MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf("java.net.URLConnection")).name("setRequestProperty").withAnyParameters(),
-      MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf("java.net.URLConnection")).name("addRequestProperty").withAnyParameters()
+      MethodMatcher.create().ofType(TypeCriteria.subtypeOf("org.apache.http.message.BasicHeader")).name("<init>").addParameter(LANG_STRING).addParameter(LANG_STRING),
+      MethodMatcher.create().ofType(TypeCriteria.subtypeOf("java.net.URLConnection")).name("setRequestProperty").withAnyParameters(),
+      MethodMatcher.create().ofType(TypeCriteria.subtypeOf("java.net.URLConnection")).name("addRequestProperty").withAnyParameters()
       );
   }
 

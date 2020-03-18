@@ -82,7 +82,7 @@ public class AssertionsInTestsCheck extends BaseTreeVisitor implements JavaFileS
     // JMockit
     method("mockit.Verifications", "<init>").withAnyParameters(),
     // Eclipse Vert.x
-    method("io.vertx.ext.unit.TestContext", NameCriteria.startsWith("asyncAssert")).withoutParameter());
+    MethodMatchers.create().ofType("io.vertx.ext.unit.TestContext").startWithName("asyncAssert").withoutParameters());
 
   private static final MethodMatchers REACTIVE_X_TEST_METHODS = MethodMatchers.or(
     method(TypeCriteria.subtypeOf("rx.Observable"), NameCriteria.is("test")).withAnyParameters(),
@@ -196,11 +196,11 @@ public class AssertionsInTestsCheck extends BaseTreeVisitor implements JavaFileS
   }
 
   private static MethodMatcher method(String typeDefinition, NameCriteria nameCriteria) {
-    return MethodMatcher.create().typeDefinition(TypeCriteria.is(typeDefinition)).name(nameCriteria);
+    return MethodMatcher.create().ofType(TypeCriteria.is(typeDefinition)).name(nameCriteria);
   }
 
   private static MethodMatcher method(TypeCriteria typeDefinitionCriteria, NameCriteria nameCriteria) {
-    return MethodMatcher.create().typeDefinition(typeDefinitionCriteria).name(nameCriteria);
+    return MethodMatcher.create().ofType(typeDefinitionCriteria).name(nameCriteria);
   }
 
   private class AssertionVisitor extends BaseTreeVisitor {

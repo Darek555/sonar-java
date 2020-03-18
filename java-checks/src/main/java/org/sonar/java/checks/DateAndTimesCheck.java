@@ -35,8 +35,8 @@ import org.sonar.plugins.java.api.tree.Tree;
 public class DateAndTimesCheck extends AbstractMethodDetection implements JavaVersionAwareVisitor {
 
   private static final List<MethodMatcher> METHOD_MATCHERS = Arrays.asList(
-    MethodMatcher.create().typeDefinition("java.util.Calendar").name("getInstance").withAnyParameters(),
-    MethodMatcher.create().typeDefinition("java.util.Date").name("<init>").withAnyParameters());
+    MethodMatcher.create().ofType("java.util.Calendar").name("getInstance").withAnyParameters(),
+    MethodMatcher.create().ofType("java.util.Date").name("<init>").withAnyParameters());
 
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {

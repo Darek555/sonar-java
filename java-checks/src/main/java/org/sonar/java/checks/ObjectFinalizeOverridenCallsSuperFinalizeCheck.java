@@ -48,7 +48,7 @@ import org.sonarsource.analyzer.commons.annotations.DeprecatedRuleKey;
 public class ObjectFinalizeOverridenCallsSuperFinalizeCheck extends IssuableSubscriptionVisitor {
 
   private static final String FINALIZE = "finalize";
-  private static final MethodMatcher FINALIZE_MATCHER = MethodMatcher.create().name(FINALIZE).withoutParameter();
+  private static final MethodMatcher FINALIZE_MATCHER = MethodMatcher.create().name(FINALIZE).withoutParameters();
 
   private MethodInvocationTree lastStatementTree;
 

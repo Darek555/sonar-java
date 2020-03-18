@@ -31,7 +31,7 @@ public class GetClassLoaderCheck extends AbstractMethodDetection {
 
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
-    return MethodMatcher.create().typeDefinition("java.lang.Class").name("getClassLoader").withoutParameter();
+    return MethodMatcher.create().ofType("java.lang.Class").name("getClassLoader").withoutParameters();
   }
 
   @Override

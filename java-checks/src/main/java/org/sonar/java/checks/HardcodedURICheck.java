@@ -48,9 +48,9 @@ public class HardcodedURICheck extends IssuableSubscriptionVisitor {
   private static final String CONSTRUCTOR_NAME = "<init>";
   private static final String JAVA_LANG_STRING = "java.lang.String";
   private static final MethodMatchers MATCHERS = MethodMatchers.or(
-    MethodMatcher.create().typeDefinition("java.net.URI").name(CONSTRUCTOR_NAME).addParameter(JAVA_LANG_STRING),
-    MethodMatcher.create().typeDefinition("java.io.File").name(CONSTRUCTOR_NAME).addParameter(JAVA_LANG_STRING),
-    MethodMatcher.create().typeDefinition("java.io.File").name(CONSTRUCTOR_NAME).addParameter(TypeCriteria.anyType()).addParameter(JAVA_LANG_STRING));
+    MethodMatcher.create().ofType("java.net.URI").name(CONSTRUCTOR_NAME).addParameter(JAVA_LANG_STRING),
+    MethodMatcher.create().ofType("java.io.File").name(CONSTRUCTOR_NAME).addParameter(JAVA_LANG_STRING),
+    MethodMatcher.create().ofType("java.io.File").name(CONSTRUCTOR_NAME).addParameter(TypeCriteria.anyType()).addParameter(JAVA_LANG_STRING));
 
   private static final String SCHEME = "[a-zA-Z][a-zA-Z\\+\\.\\-]+";
   private static final String FOLDER_NAME = "[^/?%*:\\\\|\"<>]+";

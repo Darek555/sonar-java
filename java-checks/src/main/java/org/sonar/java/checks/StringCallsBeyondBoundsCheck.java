@@ -37,20 +37,20 @@ public class StringCallsBeyondBoundsCheck extends AbstractMethodDetection {
 
   private static final String STRING = "java.lang.String";
   private static final MethodMatcher STRING_LENGTH =
-    MethodMatcher.create().typeDefinition(STRING).name("length").withoutParameter();
+    MethodMatcher.create().ofType(STRING).name("length").withoutParameters();
 
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatchers.or(
-      MethodMatcher.create().typeDefinition(STRING).name("charAt").addParameter("int"),
-      MethodMatcher.create().typeDefinition(STRING).name("codePointAt").addParameter("int"),
-      MethodMatcher.create().typeDefinition(STRING).name("codePointBefore").addParameter("int"),
-      MethodMatcher.create().typeDefinition(STRING).name("codePointCount").addParameter("int").addParameter("int"),
-      MethodMatcher.create().typeDefinition(STRING).name("getChars").addParameter("int").addParameter("int").addParameter("char[]").addParameter("int"),
-      MethodMatcher.create().typeDefinition(STRING).name("offsetByCodePoints").addParameter("int").addParameter("int"),
-      MethodMatcher.create().typeDefinition(STRING).name("substring").addParameter("int"),
-      MethodMatcher.create().typeDefinition(STRING).name("substring").addParameter("int").addParameter("int"),
-      MethodMatcher.create().typeDefinition(STRING).name("subSequence").addParameter("int").addParameter("int")
+      MethodMatcher.create().ofType(STRING).name("charAt").addParameter("int"),
+      MethodMatcher.create().ofType(STRING).name("codePointAt").addParameter("int"),
+      MethodMatcher.create().ofType(STRING).name("codePointBefore").addParameter("int"),
+      MethodMatcher.create().ofType(STRING).name("codePointCount").addParameter("int").addParameter("int"),
+      MethodMatcher.create().ofType(STRING).name("getChars").addParameter("int").addParameter("int").addParameter("char[]").addParameter("int"),
+      MethodMatcher.create().ofType(STRING).name("offsetByCodePoints").addParameter("int").addParameter("int"),
+      MethodMatcher.create().ofType(STRING).name("substring").addParameter("int"),
+      MethodMatcher.create().ofType(STRING).name("substring").addParameter("int").addParameter("int"),
+      MethodMatcher.create().ofType(STRING).name("subSequence").addParameter("int").addParameter("int")
     );
   }
 

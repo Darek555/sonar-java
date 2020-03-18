@@ -35,14 +35,14 @@ public class PredictableSeedCheck extends AbstractMethodDetection {
   private static final Tree.Kind[] LITERAL_KINDS = {Tree.Kind.STRING_LITERAL, Tree.Kind.INT_LITERAL, Tree.Kind.LONG_LITERAL, Tree.Kind.CHAR_LITERAL,
     Tree.Kind.NULL_LITERAL, Tree.Kind.BOOLEAN_LITERAL, Tree.Kind.DOUBLE_LITERAL, Tree.Kind.FLOAT_LITERAL};
   private static final String JAVA_SECURITY_SECURE_RANDOM = "java.security.SecureRandom";
-  private static final MethodMatcher GET_BYTES = MethodMatcher.create().typeDefinition("java.lang.String").name("getBytes").withAnyParameters();
+  private static final MethodMatcher GET_BYTES = MethodMatcher.create().ofType("java.lang.String").name("getBytes").withAnyParameters();
 
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatchers.or(
-      MethodMatcher.create().typeDefinition(JAVA_SECURITY_SECURE_RANDOM).name("<init>").parameters("byte[]"),
-      MethodMatcher.create().typeDefinition(JAVA_SECURITY_SECURE_RANDOM).name("setSeed").parameters("byte[]"),
-      MethodMatcher.create().typeDefinition(JAVA_SECURITY_SECURE_RANDOM).name("setSeed").parameters("long")
+      MethodMatcher.create().ofType(JAVA_SECURITY_SECURE_RANDOM).name("<init>").withParameters("byte[]"),
+      MethodMatcher.create().ofType(JAVA_SECURITY_SECURE_RANDOM).name("setSeed").withParameters("byte[]"),
+      MethodMatcher.create().ofType(JAVA_SECURITY_SECURE_RANDOM).name("setSeed").withParameters("long")
       );
   }
 

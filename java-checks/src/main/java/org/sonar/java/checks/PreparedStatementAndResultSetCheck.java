@@ -48,14 +48,14 @@ public class PreparedStatementAndResultSetCheck extends AbstractMethodDetection 
   private static final String INT = "int";
   private static final String JAVA_SQL_RESULTSET = "java.sql.ResultSet";
   private static final MethodMatcher PREPARE_STATEMENT = MethodMatcher.create()
-    .typeDefinition("java.sql.Connection").name(NameCriteria.startsWith("prepareStatement")).withAnyParameters();
+    .ofType("java.sql.Connection").name(NameCriteria.startsWith("prepareStatement")).withAnyParameters();
 
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatchers.or(
-      MethodMatcher.create().typeDefinition("java.sql.PreparedStatement").name(NameCriteria.startsWith("set")).addParameter(INT).addParameter(TypeCriteria.anyType()),
-      MethodMatcher.create().typeDefinition(JAVA_SQL_RESULTSET).name(NameCriteria.startsWith("get")).addParameter(INT),
-      MethodMatcher.create().typeDefinition(JAVA_SQL_RESULTSET).name(NameCriteria.startsWith("get")).addParameter(INT).addParameter(TypeCriteria.anyType()));
+      MethodMatcher.create().ofType("java.sql.PreparedStatement").name(NameCriteria.startsWith("set")).addParameter(INT).addParameter(TypeCriteria.anyType()),
+      MethodMatcher.create().ofType(JAVA_SQL_RESULTSET).name(NameCriteria.startsWith("get")).addParameter(INT),
+      MethodMatcher.create().ofType(JAVA_SQL_RESULTSET).name(NameCriteria.startsWith("get")).addParameter(INT).addParameter(TypeCriteria.anyType()));
   }
 
   @Override

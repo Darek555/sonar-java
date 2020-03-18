@@ -41,7 +41,7 @@ import org.sonarsource.analyzer.commons.annotations.DeprecatedRuleKey;
 public class ServerCertificatesCheck extends IssuableSubscriptionVisitor {
 
   private static final MethodMatcher CHECK_TRUSTED_MATCHER = MethodMatcher.create()
-    .typeDefinition(TypeCriteria.subtypeOf("javax.net.ssl.X509TrustManager"))
+    .ofType(TypeCriteria.subtypeOf("javax.net.ssl.X509TrustManager"))
     .addParameter(TypeCriteria.is("java.security.cert.X509Certificate[]"))
     .addParameter(TypeCriteria.is("java.lang.String"));
 

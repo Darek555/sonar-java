@@ -39,7 +39,7 @@ import org.sonar.plugins.java.api.tree.Tree.Kind;
 public class NonSerializableWriteCheck extends IssuableSubscriptionVisitor {
 
   private static final MethodMatcher WRITE_OBJECT_MATCHER = MethodMatcher.create()
-    .typeDefinition("java.io.ObjectOutputStream")
+    .ofType("java.io.ObjectOutputStream")
     .name("writeObject")
     .addParameter("java.lang.Object");
 

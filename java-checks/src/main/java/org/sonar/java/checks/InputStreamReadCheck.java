@@ -36,7 +36,7 @@ import org.sonar.plugins.java.api.tree.Tree;
 @Rule(key = "S4517")
 public class InputStreamReadCheck extends IssuableSubscriptionVisitor {
 
-  private static final MethodMatcher INPUT_STREAM_READ = MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf("java.io.InputStream")).name("read").withoutParameter();
+  private static final MethodMatcher INPUT_STREAM_READ = MethodMatcher.create().ofType(TypeCriteria.subtypeOf("java.io.InputStream")).name("read").withoutParameters();
 
   @Override
   public List<Tree.Kind> nodesToVisit() {

@@ -37,6 +37,6 @@ public class ThreadSleepCheck extends AbstractInSynchronizeChecker {
 
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
-    return MethodMatcher.create().typeDefinition("java.lang.Thread").name("sleep").withAnyParameters();
+    return MethodMatcher.create().ofType("java.lang.Thread").name("sleep").withAnyParameters();
   }
 }

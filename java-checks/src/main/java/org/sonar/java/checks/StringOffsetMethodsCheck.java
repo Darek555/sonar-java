@@ -35,16 +35,16 @@ public class StringOffsetMethodsCheck extends AbstractMethodDetection {
 
   private static final TypeCriteria JAVA_LANG_STRING = TypeCriteria.is("java.lang.String");
   private static final TypeCriteria INT = TypeCriteria.is("int");
-  private static final MethodMatcher SUBSTRING = MethodMatcher.create().typeDefinition(JAVA_LANG_STRING).name("substring").parameters(INT);
+  private static final MethodMatcher SUBSTRING = MethodMatcher.create().ofType(JAVA_LANG_STRING).name("substring").withParameters(INT);
 
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatchers.or(
-      MethodMatcher.create().typeDefinition(JAVA_LANG_STRING).name("indexOf").parameters(JAVA_LANG_STRING),
-      MethodMatcher.create().typeDefinition(JAVA_LANG_STRING).name("indexOf").parameters(INT),
-      MethodMatcher.create().typeDefinition(JAVA_LANG_STRING).name("lastIndexOf").parameters(JAVA_LANG_STRING),
-      MethodMatcher.create().typeDefinition(JAVA_LANG_STRING).name("lastIndexOf").parameters(INT),
-      MethodMatcher.create().typeDefinition(JAVA_LANG_STRING).name("startsWith").parameters(JAVA_LANG_STRING)
+      MethodMatcher.create().ofType(JAVA_LANG_STRING).name("indexOf").withParameters(JAVA_LANG_STRING),
+      MethodMatcher.create().ofType(JAVA_LANG_STRING).name("indexOf").withParameters(INT),
+      MethodMatcher.create().ofType(JAVA_LANG_STRING).name("lastIndexOf").withParameters(JAVA_LANG_STRING),
+      MethodMatcher.create().ofType(JAVA_LANG_STRING).name("lastIndexOf").withParameters(INT),
+      MethodMatcher.create().ofType(JAVA_LANG_STRING).name("startsWith").withParameters(JAVA_LANG_STRING)
       );
   }
 

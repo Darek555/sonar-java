@@ -105,11 +105,11 @@ public class StringToPrimitiveConversionCheck extends IssuableSubscriptionVisito
       this.tag = tag;
       this.message = "Use \"" + parseMethodName() + "\" for this string-to-" + primitiveName + " conversion.";
       this.unboxingInvocationMatcher = MethodMatcher.create()
-        .typeDefinition("java.lang." + className)
+        .ofType("java.lang." + className)
         .name(primitiveName + "Value")
-        .withoutParameter();
+        .withoutParameters();
       this.valueOfInvocationMatcher = MethodMatcher.create()
-        .typeDefinition("java.lang." + className)
+        .ofType("java.lang." + className)
         .name("valueOf")
         .addParameter("java.lang.String");
     }

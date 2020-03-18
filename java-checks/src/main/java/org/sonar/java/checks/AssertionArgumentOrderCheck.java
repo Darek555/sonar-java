@@ -46,23 +46,23 @@ public class AssertionArgumentOrderCheck extends AbstractMethodDetection {
   private static final String MESSAGE = "Swap these 2 arguments so they are in the correct order: expected value, actual value.";
 
   private static final MethodMatchers COLLECTION_CREATION_CALL = MethodMatchers.or(
-    MethodMatcher.create().typeDefinition("java.util.Collections").name(NameCriteria.startsWith("singleton")).withAnyParameters(),
-    MethodMatcher.create().typeDefinition("java.util.Collections").name(NameCriteria.startsWith("empty")).withAnyParameters(),
-    MethodMatcher.create().typeDefinition("java.util.Arrays").name("asList").withAnyParameters());
+    MethodMatcher.create().ofType("java.util.Collections").name(NameCriteria.startsWith("singleton")).withAnyParameters(),
+    MethodMatcher.create().ofType("java.util.Collections").name(NameCriteria.startsWith("empty")).withAnyParameters(),
+    MethodMatcher.create().ofType("java.util.Arrays").name("asList").withAnyParameters());
 
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
-    return MethodMatchers.or(MethodMatcher.create().typeDefinition(ORG_JUNIT_ASSERT).name("assertEquals").withAnyParameters(),
-      MethodMatcher.create().typeDefinition(ORG_JUNIT_ASSERT).name("assertSame").withAnyParameters(),
-      MethodMatcher.create().typeDefinition(ORG_JUNIT_ASSERT).name("assertNotSame").withAnyParameters(),
+    return MethodMatchers.or(MethodMatcher.create().ofType(ORG_JUNIT_ASSERT).name("assertEquals").withAnyParameters(),
+      MethodMatcher.create().ofType(ORG_JUNIT_ASSERT).name("assertSame").withAnyParameters(),
+      MethodMatcher.create().ofType(ORG_JUNIT_ASSERT).name("assertNotSame").withAnyParameters(),
       // JUnit 5
-      MethodMatcher.create().typeDefinition(ORG_JUNIT5_ASSERTIONS).name("assertArrayEquals").withAnyParameters(),
-      MethodMatcher.create().typeDefinition(ORG_JUNIT5_ASSERTIONS).name("assertEquals").withAnyParameters(),
-      MethodMatcher.create().typeDefinition(ORG_JUNIT5_ASSERTIONS).name("assertIterableEquals").withAnyParameters(),
-      MethodMatcher.create().typeDefinition(ORG_JUNIT5_ASSERTIONS).name("assertLinesMatch").withAnyParameters(),
-      MethodMatcher.create().typeDefinition(ORG_JUNIT5_ASSERTIONS).name("assertNotEquals").withAnyParameters(),
-      MethodMatcher.create().typeDefinition(ORG_JUNIT5_ASSERTIONS).name("assertNotSame").withAnyParameters(),
-      MethodMatcher.create().typeDefinition(ORG_JUNIT5_ASSERTIONS).name("assertSame").withAnyParameters());
+      MethodMatcher.create().ofType(ORG_JUNIT5_ASSERTIONS).name("assertArrayEquals").withAnyParameters(),
+      MethodMatcher.create().ofType(ORG_JUNIT5_ASSERTIONS).name("assertEquals").withAnyParameters(),
+      MethodMatcher.create().ofType(ORG_JUNIT5_ASSERTIONS).name("assertIterableEquals").withAnyParameters(),
+      MethodMatcher.create().ofType(ORG_JUNIT5_ASSERTIONS).name("assertLinesMatch").withAnyParameters(),
+      MethodMatcher.create().ofType(ORG_JUNIT5_ASSERTIONS).name("assertNotEquals").withAnyParameters(),
+      MethodMatcher.create().ofType(ORG_JUNIT5_ASSERTIONS).name("assertNotSame").withAnyParameters(),
+      MethodMatcher.create().ofType(ORG_JUNIT5_ASSERTIONS).name("assertSame").withAnyParameters());
   }
 
   @Override

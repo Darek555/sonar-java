@@ -34,24 +34,24 @@ import org.sonar.plugins.java.api.tree.Tree;
 public class IntegerToHexStringCheck extends AbstractMethodDetection {
 
   private static final MethodMatcher APPEND_MATCHER = MethodMatcher.create()
-    .typeDefinition(TypeCriteria.subtypeOf("java.lang.AbstractStringBuilder"))
+    .ofType(TypeCriteria.subtypeOf("java.lang.AbstractStringBuilder"))
     .name("append")
     .addParameter(TypeCriteria.is("java.lang.String"));
 
   private static final MethodMatcher PRINT_MATCHER = MethodMatcher.create()
-    .typeDefinition(TypeCriteria.subtypeOf("java.io.PrintStream"))
+    .ofType(TypeCriteria.subtypeOf("java.io.PrintStream"))
     .name("print")
     .addParameter(TypeCriteria.is("java.lang.String"));
 
   private static final MethodMatcher JOINER_MATCHER = MethodMatcher.create()
-    .typeDefinition(TypeCriteria.subtypeOf("java.util.StringJoiner"))
+    .ofType(TypeCriteria.subtypeOf("java.util.StringJoiner"))
     .name("add")
     .addParameter(TypeCriteria.is("java.lang.CharSequence"));
 
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatcher.create()
-        .typeDefinition(TypeCriteria.is("java.lang.Integer"))
+        .ofType(TypeCriteria.is("java.lang.Integer"))
         .name("toHexString")
         .addParameter(TypeCriteria.is("int"));
   }

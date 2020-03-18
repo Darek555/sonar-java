@@ -47,19 +47,19 @@ import org.sonar.plugins.java.api.tree.Tree;
 public class CORSCheck extends IssuableSubscriptionVisitor {
 
   private static final MethodMatchers SET_ADD_HEADER_MATCHER = MethodMatchers.or(
-    MethodMatcher.create().typeDefinition("javax.servlet.http.HttpServletResponse").name("setHeader").withAnyParameters(),
-    MethodMatcher.create().typeDefinition("javax.servlet.http.HttpServletResponse").name("addHeader").withAnyParameters()
+    MethodMatcher.create().ofType("javax.servlet.http.HttpServletResponse").name("setHeader").withAnyParameters(),
+    MethodMatcher.create().ofType("javax.servlet.http.HttpServletResponse").name("addHeader").withAnyParameters()
   );
 
   private static final String ACCESS_CONTROL_ALLOW_ORIGIN = "access-control-allow-origin";
   private static final Set<String> ANNOTATION_ORIGINS_KEY_ALIAS = ImmutableSet.of("origins", "value");
 
   private static final MethodMatchers ADD_ALLOWED_ORIGIN_MATCHER = MethodMatchers.or(
-    MethodMatcher.create().typeDefinition("org.springframework.web.cors.CorsConfiguration").name("addAllowedOrigin").withAnyParameters(),
-    MethodMatcher.create().typeDefinition("org.springframework.web.servlet.config.annotation.CorsRegistration").name("allowedOrigins").withAnyParameters()
+    MethodMatcher.create().ofType("org.springframework.web.cors.CorsConfiguration").name("addAllowedOrigin").withAnyParameters(),
+    MethodMatcher.create().ofType("org.springframework.web.servlet.config.annotation.CorsRegistration").name("allowedOrigins").withAnyParameters()
   );
 
-  private static final MethodMatcher APPLY_PERMIT_DEFAULT_VALUES = MethodMatcher.create().typeDefinition("org.springframework.web.cors.CorsConfiguration")
+  private static final MethodMatcher APPLY_PERMIT_DEFAULT_VALUES = MethodMatcher.create().ofType("org.springframework.web.cors.CorsConfiguration")
     .name("applyPermitDefaultValues").withAnyParameters();
   public static final String MESSAGE = "Make sure that enabling CORS is safe here.";
 

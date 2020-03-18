@@ -67,10 +67,10 @@ public class ControllingPermissionsCheck extends IssuableSubscriptionVisitor {
 
   private static final String MUTABLE_ACL_SERVICE = "org.springframework.security.acls.model.MutableAclService";
   private static final MethodMatchers METHOD_MATCHERS = MethodMatchers.or(
-    MethodMatcher.create().typeDefinition(MUTABLE_ACL_SERVICE).name("createAcl").withAnyParameters(),
-    MethodMatcher.create().typeDefinition(MUTABLE_ACL_SERVICE).name("deleteAcl").withAnyParameters(),
-    MethodMatcher.create().typeDefinition(MUTABLE_ACL_SERVICE).name("updateAcl").withAnyParameters(),
-    MethodMatcher.create().typeDefinition("org.springframework.security.config.annotation.web.builders.HttpSecurity").name("authorizeRequests").withAnyParameters());
+    MethodMatcher.create().ofType(MUTABLE_ACL_SERVICE).name("createAcl").withAnyParameters(),
+    MethodMatcher.create().ofType(MUTABLE_ACL_SERVICE).name("deleteAcl").withAnyParameters(),
+    MethodMatcher.create().ofType(MUTABLE_ACL_SERVICE).name("updateAcl").withAnyParameters(),
+    MethodMatcher.create().ofType("org.springframework.security.config.annotation.web.builders.HttpSecurity").name("authorizeRequests").withAnyParameters());
 
   @Override
   public List<Tree.Kind> nodesToVisit() {

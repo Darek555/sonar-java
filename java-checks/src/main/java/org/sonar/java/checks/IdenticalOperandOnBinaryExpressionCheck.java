@@ -42,10 +42,10 @@ import java.util.List;
 public class IdenticalOperandOnBinaryExpressionCheck extends IssuableSubscriptionVisitor {
 
   private static final String JAVA_LANG_OBJECT = "java.lang.Object";
-  private static final MethodMatcher EQUALS_MATCHER = MethodMatcher.create().typeDefinition(JAVA_LANG_OBJECT).name("equals").addParameter(JAVA_LANG_OBJECT);
-  private static final MethodMatcher DEEP_EQUALS_MATCHER = MethodMatcher.create().typeDefinition("java.util.Objects")
+  private static final MethodMatcher EQUALS_MATCHER = MethodMatcher.create().ofType(JAVA_LANG_OBJECT).name("equals").addParameter(JAVA_LANG_OBJECT);
+  private static final MethodMatcher DEEP_EQUALS_MATCHER = MethodMatcher.create().ofType("java.util.Objects")
     .name("equals").addParameter(JAVA_LANG_OBJECT).addParameter(JAVA_LANG_OBJECT);
-  private static final MethodMatcher OBJECTS_EQUALS_MATCHER = MethodMatcher.create().typeDefinition("java.util.Objects")
+  private static final MethodMatcher OBJECTS_EQUALS_MATCHER = MethodMatcher.create().ofType("java.util.Objects")
     .name("deepEquals").addParameter(JAVA_LANG_OBJECT).addParameter(JAVA_LANG_OBJECT);
 
   /**

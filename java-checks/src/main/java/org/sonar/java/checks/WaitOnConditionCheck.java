@@ -35,9 +35,9 @@ public class WaitOnConditionCheck extends AbstractMethodDetection {
   protected MethodMatchers getMethodInvocationMatchers() {
     TypeCriteria conditionSubType = TypeCriteria.subtypeOf("java.util.concurrent.locks.Condition");
     return MethodMatchers.or(
-      MethodMatcher.create().typeDefinition(conditionSubType).name("wait").withoutParameter(),
-      MethodMatcher.create().typeDefinition(conditionSubType).name("wait").addParameter("long"),
-      MethodMatcher.create().typeDefinition(conditionSubType).name("wait").addParameter("long").addParameter("int"));
+      MethodMatcher.create().ofType(conditionSubType).name("wait").withoutParameters(),
+      MethodMatcher.create().ofType(conditionSubType).name("wait").addParameter("long"),
+      MethodMatcher.create().ofType(conditionSubType).name("wait").addParameter("long").addParameter("int"));
   }
 
   @Override

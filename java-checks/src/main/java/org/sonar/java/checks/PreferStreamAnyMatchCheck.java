@@ -59,17 +59,17 @@ public class PreferStreamAnyMatchCheck extends AbstractMethodDetection {
       .map(type -> MethodMatchers.create().ofType(type).name("filter").withAnyParameters())
       .collect(Collectors.toList()));
 
-  private static final MethodMatcher BOOLEAN_VALUE = MethodMatcher.create().typeDefinition("java.lang.Boolean")
-    .name("booleanValue").withoutParameter();
+  private static final MethodMatcher BOOLEAN_VALUE = MethodMatcher.create().ofType("java.lang.Boolean")
+    .name("booleanValue").withoutParameters();
 
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
     List<MethodMatcher> matchers = new ArrayList<>();
     Stream.of("java.util.Optional", "java.util.OptionalInt", "java.util.OptionalLong", "java.util.OptionalDouble")
-      .map(type -> MethodMatcher.create().typeDefinition(type).name("isPresent").withoutParameter())
+      .map(type -> MethodMatcher.create().ofType(type).name("isPresent").withoutParameters())
       .forEach(matchers::add);
     STREAM_TYPES.stream()
-      .map(type -> MethodMatcher.create().typeDefinition(type).name("anyMatch").addParameter("java.util.function.Predicate"))
+      .map(type -> MethodMatcher.create().ofType(type).name("anyMatch").addParameter("java.util.function.Predicate"))
       .forEach(matchers::add);
     return MethodMatchers.or(matchers);
   }

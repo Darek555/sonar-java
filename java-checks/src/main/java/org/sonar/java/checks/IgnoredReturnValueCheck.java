@@ -75,10 +75,10 @@ public class IgnoredReturnValueCheck extends IssuableSubscriptionVisitor {
   private static final Set<String> EXCLUDED_PREFIX = ImmutableSet.of("parse", "format", "decode", "valueOf");
 
   private static final MethodMatchers EXCLUDED = MethodMatchers.or(
-    MethodMatcher.create().typeDefinition("java.lang.Character").name("toChars").parameters("int", "char[]", "int"),
-    MethodMatcher.create().typeDefinition(JAVA_LANG_STRING).name("intern").withoutParameter());
+    MethodMatcher.create().ofType("java.lang.Character").name("toChars").withParameters("int", "char[]", "int"),
+    MethodMatcher.create().ofType(JAVA_LANG_STRING).name("intern").withoutParameters());
 
-  private static final MethodMatcher STRING_GET_BYTES = MethodMatcher.create().typeDefinition(JAVA_LANG_STRING).name("getBytes").parameters("java.nio.charset.Charset");
+  private static final MethodMatcher STRING_GET_BYTES = MethodMatcher.create().ofType(JAVA_LANG_STRING).name("getBytes").withParameters("java.nio.charset.Charset");
 
   @Override
   public List<Tree.Kind> nodesToVisit() {

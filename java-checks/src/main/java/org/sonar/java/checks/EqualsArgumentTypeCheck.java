@@ -49,7 +49,7 @@ public class EqualsArgumentTypeCheck extends IssuableSubscriptionVisitor {
 
   private static final MethodMatcher GETCLASS_MATCHER = MethodMatcher.create()
     .name("getClass")
-    .withoutParameter();
+    .withoutParameters();
 
   @Override
   public List<Tree.Kind> nodesToVisit() {

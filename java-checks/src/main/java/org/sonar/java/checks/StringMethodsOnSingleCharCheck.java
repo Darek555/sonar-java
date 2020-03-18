@@ -37,10 +37,10 @@ public class StringMethodsOnSingleCharCheck extends AbstractMethodDetection {
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatchers.or(
-      MethodMatcher.create().typeDefinition(STRING).name("indexOf").addParameter(STRING),
-      MethodMatcher.create().typeDefinition(STRING).name("indexOf").addParameter(STRING).addParameter("int"),
-      MethodMatcher.create().typeDefinition(STRING).name("lastIndexOf").addParameter(STRING),
-      MethodMatcher.create().typeDefinition(STRING).name("lastIndexOf").addParameter(STRING).addParameter("int")
+      MethodMatcher.create().ofType(STRING).name("indexOf").addParameter(STRING),
+      MethodMatcher.create().ofType(STRING).name("indexOf").addParameter(STRING).addParameter("int"),
+      MethodMatcher.create().ofType(STRING).name("lastIndexOf").addParameter(STRING),
+      MethodMatcher.create().ofType(STRING).name("lastIndexOf").addParameter(STRING).addParameter("int")
       );
   }
 

@@ -37,9 +37,9 @@ import org.sonar.plugins.java.api.tree.Tree.Kind;
 public class SerializableSuperConstructorCheck extends IssuableSubscriptionVisitor {
 
   private static final MethodMatcher WRITE_REPLACE = MethodMatcher.create()
-    .typeDefinition(TypeCriteria.anyType())
+    .ofType(TypeCriteria.anyType())
     .name("writeReplace")
-    .withoutParameter();
+    .withoutParameters();
 
   @Override
   public List<Kind> nodesToVisit() {

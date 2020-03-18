@@ -209,7 +209,7 @@ public class ImmediateReverseBoxingCheck extends IssuableSubscriptionVisitor {
       } else {
         typeCriteria = TypeCriteria.subtypeOf("java.lang.Number");
       }
-      matchers.add(MethodMatcher.create().typeDefinition(typeCriteria).name(primitiveType + "Value").withoutParameter());
+      matchers.add(MethodMatcher.create().ofType(typeCriteria).name(primitiveType + "Value").withoutParameters());
     }
     return MethodMatchers.or(matchers);
   }
@@ -219,7 +219,7 @@ public class ImmediateReverseBoxingCheck extends IssuableSubscriptionVisitor {
     for (Entry<String, String> primitiveMapping : PRIMITIVE_TYPES_BY_WRAPPER.entrySet()) {
       matchers.add(
         MethodMatcher.create()
-          .typeDefinition(primitiveMapping.getKey())
+          .ofType(primitiveMapping.getKey())
           .name("valueOf")
           .addParameter(primitiveMapping.getValue()));
     }

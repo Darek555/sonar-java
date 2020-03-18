@@ -38,8 +38,8 @@ import static java.lang.String.format;
 public class StaticMemberAccessCheck extends IssuableSubscriptionVisitor {
 
   private static final MethodMatchers LIST_SET_OF = MethodMatchers.or(
-    MethodMatcher.create().typeDefinition("java.util.List").name("of").withAnyParameters(),
-    MethodMatcher.create().typeDefinition("java.util.Set").name("of").withAnyParameters()
+    MethodMatcher.create().ofType("java.util.List").name("of").withAnyParameters(),
+    MethodMatcher.create().ofType("java.util.Set").name("of").withAnyParameters()
   );
 
   @Override

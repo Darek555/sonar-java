@@ -38,7 +38,7 @@ public class IndexOfStartPositionCheck extends IssuableSubscriptionVisitor {
 
   private static final String JAVA_LANG_STRING = "java.lang.String";
   private static final MethodMatcher INDEX_OF_METHOD = MethodMatcher.create()
-    .typeDefinition(JAVA_LANG_STRING).name("indexOf").addParameter(JAVA_LANG_STRING);
+    .ofType(JAVA_LANG_STRING).name("indexOf").addParameter(JAVA_LANG_STRING);
 
   @Override
   public List<Tree.Kind> nodesToVisit() {

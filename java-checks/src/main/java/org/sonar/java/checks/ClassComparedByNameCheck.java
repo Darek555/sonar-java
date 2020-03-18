@@ -35,7 +35,7 @@ public class ClassComparedByNameCheck extends AbstractMethodDetection {
 
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
-    return MethodMatcher.create().typeDefinition("java.lang.String").name("equals").withAnyParameters();
+    return MethodMatcher.create().ofType("java.lang.String").name("equals").withAnyParameters();
   }
 
   @Override
@@ -68,9 +68,10 @@ public class ClassComparedByNameCheck extends AbstractMethodDetection {
   private static class ClassGetNameDetector extends BaseTreeVisitor {
     private boolean useClassGetName = false;
 
-    private static final MethodMatchers METHOD_MATCHERS = MethodMatchers.or(
-      MethodMatcher.create().typeDefinition("java.lang.Class").name("getName").withoutParameter(),
-      MethodMatcher.create().typeDefinition("java.lang.Class").name("getSimpleName").withoutParameter());
+    private static final MethodMatchers METHOD_MATCHERS = MethodMatchers.create()
+      .ofType("java.lang.Class")
+      .names("getName", "getSimpleName")
+      .withoutParameters();
 
     @Override
     public void visitMethodInvocation(MethodInvocationTree tree) {

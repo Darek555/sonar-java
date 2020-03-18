@@ -39,8 +39,8 @@ public class LDAPDeserializationCheck extends AbstractMethodDetection {
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatchers.or(
-      MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf(CLASS_NAME)).name(CONSTRUCTOR_NAME).withAnyParameters(),
-      MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf(CLASS_NAME)).name("setReturningObjFlag").parameters("boolean"));
+      MethodMatcher.create().ofType(TypeCriteria.subtypeOf(CLASS_NAME)).name(CONSTRUCTOR_NAME).withAnyParameters(),
+      MethodMatcher.create().ofType(TypeCriteria.subtypeOf(CLASS_NAME)).name("setReturningObjFlag").withParameters("boolean"));
   }
   @Override
   protected void onConstructorFound(NewClassTree newClassTree) {

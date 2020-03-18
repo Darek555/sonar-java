@@ -36,11 +36,11 @@ public class BooleanLiteralInAssertionsCheck extends AbstractMethodDetection {
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatchers.or(
-      MethodMatcher.create().typeDefinition("org.junit.Assert").name(NameCriteria.startsWith(ASSERT)).withAnyParameters(),
-      MethodMatcher.create().typeDefinition("org.junit.jupiter.api.Assertions").name(NameCriteria.startsWith(ASSERT)).withAnyParameters(),
-      MethodMatcher.create().typeDefinition("junit.framework.Assert").name(NameCriteria.startsWith(ASSERT)).withAnyParameters(),
-      MethodMatcher.create().typeDefinition("junit.framework.TestCase").name(NameCriteria.startsWith(ASSERT)).withAnyParameters(),
-      MethodMatcher.create().typeDefinition("org.fest.assertions.Assertions").name("assertThat").addParameter("boolean")
+      MethodMatcher.create().ofType("org.junit.Assert").name(NameCriteria.startsWith(ASSERT)).withAnyParameters(),
+      MethodMatcher.create().ofType("org.junit.jupiter.api.Assertions").name(NameCriteria.startsWith(ASSERT)).withAnyParameters(),
+      MethodMatcher.create().ofType("junit.framework.Assert").name(NameCriteria.startsWith(ASSERT)).withAnyParameters(),
+      MethodMatcher.create().ofType("junit.framework.TestCase").name(NameCriteria.startsWith(ASSERT)).withAnyParameters(),
+      MethodMatcher.create().ofType("org.fest.assertions.Assertions").name("assertThat").addParameter("boolean")
       );
   }
 

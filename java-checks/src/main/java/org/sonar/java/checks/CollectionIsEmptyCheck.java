@@ -20,10 +20,9 @@
 package org.sonar.java.checks;
 
 import org.sonar.check.Rule;
-import org.sonar.java.matcher.MethodMatcher;
-import org.sonar.java.matcher.TypeCriteria;
 import org.sonar.plugins.java.api.JavaFileScanner;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.BaseTreeVisitor;
 import org.sonar.plugins.java.api.tree.BinaryExpressionTree;
 import org.sonar.plugins.java.api.tree.ClassTree;
@@ -37,7 +36,11 @@ import org.sonar.plugins.java.api.tree.Tree.Kind;
 public class CollectionIsEmptyCheck extends BaseTreeVisitor implements JavaFileScanner {
 
   private static final String JAVA_UTIL_COLLECTION = "java.util.Collection";
-  private static final MethodMatcher SIZE_METHOD = getSizeMethodInvocationMatcher();
+  private static final MethodMatchers SIZE_METHOD = MethodMatchers.create()
+    .ofSubType(JAVA_UTIL_COLLECTION)
+    .name("size")
+    .withoutParameters();
+
   private JavaFileScannerContext context;
 
   @Override
@@ -106,10 +109,6 @@ public class CollectionIsEmptyCheck extends BaseTreeVisitor implements JavaFileS
   private static boolean isOne(ExpressionTree tree) {
     return tree.is(Kind.INT_LITERAL) &&
       "1".equals(((LiteralTree) tree).value());
-  }
-
-  private static MethodMatcher getSizeMethodInvocationMatcher() {
-    return MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf(JAVA_UTIL_COLLECTION)).name("size").withoutParameter();
   }
 
 }
