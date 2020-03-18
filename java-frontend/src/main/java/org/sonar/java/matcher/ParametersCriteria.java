@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 @FunctionalInterface
+@Deprecated
 public interface ParametersCriteria extends Predicate<List<Type>> {
 
   static ParametersCriteria none() {

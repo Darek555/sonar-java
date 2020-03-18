@@ -22,6 +22,7 @@ package org.sonar.java.matcher;
 import java.util.function.Predicate;
 
 @FunctionalInterface
+@Deprecated
 public interface NameCriteria extends Predicate<String> {
 
   static NameCriteria any() {

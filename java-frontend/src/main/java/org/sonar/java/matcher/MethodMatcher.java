@@ -29,6 +29,7 @@ import org.sonar.plugins.java.api.tree.MethodReferenceTree;
 import org.sonar.plugins.java.api.tree.MethodTree;
 import org.sonar.plugins.java.api.tree.NewClassTree;
 
+@Deprecated
 public class MethodMatcher implements MethodMatchers {
 
   private MethodMatchers internalMatcher;

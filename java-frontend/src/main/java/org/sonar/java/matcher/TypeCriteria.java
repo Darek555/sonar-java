@@ -24,6 +24,7 @@ import org.sonar.plugins.java.api.semantic.Type;
 import java.util.function.Predicate;
 
 @FunctionalInterface
+@Deprecated
 public interface TypeCriteria extends Predicate<Type> {
 
   static TypeCriteria subtypeOf(String fullyQualifiedName) {
