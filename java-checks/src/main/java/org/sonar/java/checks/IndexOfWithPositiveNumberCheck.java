@@ -19,20 +19,19 @@
  */
 package org.sonar.java.checks;
 
+import java.util.Arrays;
+import java.util.List;
+import javax.annotation.Nullable;
 import org.sonar.check.Rule;
 import org.sonar.java.matcher.MethodMatcher;
-import org.sonar.java.matcher.MethodMatcherCollection;
 import org.sonar.java.matcher.TypeCriteria;
 import org.sonar.java.model.LiteralUtils;
 import org.sonar.plugins.java.api.IssuableSubscriptionVisitor;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.BinaryExpressionTree;
 import org.sonar.plugins.java.api.tree.ExpressionTree;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 import org.sonar.plugins.java.api.tree.Tree;
-
-import javax.annotation.Nullable;
-import java.util.Arrays;
-import java.util.List;
 
 @Rule(key = "S2692")
 public class IndexOfWithPositiveNumberCheck extends IssuableSubscriptionVisitor {
@@ -40,7 +39,7 @@ public class IndexOfWithPositiveNumberCheck extends IssuableSubscriptionVisitor 
   private static final String JAVA_LANG_STRING = "java.lang.String";
   private static final String INDEXOF = "indexOf";
 
-  private static final MethodMatcherCollection CHECKED_METHODS = MethodMatcherCollection.create(
+  private static final MethodMatchers CHECKED_METHODS = MethodMatchers.or(
     MethodMatcher.create()
       .typeDefinition(JAVA_LANG_STRING)
       .name(INDEXOF)
@@ -77,7 +76,7 @@ public class IndexOfWithPositiveNumberCheck extends IssuableSubscriptionVisitor 
   }
 
   private static boolean isIndexOfOnArrayOrString(Tree tree) {
-    return tree.is(Tree.Kind.METHOD_INVOCATION) && CHECKED_METHODS.anyMatch((MethodInvocationTree) tree);
+    return tree.is(Tree.Kind.METHOD_INVOCATION) && CHECKED_METHODS.matches((MethodInvocationTree) tree);
   }
 
 }

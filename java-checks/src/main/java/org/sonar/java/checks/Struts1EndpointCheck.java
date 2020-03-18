@@ -24,10 +24,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.sonar.check.Rule;
 import org.sonar.java.matcher.MethodMatcher;
-import org.sonar.java.matcher.MethodMatcherCollection;
 import org.sonar.java.matcher.TypeCriteria;
 import org.sonar.plugins.java.api.IssuableSubscriptionVisitor;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.IdentifierTree;
 import org.sonar.plugins.java.api.tree.MethodTree;
 import org.sonar.plugins.java.api.tree.Tree;
@@ -39,7 +39,7 @@ public class Struts1EndpointCheck extends IssuableSubscriptionVisitor {
     "javax.servlet.http.HttpServletRequest", "javax.servlet.http.HttpServletResponse"};
   private static final String[] args2 = {"org.apache.struts.action.ActionMapping", "org.apache.struts.action.ActionForm",
     "javax.servlet.ServletRequest", "javax.servlet.ServletResponse"};
-  private static final MethodMatcherCollection STRUTS_METHOD = MethodMatcherCollection.create(
+  private static final MethodMatchers STRUTS_METHOD = MethodMatchers.or(
     MethodMatcher.create().typeDefinition(TypeCriteria.anyType()).name("perform").parameters(args1),
     MethodMatcher.create().typeDefinition(TypeCriteria.anyType()).name("perform").parameters(args2),
     MethodMatcher.create().typeDefinition(TypeCriteria.anyType()).name("execute").parameters(args1),
@@ -57,7 +57,7 @@ public class Struts1EndpointCheck extends IssuableSubscriptionVisitor {
       return;
     }
     MethodTree methodTree = (MethodTree) tree;
-    if (methodTree.symbol().owner().type().isSubtypeOf("org.apache.struts.action.Action") && STRUTS_METHOD.anyMatch(methodTree)) {
+    if (methodTree.symbol().owner().type().isSubtypeOf("org.apache.struts.action.Action") && STRUTS_METHOD.matches(methodTree)) {
       List<IdentifierTree> actionMappingUsages = methodTree.parameters().get(1).symbol().usages();
       if (!actionMappingUsages.isEmpty()) {
         reportIssue(methodTree.simpleName(), "Make sure that the ActionForm is used safely here.",

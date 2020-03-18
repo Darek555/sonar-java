@@ -19,18 +19,17 @@
  */
 package org.sonar.java.checks;
 
+import java.util.Collections;
+import java.util.List;
 import org.sonar.check.Rule;
 import org.sonar.java.matcher.MethodMatcher;
-import org.sonar.java.matcher.MethodMatcherCollection;
 import org.sonar.plugins.java.api.IssuableSubscriptionVisitor;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.BaseTreeVisitor;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 import org.sonar.plugins.java.api.tree.NewClassTree;
 import org.sonar.plugins.java.api.tree.Tree;
 import org.sonar.plugins.java.api.tree.TypeCastTree;
-
-import java.util.Collections;
-import java.util.List;
 
 @Rule(key = "S2140")
 public class RandomFloatToIntCheck extends IssuableSubscriptionVisitor {
@@ -40,7 +39,7 @@ public class RandomFloatToIntCheck extends IssuableSubscriptionVisitor {
 
   private final MethodMatcher mathRandomMethodMatcher = MethodMatcher.create().typeDefinition("java.lang.Math").name("random").withoutParameter();
 
-  private final MethodMatcherCollection methodMatchers = MethodMatcherCollection.create(
+  private final MethodMatchers methodMatchers = MethodMatchers.or(
     MethodMatcher.create().typeDefinition("java.util.Random").name(NEXT_DOUBLE).withoutParameter(),
     MethodMatcher.create().typeDefinition("java.util.Random").name(NEXT_FLOAT).withoutParameter(),
     MethodMatcher.create().typeDefinition("java.util.concurrent.ThreadLocalRandom").name(NEXT_DOUBLE).withAnyParameters(),
@@ -71,7 +70,7 @@ public class RandomFloatToIntCheck extends IssuableSubscriptionVisitor {
     public void visitMethodInvocation(MethodInvocationTree tree) {
       if (mathRandomMethodMatcher.matches(tree)) {
         reportIssue(tree.methodSelect(), "Use \"java.util.Random.nextInt()\" instead.");
-      } else if (methodMatchers.anyMatch(tree)) {
+      } else if (methodMatchers.matches(tree)) {
         reportIssue(tree.methodSelect(), "Use \"nextInt()\" instead.");
       }
       super.visitMethodInvocation(tree);

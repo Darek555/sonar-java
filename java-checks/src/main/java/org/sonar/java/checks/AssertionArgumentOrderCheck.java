@@ -24,7 +24,6 @@ import java.util.List;
 import org.sonar.check.Rule;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
 import org.sonar.java.matcher.MethodMatcher;
-import org.sonar.java.matcher.MethodMatcherCollection;
 import org.sonar.java.matcher.NameCriteria;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.semantic.MethodMatchers;
@@ -46,7 +45,7 @@ public class AssertionArgumentOrderCheck extends AbstractMethodDetection {
     Tree.Kind.NULL_LITERAL, Tree.Kind.BOOLEAN_LITERAL, Tree.Kind.DOUBLE_LITERAL, Tree.Kind.FLOAT_LITERAL};
   private static final String MESSAGE = "Swap these 2 arguments so they are in the correct order: expected value, actual value.";
 
-  private static final MethodMatcherCollection COLLECTION_CREATION_CALL = MethodMatcherCollection.create(
+  private static final MethodMatchers COLLECTION_CREATION_CALL = MethodMatchers.or(
     MethodMatcher.create().typeDefinition("java.util.Collections").name(NameCriteria.startsWith("singleton")).withAnyParameters(),
     MethodMatcher.create().typeDefinition("java.util.Collections").name(NameCriteria.startsWith("empty")).withAnyParameters(),
     MethodMatcher.create().typeDefinition("java.util.Arrays").name("asList").withAnyParameters());
@@ -94,7 +93,7 @@ public class AssertionArgumentOrderCheck extends AbstractMethodDetection {
   private static boolean isCollectionCreationWithConstants(ExpressionTree actualArgument) {
     if (actualArgument.is(Tree.Kind.METHOD_INVOCATION)) {
       MethodInvocationTree mit = (MethodInvocationTree) actualArgument;
-      return COLLECTION_CREATION_CALL.anyMatch(mit) && mit.arguments().stream().allMatch(AssertionArgumentOrderCheck::isConstant);
+      return COLLECTION_CREATION_CALL.matches(mit) && mit.arguments().stream().allMatch(AssertionArgumentOrderCheck::isConstant);
     }
     return false;
   }

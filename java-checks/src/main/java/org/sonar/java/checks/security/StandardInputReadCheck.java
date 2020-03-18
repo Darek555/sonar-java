@@ -23,9 +23,9 @@ import java.util.Arrays;
 import java.util.List;
 import org.sonar.check.Rule;
 import org.sonar.java.matcher.MethodMatcher;
-import org.sonar.java.matcher.MethodMatcherCollection;
 import org.sonar.java.matcher.NameCriteria;
 import org.sonar.plugins.java.api.IssuableSubscriptionVisitor;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.IdentifierTree;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
@@ -35,7 +35,7 @@ import org.sonar.plugins.java.api.tree.Tree;
 @Rule(key = "S4829")
 public class StandardInputReadCheck extends IssuableSubscriptionVisitor {
 
-  private static final MethodMatcherCollection METHOD_MATCHERS = MethodMatcherCollection.create(
+  private static final MethodMatchers METHOD_MATCHERS = MethodMatchers.or(
     MethodMatcher.create().typeDefinition("java.lang.System").name("setIn").withAnyParameters(),
     MethodMatcher.create().typeDefinition("java.io.Console").name(NameCriteria.startsWith("read")).withAnyParameters());
 
@@ -52,9 +52,9 @@ public class StandardInputReadCheck extends IssuableSubscriptionVisitor {
       return;
     }
 
-    if (tree.is(Tree.Kind.METHOD_INVOCATION) && METHOD_MATCHERS.anyMatch((MethodInvocationTree) tree)) {
+    if (tree.is(Tree.Kind.METHOD_INVOCATION) && METHOD_MATCHERS.matches((MethodInvocationTree) tree)) {
       reportIssue(tree);
-    } else if (tree.is(Tree.Kind.METHOD_REFERENCE) && METHOD_MATCHERS.anyMatch((MethodReferenceTree) tree)) {
+    } else if (tree.is(Tree.Kind.METHOD_REFERENCE) && METHOD_MATCHERS.matches((MethodReferenceTree) tree)) {
       reportIssue(tree);
     } else if (tree.is(Tree.Kind.IDENTIFIER)) {
       checkIdentifier((IdentifierTree) tree);

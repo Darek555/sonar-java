@@ -23,10 +23,10 @@ import java.util.Collections;
 import java.util.List;
 import org.sonar.check.Rule;
 import org.sonar.java.matcher.MethodMatcher;
-import org.sonar.java.matcher.MethodMatcherCollection;
 import org.sonar.java.matcher.TypeCriteria;
 import org.sonar.java.model.ExpressionUtils;
 import org.sonar.plugins.java.api.IssuableSubscriptionVisitor;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.ExpressionStatementTree;
 import org.sonar.plugins.java.api.tree.ExpressionTree;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
@@ -36,7 +36,7 @@ import org.sonar.plugins.java.api.tree.Tree.Kind;
 @Rule(key = "S2674")
 public class IgnoredStreamReturnValueCheck extends IssuableSubscriptionVisitor {
 
-  private static final MethodMatcherCollection MATCHERS = MethodMatcherCollection.create(
+  private static final MethodMatchers MATCHERS = MethodMatchers.or(
     inputStreamInvocationMatcher("skip", "long"),
     inputStreamInvocationMatcher("read", "byte[]"));
 
@@ -54,7 +54,7 @@ public class IgnoredStreamReturnValueCheck extends IssuableSubscriptionVisitor {
     ExpressionTree statement = ((ExpressionStatementTree) tree).expression();
     if (statement.is(Kind.METHOD_INVOCATION)) {
       MethodInvocationTree mit = (MethodInvocationTree) statement;
-      if (MATCHERS.anyMatch(mit)) {
+      if (MATCHERS.matches(mit)) {
         reportIssue(ExpressionUtils.methodName(mit), "Check the return value of the \"" + mit.symbol().name() + "\" call to see how many bytes were read.");
       }
     }

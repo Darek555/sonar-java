@@ -29,7 +29,6 @@ import java.util.stream.Stream;
 import org.sonar.check.Rule;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
 import org.sonar.java.matcher.MethodMatcher;
-import org.sonar.java.matcher.MethodMatcherCollection;
 import org.sonar.java.matcher.TypeCriteria;
 import org.sonar.java.model.ExpressionUtils;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
@@ -100,16 +99,15 @@ public class DefaultEncodingUsageCheck extends AbstractMethodDetection {
     .flatMap(m -> Stream.of(m.copy().addParameter(JAVA_LANG_STRING), m.copy().addParameter(JAVA_NIO_CHARSET)))
     .collect(Collectors.toList());
 
-  private static final MethodMatcherCollection COMMONS_IO_CHARSET_MATCHERS =
-    MethodMatcherCollection.create(COMMONS_IO_WITH_CHARSET.toArray(new MethodMatcher[0]));
+  private static final MethodMatchers COMMONS_IO_CHARSET_MATCHERS = MethodMatchers.or(COMMONS_IO_WITH_CHARSET);
 
   private static final List<MethodMatcher> FILEUTILS_WRITE_WITH_CHARSET = Arrays.asList(
     method(COMMONS_FILEUTILS, "write").parameters(JAVA_IO_FILE, JAVA_LANG_CHARSEQUENCE, JAVA_LANG_STRING, BOOLEAN),
     method(COMMONS_FILEUTILS, "write").parameters(JAVA_IO_FILE, JAVA_LANG_CHARSEQUENCE, JAVA_NIO_CHARSET, BOOLEAN)
   );
 
-  private static final MethodMatcherCollection FILEUTILS_WRITE_WITH_CHARSET_MATCHERS =
-    MethodMatcherCollection.create(FILEUTILS_WRITE_WITH_CHARSET.toArray(new MethodMatcher[0]));
+  private static final MethodMatchers FILEUTILS_WRITE_WITH_CHARSET_MATCHERS =
+    MethodMatchers.or(FILEUTILS_WRITE_WITH_CHARSET);
 
   private Set<Tree> excluded = new HashSet<>();
 
@@ -199,11 +197,11 @@ public class DefaultEncodingUsageCheck extends AbstractMethodDetection {
 
   @Override
   protected void onMethodInvocationFound(MethodInvocationTree mit) {
-    if (COMMONS_IO_CHARSET_MATCHERS.anyMatch(mit)) {
+    if (COMMONS_IO_CHARSET_MATCHERS.matches(mit)) {
       Arguments arguments = mit.arguments();
       ExpressionTree lastArgument = arguments.get(arguments.size() - 1);
       testNullLiteralPassedForEncoding(lastArgument);
-    } else if (FILEUTILS_WRITE_WITH_CHARSET_MATCHERS.anyMatch(mit)) {
+    } else if (FILEUTILS_WRITE_WITH_CHARSET_MATCHERS.matches(mit)) {
       testNullLiteralPassedForEncoding(mit.arguments().get(2));
     } else {
       reportIssue(ExpressionUtils.methodName(mit), "Remove this use of \"" + mit.symbol().name() + "\"");

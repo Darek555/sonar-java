@@ -25,10 +25,10 @@ import java.util.Objects;
 import javax.annotation.CheckForNull;
 import org.sonar.check.Rule;
 import org.sonar.java.matcher.MethodMatcher;
-import org.sonar.java.matcher.MethodMatcherCollection;
 import org.sonar.java.matcher.TypeCriteria;
 import org.sonar.plugins.java.api.JavaFileScanner;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.semantic.Type;
 import org.sonar.plugins.java.api.tree.BaseTreeVisitor;
@@ -42,7 +42,7 @@ import org.sonar.plugins.java.api.tree.Tree;
 public class StaticMethodCheck extends BaseTreeVisitor implements JavaFileScanner {
 
   private static final String JAVA_IO_SERIALIZABLE = "java.io.Serializable";
-  private static final MethodMatcherCollection EXCLUDED_SERIALIZABLE_METHODS = MethodMatcherCollection.create(
+  private static final MethodMatchers EXCLUDED_SERIALIZABLE_METHODS = MethodMatchers.or(
     MethodMatcher.create()
       .typeDefinition(TypeCriteria.subtypeOf(JAVA_IO_SERIALIZABLE)).name("readObject").addParameter(TypeCriteria.subtypeOf("java.io.ObjectInputStream")),
     MethodMatcher.create()
@@ -86,7 +86,7 @@ public class StaticMethodCheck extends BaseTreeVisitor implements JavaFileScanne
   }
 
   private static boolean isExcluded(MethodTree tree) {
-    return tree.is(Tree.Kind.CONSTRUCTOR) || EXCLUDED_SERIALIZABLE_METHODS.anyMatch(tree);
+    return tree.is(Tree.Kind.CONSTRUCTOR) || EXCLUDED_SERIALIZABLE_METHODS.matches(tree);
   }
 
   @Override

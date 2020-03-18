@@ -23,9 +23,9 @@ import java.util.Arrays;
 import java.util.List;
 import org.sonar.check.Rule;
 import org.sonar.java.matcher.MethodMatcher;
-import org.sonar.java.matcher.MethodMatcherCollection;
 import org.sonar.java.matcher.TypeCriteria;
 import org.sonar.plugins.java.api.IssuableSubscriptionVisitor;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.BaseTreeVisitor;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 import org.sonar.plugins.java.api.tree.NewClassTree;
@@ -49,7 +49,7 @@ public class PasswordEncoderCheck extends IssuableSubscriptionVisitor {
     .name("passwordEncoder")
     .withAnyParameters();
 
-  private static final MethodMatcherCollection UNSAFE_PASSWORD_ENCODERS = MethodMatcherCollection.create(
+  private static final MethodMatchers UNSAFE_PASSWORD_ENCODERS = MethodMatchers.or(
     constructorMatcher("org.springframework.security.authentication.encoding.ShaPasswordEncoder").withAnyParameters(),
     constructorMatcher("org.springframework.security.authentication.encoding.Md5PasswordEncoder").withAnyParameters(),
     constructorMatcher("org.springframework.security.crypto.password.LdapShaPasswordEncoder").withAnyParameters(),
@@ -70,7 +70,7 @@ public class PasswordEncoderCheck extends IssuableSubscriptionVisitor {
     if (!hasSemantic()) {
       return;
     }
-    if (tree.is(Tree.Kind.NEW_CLASS) && UNSAFE_PASSWORD_ENCODERS.anyMatch(((NewClassTree) tree))) {
+    if (tree.is(Tree.Kind.NEW_CLASS) && UNSAFE_PASSWORD_ENCODERS.matches(((NewClassTree) tree))) {
       reportIssue(((NewClassTree) tree).identifier(), "Use secure \"PasswordEncoder\" implementation.");
     } else if (tree.is(Tree.Kind.METHOD)) {
       MethodInvocationVisitor visitor = new MethodInvocationVisitor();

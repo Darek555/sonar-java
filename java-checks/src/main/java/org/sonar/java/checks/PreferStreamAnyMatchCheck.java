@@ -19,16 +19,15 @@
  */
 package org.sonar.java.checks;
 
-import com.google.common.collect.ImmutableSet;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.sonar.check.Rule;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
 import org.sonar.java.matcher.MethodMatcher;
-import org.sonar.java.matcher.MethodMatcherCollection;
 import org.sonar.java.model.ExpressionUtils;
 import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.ExpressionTree;
@@ -42,30 +41,23 @@ import org.sonar.plugins.java.api.tree.Tree;
 @Rule(key = "S4034")
 public class PreferStreamAnyMatchCheck extends AbstractMethodDetection {
 
-  private static final Set<String> STREAM_TYPES = ImmutableSet.of("java.util.stream.Stream", "java.util.stream.IntStream", "java.util.stream.LongStream",
+  private static final List<String> STREAM_TYPES = Arrays.asList("java.util.stream.Stream", "java.util.stream.IntStream", "java.util.stream.LongStream",
     "java.util.stream.DoubleStream");
 
-  private static final MethodMatcherCollection FIND_METHODS = MethodMatcherCollection.create();
+  private static final MethodMatchers FIND_METHODS = MethodMatchers.or(
+    STREAM_TYPES.stream()
+      .map(type -> MethodMatchers.create().ofType(type).names("findFirst", "findAny").withoutParameters())
+      .collect(Collectors.toList()));
 
-  static {
-    STREAM_TYPES.forEach(type -> {
-      FIND_METHODS.add(MethodMatcher.create().typeDefinition(type).name("findFirst").withoutParameter());
-      FIND_METHODS.add(MethodMatcher.create().typeDefinition(type).name("findAny").withoutParameter());
-    });
-  }
+  private static final MethodMatchers MAP_METHODS = MethodMatchers.or(
+    STREAM_TYPES.stream()
+      .map(type -> MethodMatchers.create().ofType(type).name("map").withParameters("java.util.function.Function"))
+      .collect(Collectors.toList()));
 
-  private static final MethodMatcherCollection MAP_METHODS = MethodMatcherCollection.create();
-  static {
-    STREAM_TYPES.forEach(type ->
-      MAP_METHODS.add(MethodMatcher.create().typeDefinition(type).name("map").addParameter("java.util.function.Function"))
-    );
-  }
-
-  private static final MethodMatcherCollection FILTER_METHODS = MethodMatcherCollection.create();
-
-  static {
-    STREAM_TYPES.forEach(type -> FILTER_METHODS.add(MethodMatcher.create().typeDefinition(type).name("filter").withAnyParameters()));
-  }
+  private static final MethodMatchers FILTER_METHODS = MethodMatchers.or(
+    STREAM_TYPES.stream()
+      .map(type -> MethodMatchers.create().ofType(type).name("filter").withAnyParameters())
+      .collect(Collectors.toList()));
 
   private static final MethodMatcher BOOLEAN_VALUE = MethodMatcher.create().typeDefinition("java.lang.Boolean")
     .name("booleanValue").withoutParameter();
@@ -107,7 +99,7 @@ public class PreferStreamAnyMatchCheck extends AbstractMethodDetection {
     }
     if (predicate.is(Tree.Kind.METHOD_REFERENCE) && isBooleanValueReference((MethodReferenceTree) predicate)) {
       previousMITInChain(anyMatchMIT)
-        .filter(MAP_METHODS::anyMatch)
+        .filter(MAP_METHODS::matches)
         .ifPresent(mapMIT -> context.reportIssue(this, reportTree,
           "Use mapper from \"map()\" directly as predicate in \"anyMatch()\"."));
     }
@@ -119,9 +111,9 @@ public class PreferStreamAnyMatchCheck extends AbstractMethodDetection {
 
   private void handleIsPresent(MethodInvocationTree isPresentMIT) {
     previousMITInChain(isPresentMIT)
-      .filter(FIND_METHODS::anyMatch)
+      .filter(FIND_METHODS::matches)
       .ifPresent(findMIT ->
-        previousMITInChain(findMIT).filter(FILTER_METHODS::anyMatch)
+        previousMITInChain(findMIT).filter(FILTER_METHODS::matches)
           .ifPresent(filterMIT ->
     context.reportIssue(this, ExpressionUtils.methodName(filterMIT), ExpressionUtils.methodName(isPresentMIT),
       "Replace this \"filter()." + ExpressionUtils.methodName(findMIT).name() + "().isPresent()\" chain with \"anyMatch()\".")));

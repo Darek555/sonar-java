@@ -22,7 +22,6 @@ package org.sonar.java.checks;
 import org.sonar.check.Rule;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
 import org.sonar.java.matcher.MethodMatcher;
-import org.sonar.java.matcher.MethodMatcherCollection;
 import org.sonar.java.model.ExpressionUtils;
 import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.BaseTreeVisitor;
@@ -69,13 +68,13 @@ public class ClassComparedByNameCheck extends AbstractMethodDetection {
   private static class ClassGetNameDetector extends BaseTreeVisitor {
     private boolean useClassGetName = false;
 
-    private static final MethodMatcherCollection METHOD_MATCHERS = MethodMatcherCollection.create(
+    private static final MethodMatchers METHOD_MATCHERS = MethodMatchers.or(
       MethodMatcher.create().typeDefinition("java.lang.Class").name("getName").withoutParameter(),
       MethodMatcher.create().typeDefinition("java.lang.Class").name("getSimpleName").withoutParameter());
 
     @Override
     public void visitMethodInvocation(MethodInvocationTree tree) {
-      if (METHOD_MATCHERS.anyMatch(tree)) {
+      if (METHOD_MATCHERS.matches(tree)) {
         useClassGetName = true;
       }
       scan(tree.methodSelect());

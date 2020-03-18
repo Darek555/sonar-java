@@ -19,10 +19,12 @@
  */
 package org.sonar.java.checks;
 
+import java.util.Collections;
+import java.util.List;
 import org.sonar.check.Rule;
 import org.sonar.java.matcher.MethodMatcher;
-import org.sonar.java.matcher.MethodMatcherCollection;
 import org.sonar.plugins.java.api.IssuableSubscriptionVisitor;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.semantic.Type;
 import org.sonar.plugins.java.api.tree.BaseTreeVisitor;
@@ -36,9 +38,6 @@ import org.sonar.plugins.java.api.tree.Tree;
 import org.sonar.plugins.java.api.tree.TryStatementTree;
 import org.sonar.plugins.java.api.tree.TypeTree;
 import org.sonar.plugins.java.api.tree.UnionTypeTree;
-
-import java.util.Collections;
-import java.util.List;
 
 @Rule(key = "S1181")
 public class CatchOfThrowableOrErrorCheck extends IssuableSubscriptionVisitor {
@@ -88,7 +87,7 @@ public class CatchOfThrowableOrErrorCheck extends IssuableSubscriptionVisitor {
 
   private static class GuavaCloserRethrowVisitor extends BaseTreeVisitor {
     private static final String JAVA_LANG_CLASS = "java.lang.Class";
-    private static final MethodMatcherCollection MATCHERS = MethodMatcherCollection.create(
+    private static final MethodMatchers MATCHERS = MethodMatchers.or(
       rethrowMethod(),
       rethrowMethod().addParameter(JAVA_LANG_CLASS),
       rethrowMethod().addParameter(JAVA_LANG_CLASS).addParameter(JAVA_LANG_CLASS));
@@ -110,7 +109,7 @@ public class CatchOfThrowableOrErrorCheck extends IssuableSubscriptionVisitor {
     private boolean isGuavaCloserRethrow(ExpressionTree expression) {
       if (expression.is(Tree.Kind.METHOD_INVOCATION)) {
         MethodInvocationTree mit = (MethodInvocationTree) expression;
-        if (MATCHERS.anyMatch(mit)) {
+        if (MATCHERS.matches(mit)) {
           ExpressionTree firstArgument = mit.arguments().get(0);
           return firstArgument.is(Tree.Kind.IDENTIFIER) && exceptionSymbol.equals(((IdentifierTree) firstArgument).symbol());
         }

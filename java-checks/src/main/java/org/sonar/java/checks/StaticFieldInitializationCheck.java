@@ -25,7 +25,6 @@ import java.util.LinkedList;
 import java.util.List;
 import org.sonar.check.Rule;
 import org.sonar.java.matcher.MethodMatcher;
-import org.sonar.java.matcher.MethodMatcherCollection;
 import org.sonar.java.model.ModifiersUtils;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.semantic.MethodMatchers;
@@ -44,7 +43,7 @@ public class StaticFieldInitializationCheck extends AbstractInSynchronizeChecker
   private Deque<Boolean> classWithSynchronizedMethod = new LinkedList<>();
   private Deque<Boolean> withinStaticInitializer = new LinkedList<>();
   private Deque<Boolean> methodUsesLocks = new LinkedList<>();
-  private MethodMatcherCollection locks = MethodMatcherCollection.create(
+  private MethodMatchers locks = MethodMatchers.or(
     MethodMatcher.create().typeDefinition("java.util.concurrent.locks.Lock").name("lock").withoutParameter(),
     MethodMatcher.create().typeDefinition("java.util.concurrent.locks.Lock").name("tryLock").withoutParameter()
   );
@@ -86,7 +85,7 @@ public class StaticFieldInitializationCheck extends AbstractInSynchronizeChecker
         methodUsesLocks.push(false);
         break;
       case METHOD_INVOCATION:
-        if (locks.anyMatch((MethodInvocationTree) tree) && methodUsesLocks.size() != 1) {
+        if (locks.matches((MethodInvocationTree) tree) && methodUsesLocks.size() != 1) {
           methodUsesLocks.pop();
           methodUsesLocks.push(true);
         }

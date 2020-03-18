@@ -36,10 +36,10 @@ import org.sonar.check.Rule;
 import org.sonar.check.RuleProperty;
 import org.sonar.java.checks.helpers.ExpressionsHelper;
 import org.sonar.java.matcher.MethodMatcher;
-import org.sonar.java.matcher.MethodMatcherCollection;
 import org.sonar.java.matcher.TypeCriteria;
 import org.sonar.plugins.java.api.JavaFileScanner;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.Arguments;
 import org.sonar.plugins.java.api.tree.AssignmentExpressionTree;
@@ -63,7 +63,7 @@ import static org.sonar.java.model.ExpressionUtils.skipParentheses;
 @Rule(key = "S1166")
 public class CatchUsesExceptionWithContextCheck extends BaseTreeVisitor implements JavaFileScanner {
 
-  private static final MethodMatcherCollection GET_MESSAGE_METHODS = MethodMatcherCollection.create(
+  private static final MethodMatchers GET_MESSAGE_METHODS = MethodMatchers.or(
     MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf("java.lang.Throwable")).name("getMessage").withoutParameter(),
     MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf("java.lang.Throwable")).name("getLocalizedMessage").withoutParameter());
 
@@ -74,7 +74,7 @@ public class CatchUsesExceptionWithContextCheck extends BaseTreeVisitor implemen
   private static final MethodMatcher JAVA_UTIL_LOGP_METHOD = MethodMatcher.create().typeDefinition(JAVA_UTIL_LOGGING_LOGGER).name("logp").withAnyParameters();
   private static final MethodMatcher JAVA_UTIL_LOGRB_METHOD = MethodMatcher.create().typeDefinition(JAVA_UTIL_LOGGING_LOGGER).name("logrb").withAnyParameters();
 
-  private static final MethodMatcherCollection LOGGING_METHODS = MethodMatcherCollection.create(
+  private static final MethodMatchers LOGGING_METHODS = MethodMatchers.or(
     MethodMatcher.create().typeDefinition(JAVA_UTIL_LOGGING_LOGGER).name("config").withAnyParameters(),
     MethodMatcher.create().typeDefinition(JAVA_UTIL_LOGGING_LOGGER).name("fine").withAnyParameters(),
     MethodMatcher.create().typeDefinition(JAVA_UTIL_LOGGING_LOGGER).name("finer").withAnyParameters(),
@@ -178,7 +178,7 @@ public class CatchUsesExceptionWithContextCheck extends BaseTreeVisitor implemen
   @Override
   public void visitMethodInvocation(MethodInvocationTree mit) {
     super.visitMethodInvocation(mit);
-    if (LOGGING_METHODS.anyMatch(mit)) {
+    if (LOGGING_METHODS.matches(mit)) {
       usageStatusStack.forEach(usageStatus -> usageStatus.addLoggingMethodInvocation(mit));
     }
   }
@@ -328,7 +328,7 @@ public class CatchUsesExceptionWithContextCheck extends BaseTreeVisitor implemen
         ExpressionTree initializer = getVariableInitializer(variable);
         return assignments.isEmpty() && initializer != null && isSimpleExceptionMessage(initializer);
       } else if (innerExpression.is(Kind.METHOD_INVOCATION)) {
-        return GET_MESSAGE_METHODS.anyMatch(((MethodInvocationTree) innerExpression));
+        return GET_MESSAGE_METHODS.matches(((MethodInvocationTree) innerExpression));
       }
       return false;
     }
@@ -370,7 +370,7 @@ public class CatchUsesExceptionWithContextCheck extends BaseTreeVisitor implemen
 
     @Override
     public void visitMethodInvocation(MethodInvocationTree mit) {
-      if (!hasGetMessageCall && GET_MESSAGE_METHODS.anyMatch(mit)) {
+      if (!hasGetMessageCall && GET_MESSAGE_METHODS.matches(mit)) {
         hasGetMessageCall = true;
       }
       super.visitMethodInvocation(mit);

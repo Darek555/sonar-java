@@ -19,13 +19,15 @@
  */
 package org.sonar.java.checks;
 
+import java.util.Collections;
+import java.util.List;
 import org.sonar.check.Rule;
 import org.sonar.java.JavaVersionAwareVisitor;
 import org.sonar.java.matcher.MethodMatcher;
-import org.sonar.java.matcher.MethodMatcherCollection;
 import org.sonar.java.matcher.TypeCriteria;
 import org.sonar.plugins.java.api.IssuableSubscriptionVisitor;
 import org.sonar.plugins.java.api.JavaVersion;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.semantic.Type;
 import org.sonar.plugins.java.api.tree.ClassTree;
@@ -33,13 +35,10 @@ import org.sonar.plugins.java.api.tree.IdentifierTree;
 import org.sonar.plugins.java.api.tree.MethodTree;
 import org.sonar.plugins.java.api.tree.Tree;
 
-import java.util.Collections;
-import java.util.List;
-
 @Rule(key = "S1609")
 public class SAMAnnotatedCheck extends IssuableSubscriptionVisitor implements JavaVersionAwareVisitor {
 
-  private static final MethodMatcherCollection OBJECT_METHODS = MethodMatcherCollection.create(
+  private static final MethodMatchers OBJECT_METHODS = MethodMatchers.or(
     methodMatcherWithName("equals", "java.lang.Object"),
     methodMatcherWithName("getClass"),
     methodMatcherWithName("hashcode"),
@@ -106,7 +105,7 @@ public class SAMAnnotatedCheck extends IssuableSubscriptionVisitor implements Ja
 
   private static boolean isNotObjectMethod(Symbol.MethodSymbol method) {
     MethodTree declaration = method.declaration();
-    return declaration == null || !OBJECT_METHODS.anyMatch(declaration);
+    return declaration == null || !OBJECT_METHODS.matches(declaration);
   }
 
   private static MethodMatcher methodMatcherWithName(String name, String... parameters) {

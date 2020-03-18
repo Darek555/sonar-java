@@ -22,7 +22,6 @@ package org.sonar.java.checks.security;
 import org.sonar.check.Rule;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
 import org.sonar.java.matcher.MethodMatcher;
-import org.sonar.java.matcher.MethodMatcherCollection;
 import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 
@@ -41,7 +40,7 @@ public class AndroidBroadcastingCheck extends AbstractMethodDetection {
   private static final MethodMatcher SEND_STICKY_BROADCAST_AS_USER = androidContext().name("sendStickyBroadcastAsUser").withAnyParameters();
   private static final MethodMatcher SEND_STICKY_ORDERED_BROADCAST = androidContext().name("sendStickyOrderedBroadcast").withAnyParameters();
   private static final MethodMatcher SEND_STICKY_ORDERED_BROADCAST_AS_USER = androidContext().name("sendStickyOrderedBroadcastAsUser").withAnyParameters();
-  private static final MethodMatcherCollection STICKY_BROADCAST = MethodMatcherCollection.create(SEND_STICKY_BROADCAST,
+  private static final MethodMatchers STICKY_BROADCAST = MethodMatchers.or(SEND_STICKY_BROADCAST,
     SEND_STICKY_BROADCAST_AS_USER, SEND_STICKY_ORDERED_BROADCAST, SEND_STICKY_ORDERED_BROADCAST_AS_USER);
 
   private static MethodMatcher androidContext() {
@@ -72,7 +71,7 @@ public class AndroidBroadcastingCheck extends AbstractMethodDetection {
       reportIssue(mit.methodSelect(), MESSAGE);
     } else if (SEND_ORDERED_BROADCAST_AS_USER.matches(mit) && mit.arguments().size() > 2 && mit.arguments().get(2).is(NULL_LITERAL)) {
       reportIssue(mit.methodSelect(), MESSAGE);
-    } else if (STICKY_BROADCAST.anyMatch(mit)) {
+    } else if (STICKY_BROADCAST.matches(mit)) {
       reportIssue(mit.methodSelect(), MESSAGE);
     }
   }

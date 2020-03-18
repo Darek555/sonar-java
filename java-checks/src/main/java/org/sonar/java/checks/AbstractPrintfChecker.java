@@ -34,7 +34,6 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang.StringUtils;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
 import org.sonar.java.matcher.MethodMatcher;
-import org.sonar.java.matcher.MethodMatcherCollection;
 import org.sonar.java.matcher.TypeCriteria;
 import org.sonar.java.model.LiteralUtils;
 import org.sonar.plugins.java.api.semantic.MethodMatchers;
@@ -70,7 +69,7 @@ public abstract class AbstractPrintfChecker extends AbstractMethodDetection {
     .addParameter("java.util.logging.Level")
     .addParameter(JAVA_LANG_STRING)
     .addParameter(TypeCriteria.anyType());
-  protected static final MethodMatcherCollection JAVA_UTIL_LOGGER_LOG_MATCHER = MethodMatcherCollection.create(
+  protected static final MethodMatchers JAVA_UTIL_LOGGER_LOG_MATCHER = MethodMatchers.or(
     JAVA_UTIL_LOGGER_LOG_LEVEL_STRING,
     JAVA_UTIL_LOGGER_LOG_LEVEL_STRING_ANY);
     

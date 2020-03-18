@@ -23,8 +23,8 @@ import java.util.Collections;
 import java.util.List;
 import org.sonar.check.Rule;
 import org.sonar.java.matcher.MethodMatcher;
-import org.sonar.java.matcher.MethodMatcherCollection;
 import org.sonar.plugins.java.api.IssuableSubscriptionVisitor;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.semantic.Type;
 import org.sonar.plugins.java.api.tree.ExpressionTree;
@@ -37,7 +37,7 @@ import static java.lang.String.format;
 @Rule(key = "S3252")
 public class StaticMemberAccessCheck extends IssuableSubscriptionVisitor {
 
-  private static final MethodMatcherCollection LIST_SET_OF = MethodMatcherCollection.create(
+  private static final MethodMatchers LIST_SET_OF = MethodMatchers.or(
     MethodMatcher.create().typeDefinition("java.util.List").name("of").withAnyParameters(),
     MethodMatcher.create().typeDefinition("java.util.Set").name("of").withAnyParameters()
   );
@@ -69,6 +69,6 @@ public class StaticMemberAccessCheck extends IssuableSubscriptionVisitor {
     // this is necessary because we incorrectly resolve to Set#of List#of methods on JDK11
     // see SONARJAVA-3095
     Tree parent = mse.parent();
-    return parent.is(Tree.Kind.METHOD_INVOCATION) && LIST_SET_OF.anyMatch((MethodInvocationTree) parent);
+    return parent.is(Tree.Kind.METHOD_INVOCATION) && LIST_SET_OF.matches((MethodInvocationTree) parent);
   }
 }

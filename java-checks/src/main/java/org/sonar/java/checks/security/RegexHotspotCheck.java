@@ -24,8 +24,8 @@ import java.util.List;
 import org.sonar.check.Rule;
 import org.sonar.java.checks.helpers.ExpressionsHelper;
 import org.sonar.java.matcher.MethodMatcher;
-import org.sonar.java.matcher.MethodMatcherCollection;
 import org.sonar.plugins.java.api.IssuableSubscriptionVisitor;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.AnnotationTree;
 import org.sonar.plugins.java.api.tree.Arguments;
 import org.sonar.plugins.java.api.tree.AssignmentExpressionTree;
@@ -38,7 +38,7 @@ import org.sonar.plugins.java.api.tree.Tree;
 public class RegexHotspotCheck extends IssuableSubscriptionVisitor {
 
   private static final String JAVA_LANG_STRING = "java.lang.String";
-  private static final MethodMatcherCollection REGEX_HOTSPOTS = MethodMatcherCollection.create(
+  private static final MethodMatchers REGEX_HOTSPOTS = MethodMatchers.or(
     MethodMatcher.create().typeDefinition(JAVA_LANG_STRING).name("matches").addParameter(JAVA_LANG_STRING),
     MethodMatcher.create().typeDefinition(JAVA_LANG_STRING).name("replaceAll").withAnyParameters(),
     MethodMatcher.create().typeDefinition(JAVA_LANG_STRING).name("replaceFirst").withAnyParameters(),
@@ -63,7 +63,7 @@ public class RegexHotspotCheck extends IssuableSubscriptionVisitor {
       return;
     }
     if (tree.is(Tree.Kind.METHOD_INVOCATION)) {
-      if (REGEX_HOTSPOTS.anyMatch((MethodInvocationTree) tree)) {
+      if (REGEX_HOTSPOTS.matches((MethodInvocationTree) tree)) {
         Arguments args = ((MethodInvocationTree) tree).arguments();
         if (!args.isEmpty() && isSuspiciousRegex(args.get(0))) {
           reportIssue(args.get(0), MESSAGE);

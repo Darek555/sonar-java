@@ -26,13 +26,13 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.sonar.check.Rule;
 import org.sonar.java.matcher.MethodMatcher;
-import org.sonar.java.matcher.MethodMatcherCollection;
 import org.sonar.java.matcher.NameCriteria;
 import org.sonar.java.matcher.TypeCriteria;
 import org.sonar.java.model.ModifiersUtils;
 import org.sonar.plugins.java.api.JavaFileScanner;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.JavaFileScannerContext.Location;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.semantic.Type;
 import org.sonar.plugins.java.api.tree.BaseTreeVisitor;
@@ -60,7 +60,7 @@ public class AssertionsCompletenessCheck extends BaseTreeVisitor implements Java
   private static final String JAVA6_ABSTRACT_SOFT_ASSERT = "org.assertj.core.api.Java6AbstractStandardSoftAssertions";
   private static final MethodMatcher MOCKITO_VERIFY = MethodMatcher.create()
     .typeDefinition(TypeCriteria.subtypeOf("org.mockito.Mockito")).name("verify").withAnyParameters();
-  private static final MethodMatcherCollection ASSERTJ_ASSERT_ALL = MethodMatcherCollection.create(
+  private static final MethodMatchers ASSERTJ_ASSERT_ALL = MethodMatchers.or(
     MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf("org.assertj.core.api.SoftAssertions")).name("assertAll").withAnyParameters(),
     MethodMatcher.create().typeDefinition(TypeCriteria.subtypeOf("org.assertj.core.api.Java6SoftAssertions")).name("assertAll").withAnyParameters());
   private static final MethodMatcher ASSERTJ_ASSERT_THAT = MethodMatcher.create()
@@ -70,7 +70,7 @@ public class AssertionsCompletenessCheck extends BaseTreeVisitor implements Java
   private static final MethodMatcher ASSERTJ_ASSERT_SOFTLY = MethodMatcher.create()
     .typeDefinition(TypeCriteria.subtypeOf("org.assertj.core.api.SoftAssertions")).name("assertSoftly").withAnyParameters();
 
-  private static final MethodMatcherCollection FEST_LIKE_ASSERT_THAT = MethodMatcherCollection.create(
+  private static final MethodMatchers FEST_LIKE_ASSERT_THAT = MethodMatchers.or(
     // Fest 1.X
     assertThatOnType("org.fest.assertions.Assertions"),
     // Fest 2.X
@@ -90,7 +90,7 @@ public class AssertionsCompletenessCheck extends BaseTreeVisitor implements Java
     methodWithName("com.google.common.truth.Truth8", NameCriteria.startsWith("assert"))
   );
 
-  private static final MethodMatcherCollection FEST_LIKE_EXCLUSIONS = MethodMatcherCollection.create(
+  private static final MethodMatchers FEST_LIKE_EXCLUSIONS = MethodMatchers.or(
     methodWithName(FEST_ASSERT_SUPERTYPE, NameCriteria.startsWith("as")),
     methodWithName(FEST_ASSERT_SUPERTYPE, NameCriteria.startsWith("using")),
     methodWithName(FEST_ASSERT_SUPERTYPE, NameCriteria.startsWith("with")),
@@ -171,7 +171,7 @@ public class AssertionsCompletenessCheck extends BaseTreeVisitor implements Java
       return;
     }
     Boolean previous = chainedToAnyMethodButFestExclusions;
-    chainedToAnyMethodButFestExclusions = MoreObjects.firstNonNull(chainedToAnyMethodButFestExclusions, false) || !FEST_LIKE_EXCLUSIONS.anyMatch(mit);
+    chainedToAnyMethodButFestExclusions = MoreObjects.firstNonNull(chainedToAnyMethodButFestExclusions, false) || !FEST_LIKE_EXCLUSIONS.matches(mit);
     scan(mit.methodSelect());
     // skip arguments
     chainedToAnyMethodButFestExclusions = previous;
@@ -182,7 +182,7 @@ public class AssertionsCompletenessCheck extends BaseTreeVisitor implements Java
       return false;
     }
 
-    if (((FEST_LIKE_ASSERT_THAT.anyMatch(mit) && (mit.arguments().size() == 1)) || MOCKITO_VERIFY.matches(mit)) && !Boolean.TRUE.equals(chainedToAnyMethodButFestExclusions)) {
+    if (((FEST_LIKE_ASSERT_THAT.matches(mit) && (mit.arguments().size() == 1)) || MOCKITO_VERIFY.matches(mit)) && !Boolean.TRUE.equals(chainedToAnyMethodButFestExclusions)) {
       context.reportIssue(this, mit.methodSelect(), "Complete the assertion.");
       return true;
     }
@@ -224,7 +224,7 @@ public class AssertionsCompletenessCheck extends BaseTreeVisitor implements Java
         assertThatCalled = assertThatStateBeforeInvocation;
       }
 
-      if (ASSERTJ_ASSERT_ALL.anyMatch(mit)) {
+      if (ASSERTJ_ASSERT_ALL.matches(mit)) {
         if (assertThatCalled) {
           assertThatCalled = false;
         } else {

@@ -23,10 +23,10 @@ import java.util.Collections;
 import java.util.List;
 import org.sonar.check.Rule;
 import org.sonar.java.matcher.MethodMatcher;
-import org.sonar.java.matcher.MethodMatcherCollection;
 import org.sonar.java.matcher.NameCriteria;
 import org.sonar.java.model.JUtils;
 import org.sonar.plugins.java.api.IssuableSubscriptionVisitor;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.semantic.Type;
 import org.sonar.plugins.java.api.tree.ExpressionTree;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
@@ -38,7 +38,7 @@ import org.sonar.plugins.java.api.tree.VariableTree;
 public class EnumSetCheck extends IssuableSubscriptionVisitor {
 
   private static final MethodMatcher COLLECTIONS_UNMODIFIABLE = MethodMatcher.create().typeDefinition("java.util.Collections").name("unmodifiableSet").withAnyParameters();
-  private static final MethodMatcherCollection SET_CREATION_METHODS = MethodMatcherCollection.create(
+  private static final MethodMatchers SET_CREATION_METHODS = MethodMatchers.or(
     // Java 9 factory methods
     MethodMatcher.create().typeDefinition("java.util.Set").name("of").withAnyParameters(),
     // guava
@@ -65,7 +65,7 @@ public class EnumSetCheck extends IssuableSubscriptionVisitor {
       if (COLLECTIONS_UNMODIFIABLE.matches(mit)) {
         // check the collection used as parameter
         initializer = mit.arguments().get(0);
-      } else if (!SET_CREATION_METHODS.anyMatch(mit) || "immutableEnumSet".equals(mit.symbol().name())) {
+      } else if (!SET_CREATION_METHODS.matches(mit) || "immutableEnumSet".equals(mit.symbol().name())) {
         // Methods from Guava 'Sets' except 'immutableEnumSet' should be checked,
         // but discard any other method invocations (killing the noise)
         return;

@@ -25,9 +25,9 @@ import java.util.Optional;
 import java.util.stream.Stream;
 import org.sonar.check.Rule;
 import org.sonar.java.matcher.MethodMatcher;
-import org.sonar.java.matcher.MethodMatcherCollection;
 import org.sonar.java.matcher.TypeCriteria;
 import org.sonar.plugins.java.api.IssuableSubscriptionVisitor;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.AssignmentExpressionTree;
 import org.sonar.plugins.java.api.tree.ExpressionTree;
@@ -46,7 +46,7 @@ public class SQLInjectionCheck extends IssuableSubscriptionVisitor {
   private static final String JAVA_SQL_CONNECTION = "java.sql.Connection";
   private static final String SPRING_JDBC_OPERATIONS = "org.springframework.jdbc.core.JdbcOperations";
 
-  private static final MethodMatcherCollection SQL_INJECTION_SUSPECTS = MethodMatcherCollection.create(
+  private static final MethodMatchers SQL_INJECTION_SUSPECTS = MethodMatchers.or(
     MethodMatcher.create().callSite(TypeCriteria.subtypeOf("org.hibernate.Session")).name("createQuery").withAnyParameters(),
     MethodMatcher.create().callSite(TypeCriteria.subtypeOf("org.hibernate.Session")).name("createSQLQuery").withAnyParameters(),
 
@@ -116,10 +116,10 @@ public class SQLInjectionCheck extends IssuableSubscriptionVisitor {
       return false;
     }
     if (tree.is(Tree.Kind.NEW_CLASS)) {
-      return SQL_INJECTION_SUSPECTS.anyMatch((NewClassTree) tree);
+      return SQL_INJECTION_SUSPECTS.matches((NewClassTree) tree);
     }
     if (tree.is(Tree.Kind.METHOD_INVOCATION)) {
-      return SQL_INJECTION_SUSPECTS.anyMatch((MethodInvocationTree) tree);
+      return SQL_INJECTION_SUSPECTS.matches((MethodInvocationTree) tree);
     }
     return false;
   }

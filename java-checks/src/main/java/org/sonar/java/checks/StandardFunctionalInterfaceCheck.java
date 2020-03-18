@@ -19,20 +19,6 @@
  */
 package org.sonar.java.checks;
 
-import org.sonar.check.Rule;
-import org.sonar.java.matcher.MethodMatcher;
-import org.sonar.java.matcher.MethodMatcherCollection;
-import org.sonar.java.matcher.TypeCriteria;
-import org.sonar.plugins.java.api.IssuableSubscriptionVisitor;
-import org.sonar.plugins.java.api.semantic.Symbol;
-import org.sonar.plugins.java.api.semantic.Symbol.MethodSymbol;
-import org.sonar.plugins.java.api.semantic.Type;
-import org.sonar.plugins.java.api.tree.ClassTree;
-import org.sonar.plugins.java.api.tree.IdentifierTree;
-import org.sonar.plugins.java.api.tree.MethodTree;
-import org.sonar.plugins.java.api.tree.Tree;
-
-import javax.annotation.CheckForNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -43,11 +29,24 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import javax.annotation.CheckForNull;
+import org.sonar.check.Rule;
+import org.sonar.java.matcher.MethodMatcher;
+import org.sonar.java.matcher.TypeCriteria;
+import org.sonar.plugins.java.api.IssuableSubscriptionVisitor;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
+import org.sonar.plugins.java.api.semantic.Symbol;
+import org.sonar.plugins.java.api.semantic.Symbol.MethodSymbol;
+import org.sonar.plugins.java.api.semantic.Type;
+import org.sonar.plugins.java.api.tree.ClassTree;
+import org.sonar.plugins.java.api.tree.IdentifierTree;
+import org.sonar.plugins.java.api.tree.MethodTree;
+import org.sonar.plugins.java.api.tree.Tree;
 
 @Rule(key = "S1711")
 public class StandardFunctionalInterfaceCheck extends IssuableSubscriptionVisitor {
 
-  private static final MethodMatcherCollection OBJECT_METHODS = MethodMatcherCollection.create(
+  private static final MethodMatchers OBJECT_METHODS = MethodMatchers.or(
     methodMatcherWithName("equals", "java.lang.Object"),
     methodMatcherWithName("getClass"),
     methodMatcherWithName("hashcode"),
@@ -197,7 +196,7 @@ public class StandardFunctionalInterfaceCheck extends IssuableSubscriptionVisito
 
   private static boolean isNotObjectMethod(MethodSymbol method) {
     MethodTree declaration = method.declaration();
-    return declaration == null || !OBJECT_METHODS.anyMatch(declaration);
+    return declaration == null || !OBJECT_METHODS.matches(declaration);
   }
 
   private static class FunctionalInterface {

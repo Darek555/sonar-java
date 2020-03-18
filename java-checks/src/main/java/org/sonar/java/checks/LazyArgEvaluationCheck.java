@@ -21,22 +21,20 @@ package org.sonar.java.checks;
 
 import java.util.ArrayDeque;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Deque;
 import java.util.List;
 import java.util.Locale;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.sonar.check.Rule;
 import org.sonar.java.matcher.MethodMatcher;
-import org.sonar.java.matcher.MethodMatcherCollection;
 import org.sonar.java.matcher.TypeCriteria;
 import org.sonar.java.model.JUtils;
 import org.sonar.plugins.java.api.JavaFileScanner;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.semantic.Type;
 import org.sonar.plugins.java.api.tree.BaseTreeVisitor;
@@ -63,13 +61,13 @@ public class LazyArgEvaluationCheck extends BaseTreeVisitor implements JavaFileS
     /**
      * The methods used by the logger to log messages.
      */
-    List<MethodMatcher> log();
+    MethodMatchers log();
 
     /**
      * The method matcher corresponding to the test method used to check if a logger level is enabled.
      * For instance: 'isTraceEnabled()'.
      */
-    MethodMatcher test();
+    MethodMatchers test();
 
     static Stream<LogLevels> logLevels() {
       return Stream.of(SLF4J.values(), JUL.values(), LOG4J.values())
@@ -94,8 +92,18 @@ public class LazyArgEvaluationCheck extends BaseTreeVisitor implements JavaFileS
       private static final TypeCriteria MARKER = TypeCriteria.is("org.slf4j.Marker");
 
       @Override
-      public List<MethodMatcher> log() {
-        return slf4jVariants(() -> MethodMatcher.create().typeDefinition(LOGGER).name(toString().toLowerCase(Locale.ROOT)));
+      public MethodMatchers log() {
+        return MethodMatchers.create()
+          .ofType(LOGGER)
+          .name(toString().toLowerCase(Locale.ROOT))
+          .withParameters(STRING)
+          .withParameters(STRING, anyType())
+          .withParameters(STRING, anyType(), anyType())
+          .withParameters(STRING, OBJECT_ARR)
+          .withParameters(MARKER, STRING)
+          .withParameters(MARKER, STRING, anyType())
+          .withParameters(MARKER, STRING, anyType(), anyType())
+          .withParameters(MARKER, STRING, OBJECT_ARR);
       }
 
       @Override
@@ -103,18 +111,6 @@ public class LazyArgEvaluationCheck extends BaseTreeVisitor implements JavaFileS
         return LogLevels.levelTestMatcher(LOGGER, toString()).withoutParameter();
       }
 
-      private static List<MethodMatcher> slf4jVariants(Supplier<MethodMatcher> prototype) {
-        return Arrays.asList(
-          prototype.get().parameters(STRING),
-          prototype.get().parameters(STRING, anyType()),
-          prototype.get().parameters(STRING, anyType(), anyType()),
-          prototype.get().parameters(STRING, OBJECT_ARR),
-          prototype.get().parameters(MARKER, STRING),
-          prototype.get().parameters(MARKER, STRING, anyType()),
-          prototype.get().parameters(MARKER, STRING, anyType(), anyType()),
-          prototype.get().parameters(MARKER, STRING, OBJECT_ARR)
-        );
-      }
     }
 
     enum JUL implements LogLevels {
@@ -134,12 +130,11 @@ public class LazyArgEvaluationCheck extends BaseTreeVisitor implements JavaFileS
         .addParameter(STRING);
 
       @Override
-      public List<MethodMatcher> log() {
-        return Collections.singletonList(
-          MethodMatcher.create()
+      public MethodMatchers log() {
+        return MethodMatcher.create()
           .typeDefinition(LOGGER)
           .name(toString().toLowerCase(Locale.ROOT))
-          .addParameter(STRING));
+          .addParameter(STRING);
       }
 
       @Override
@@ -162,22 +157,22 @@ public class LazyArgEvaluationCheck extends BaseTreeVisitor implements JavaFileS
       private static final String LEVEL = "org.apache.logging.log4j.Level";
 
       private static final TypeCriteria LOGGER = TypeCriteria.subtypeOf("org.apache.logging.log4j.Logger");
-      private static final TypeCriteria MARKER = TypeCriteria.is("org.apache.logging.log4j.Marker");
+      private static final String MARKER = "org.apache.logging.log4j.Marker";
       private static final Predicate<Type> SUPPLIER = TypeCriteria.subtypeOf("org.apache.logging.log4j.util.Supplier")
         .or(TypeCriteria.subtypeOf("org.apache.logging.log4j.util.MessageSupplier"));
 
-      private static final List<MethodMatcher> TESTS = Arrays.asList(
-        MethodMatcher.create().typeDefinition(LOGGER).name("isEnabled").addParameter(LEVEL),
-        MethodMatcher.create().typeDefinition(LOGGER).name("isEnabled").addParameter(LEVEL).addParameter(MARKER));
+      private static final MethodMatchers TESTS = MethodMatchers.create().ofType(LOGGER).name("isEnabled")
+        .withParameters(LEVEL)
+        .withParameters(LEVEL, MARKER);
 
       private static final MethodMatcher LOG = MethodMatcher.create().typeDefinition(LOGGER).name("log").withAnyParameters();
 
       @Override
-      public List<MethodMatcher> log() {
-        return Collections.singletonList(MethodMatcher.create()
+      public MethodMatchers log() {
+        return MethodMatcher.create()
           .typeDefinition(LOGGER)
           .name(toString().toLowerCase(Locale.ROOT))
-          .withAnyParameters());
+          .withAnyParameters();
       }
 
       @Override
@@ -192,15 +187,15 @@ public class LazyArgEvaluationCheck extends BaseTreeVisitor implements JavaFileS
     .name("checkState")
     .withAnyParameters();
 
-  private static final MethodMatcherCollection LAZY_ARG_METHODS = MethodMatcherCollection.create(PRECONDITIONS, LogLevels.JUL.LOG, LogLevels.LOG4J.LOG);
-  static {
-    LogLevels.logLevels().map(LogLevels::log).forEach(LAZY_ARG_METHODS::addAll);
-  }
+  private static final MethodMatchers LAZY_ARG_METHODS = MethodMatchers.or(
+    PRECONDITIONS,
+    LogLevels.JUL.LOG,
+    LogLevels.LOG4J.LOG,
+    MethodMatchers.or(LogLevels.logLevels().map(LogLevels::log).collect(Collectors.toList())));
 
-  private static final MethodMatcherCollection LOG_LEVEL_TESTS = MethodMatcherCollection.create().addAll(LogLevels.LOG4J.TESTS);
-  static {
-    LogLevels.logLevels().map(LogLevels::test).forEach(LOG_LEVEL_TESTS::add);
-  }
+  private static final MethodMatchers LOG_LEVEL_TESTS = MethodMatchers.or(
+    LogLevels.LOG4J.TESTS,
+    MethodMatchers.or(LogLevels.logLevels().map(LogLevels::test).collect(Collectors.toList())));
 
   private JavaFileScannerContext context;
   private Deque<Tree> treeStack = new ArrayDeque<>();
@@ -216,7 +211,7 @@ public class LazyArgEvaluationCheck extends BaseTreeVisitor implements JavaFileS
 
   @Override
   public void visitMethodInvocation(MethodInvocationTree tree) {
-    if (LAZY_ARG_METHODS.anyMatch(tree) && !insideCatchStatement() && !insideLevelTest() && !argsUsingSuppliers(tree)) {
+    if (LAZY_ARG_METHODS.matches(tree) && !insideCatchStatement() && !insideLevelTest() && !argsUsingSuppliers(tree)) {
       onMethodInvocationFound(tree);
     }
   }
@@ -375,7 +370,7 @@ public class LazyArgEvaluationCheck extends BaseTreeVisitor implements JavaFileS
 
     @Override
     public void visitMethodInvocation(MethodInvocationTree mit) {
-      if (LOG_LEVEL_TESTS.anyMatch(mit)) {
+      if (LOG_LEVEL_TESTS.matches(mit)) {
         match = true;
       }
     }

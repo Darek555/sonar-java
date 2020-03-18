@@ -30,12 +30,12 @@ import org.sonar.api.utils.log.Loggers;
 import org.sonar.check.Rule;
 import org.sonar.check.RuleProperty;
 import org.sonar.java.matcher.MethodMatcher;
-import org.sonar.java.matcher.MethodMatcherCollection;
 import org.sonar.java.matcher.NameCriteria;
 import org.sonar.java.matcher.TypeCriteria;
 import org.sonar.java.model.ModifiersUtils;
 import org.sonar.plugins.java.api.JavaFileScanner;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.semantic.SymbolMetadata;
 import org.sonar.plugins.java.api.tree.BaseTreeVisitor;
@@ -63,7 +63,7 @@ public class AssertionsInTestsCheck extends BaseTreeVisitor implements JavaFileS
   private static final Pattern ASSERTION_METHODS_PATTERN = Pattern.compile("(assert|verify|fail|should|check|expect|validate).*");
   private static final Pattern TEST_METHODS_PATTERN = Pattern.compile("test.*|.*Test");
 
-  private static final MethodMatcherCollection ASSERTION_INVOCATION_MATCHERS = MethodMatcherCollection.create(
+  private static final MethodMatchers ASSERTION_INVOCATION_MATCHERS = MethodMatchers.or(
     // fest 1.x / 2.X
     method(TypeCriteria.subtypeOf("org.fest.assertions.GenericAssert"), ANY_NAME).withAnyParameters(),
     method(TypeCriteria.subtypeOf("org.fest.assertions.api.AbstractAssert"), ANY_NAME).withAnyParameters(),
@@ -84,7 +84,7 @@ public class AssertionsInTestsCheck extends BaseTreeVisitor implements JavaFileS
     // Eclipse Vert.x
     method("io.vertx.ext.unit.TestContext", NameCriteria.startsWith("asyncAssert")).withoutParameter());
 
-  private static final MethodMatcherCollection REACTIVE_X_TEST_METHODS = MethodMatcherCollection.create(
+  private static final MethodMatchers REACTIVE_X_TEST_METHODS = MethodMatchers.or(
     method(TypeCriteria.subtypeOf("rx.Observable"), NameCriteria.is("test")).withAnyParameters(),
     method(TypeCriteria.subtypeOf("io.reactivex.Observable"), NameCriteria.is("test")).withAnyParameters());
 
@@ -94,7 +94,7 @@ public class AssertionsInTestsCheck extends BaseTreeVisitor implements JavaFileS
       "The wildcard character can be used at the end of the method name.",
     defaultValue = "")
   public String customAssertionMethods = "";
-  private MethodMatcherCollection customAssertionMethodsMatcher = null;
+  private MethodMatchers customAssertionMethodsMatcher = null;
 
   private final Map<Symbol, Boolean> assertionInMethod = new HashMap<>();
   private JavaFileScannerContext context;
@@ -136,7 +136,7 @@ public class AssertionsInTestsCheck extends BaseTreeVisitor implements JavaFileS
     return assertionInMethod.get(symbol);
   }
 
-  private MethodMatcherCollection getCustomAssertionMethodsMatcher() {
+  private MethodMatchers getCustomAssertionMethodsMatcher() {
     if (customAssertionMethodsMatcher == null) {
       String[] fullyQualifiedMethodSymbols = customAssertionMethods.isEmpty() ? new String[0] : customAssertionMethods.split(",");
       List<MethodMatcher> customMethodMatchers = new ArrayList<>(fullyQualifiedMethodSymbols.length);
@@ -156,7 +156,7 @@ public class AssertionsInTestsCheck extends BaseTreeVisitor implements JavaFileS
         }
       }
 
-      customAssertionMethodsMatcher = MethodMatcherCollection.create(customMethodMatchers.toArray(new MethodMatcher[0]));
+      customAssertionMethodsMatcher = MethodMatchers.or(customMethodMatchers);
     }
 
     return customAssertionMethodsMatcher;
@@ -205,9 +205,9 @@ public class AssertionsInTestsCheck extends BaseTreeVisitor implements JavaFileS
 
   private class AssertionVisitor extends BaseTreeVisitor {
     boolean hasAssertion = false;
-    private MethodMatcherCollection customMethodsMatcher;
+    private MethodMatchers customMethodsMatcher;
 
-    private AssertionVisitor(MethodMatcherCollection customMethodsMatcher) {
+    private AssertionVisitor(MethodMatchers customMethodsMatcher) {
       this.customMethodsMatcher = customMethodsMatcher;
     }
 
@@ -237,8 +237,8 @@ public class AssertionsInTestsCheck extends BaseTreeVisitor implements JavaFileS
 
     private boolean isAssertion(@Nullable IdentifierTree method, Symbol methodSymbol) {
       return matchesMethodPattern(method, methodSymbol)
-        || ASSERTION_INVOCATION_MATCHERS.anyMatch(methodSymbol)
-        || customMethodsMatcher.anyMatch(methodSymbol)
+        || ASSERTION_INVOCATION_MATCHERS.matches(methodSymbol)
+        || customMethodsMatcher.matches(methodSymbol)
         || isLocalMethodWithAssertion(methodSymbol);
     }
 
@@ -249,7 +249,7 @@ public class AssertionsInTestsCheck extends BaseTreeVisitor implements JavaFileS
 
       String methodName = method.name();
       if (TEST_METHODS_PATTERN.matcher(methodName).matches()) {
-        return !REACTIVE_X_TEST_METHODS.anyMatch(methodSymbol);
+        return !REACTIVE_X_TEST_METHODS.matches(methodSymbol);
       }
       return ASSERTION_METHODS_PATTERN.matcher(methodName).matches();
     }

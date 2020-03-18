@@ -20,16 +20,16 @@
 package org.sonar.java.checks;
 
 import com.google.common.collect.ImmutableMap;
-
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import org.sonar.check.Rule;
 import org.sonar.java.matcher.MethodMatcher;
-import org.sonar.java.matcher.MethodMatcherCollection;
 import org.sonar.java.matcher.TypeCriteria;
 import org.sonar.plugins.java.api.IssuableSubscriptionVisitor;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.semantic.Type;
 import org.sonar.plugins.java.api.tree.AssignmentExpressionTree;
@@ -56,8 +56,8 @@ public class ImmediateReverseBoxingCheck extends IssuableSubscriptionVisitor {
     .put("java.lang.Character", "char")
     .build();
 
-  private static final MethodMatcherCollection unboxingInvocationMatchers = unboxingInvocationMatchers();
-  private static final MethodMatcherCollection valueOfInvocationMatchers = valueOfInvocationMatchers();
+  private static final MethodMatchers unboxingInvocationMatchers = unboxingInvocationMatchers();
+  private static final MethodMatchers valueOfInvocationMatchers = valueOfInvocationMatchers();
 
   @Override
   public List<Kind> nodesToVisit() {
@@ -199,8 +199,8 @@ public class ImmediateReverseBoxingCheck extends IssuableSubscriptionVisitor {
     }
   }
 
-  private static MethodMatcherCollection unboxingInvocationMatchers() {
-    MethodMatcherCollection matchers = MethodMatcherCollection.create();
+  private static MethodMatchers unboxingInvocationMatchers() {
+    List<MethodMatchers> matchers = new ArrayList<>();
     for (Entry<String, String> type : PRIMITIVE_TYPES_BY_WRAPPER.entrySet()) {
       String primitiveType = type.getValue();
       TypeCriteria typeCriteria;
@@ -211,11 +211,11 @@ public class ImmediateReverseBoxingCheck extends IssuableSubscriptionVisitor {
       }
       matchers.add(MethodMatcher.create().callSite(typeCriteria).name(primitiveType + "Value").withoutParameter());
     }
-    return matchers;
+    return MethodMatchers.or(matchers);
   }
 
-  private static MethodMatcherCollection valueOfInvocationMatchers() {
-    MethodMatcherCollection matchers = MethodMatcherCollection.create();
+  private static MethodMatchers valueOfInvocationMatchers() {
+    List<MethodMatchers> matchers = new ArrayList<>();
     for (Entry<String, String> primitiveMapping : PRIMITIVE_TYPES_BY_WRAPPER.entrySet()) {
       matchers.add(
         MethodMatcher.create()
@@ -223,14 +223,14 @@ public class ImmediateReverseBoxingCheck extends IssuableSubscriptionVisitor {
           .name("valueOf")
           .addParameter(primitiveMapping.getValue()));
     }
-    return matchers;
+    return MethodMatchers.or(matchers);
   }
 
   private static boolean isUnboxingMethodInvocation(MethodInvocationTree mit) {
-    return unboxingInvocationMatchers.anyMatch(mit);
+    return unboxingInvocationMatchers.matches(mit);
   }
 
   private static boolean isValueOfInvocation(MethodInvocationTree mit) {
-    return valueOfInvocationMatchers.anyMatch(mit);
+    return valueOfInvocationMatchers.matches(mit);
   }
 }
