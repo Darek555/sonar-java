@@ -33,7 +33,7 @@ import org.sonar.plugins.java.api.tree.NewClassTree;
 
 /**
  * <pre>
- * Helper interface to help to identify method with given Type, Name and Parameter lists.
+ * Immutable helper interface to help to identify method with given Type, Name and Parameter lists.
  *
  * The starting point to define a MethodMatchers is {@link #create()}.
  * It is required to provide at least one of the following:
@@ -64,6 +64,7 @@ import org.sonar.plugins.java.api.tree.NewClassTree;
  *   - withAnyParameters()          // same as withParameters((List<Type> parameters) -> true)
  *
  * If any of the three is missing, the matcher throws an Exception.
+ * The matcher will return true only when the three predicates are respected.
  * It is also possible to define a name/type/parameters multiple times, to match one method OR another.
  *
  * Examples:
@@ -86,10 +87,12 @@ import org.sonar.plugins.java.api.tree.NewClassTree;
  *        .withParameters("int").startWithParameters("long");
  *
  * - match any method with any type, with parameter int, any, int
- *   MethodMatchers.create().ofAnyType().anyName().withParameters(t-> t.is("int"), t -> true, t -> t.is("int"));
+ *     MethodMatchers.create().ofAnyType().anyName().withParameters(t-> t.is("int"), t -> true, t -> t.is("int"));
  *
+ * - match any type AND method name "a" OR "b" AND parameter int OR long
+ *     MethodMatchers.create().ofAnyType().name("a").name("b").withParameters("int").withParameters("long")
  * </pre>
- *  */
+ */
 @Beta
 public interface MethodMatchers {
 
@@ -193,8 +196,8 @@ public interface MethodMatchers {
 
     // Methods related to parameters
     /**
-     * Exact list of parameters.
-     * Can be called multiple time to match any of the parameters lists.
+     * Exact method signature.
+     * Can be called multiple time to match any of the method signatures.
      */
     MethodMatchers.Builder withoutParameters();
     MethodMatchers.Builder withParameters(String... parametersType);
@@ -203,8 +206,8 @@ public interface MethodMatchers {
     MethodMatchers.Builder withAnyParameters();
 
     /**
-     * Start of list of parameters, with any other (0 or more) parameter of any type.
-     * Can be called multiple time to match any of the parameters lists.
+     * Start of a parameter signature, with any other (0 or more) parameter of any type.
+     * Can be called multiple time to match any of the method signatures.
      */
     MethodMatchers.Builder startWithParameters(String... parametersType);
     MethodMatchers.Builder startWithParameters(Predicate<Type>... parametersType);
