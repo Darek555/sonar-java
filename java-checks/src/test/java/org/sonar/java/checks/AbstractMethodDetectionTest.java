@@ -25,7 +25,6 @@ import org.junit.Test;
 import org.sonar.java.CheckTestUtils;
 import org.sonar.java.ast.JavaAstScanner;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
-import org.sonar.java.matcher.MethodMatcher;
 import org.sonar.java.model.JavaTree;
 import org.sonar.java.model.VisitorsBridge;
 import org.sonar.plugins.java.api.semantic.MethodMatchers;
@@ -51,7 +50,7 @@ public class AbstractMethodDetectionTest {
   @Test
   public void withAnyParameters() throws Exception {
     Visitor visitor = new Visitor(
-      MethodMatcher.create().ofType("A").name("method").withAnyParameters());
+      MethodMatchers.create().ofType("A").name("method").withAnyParameters());
     JavaAstScanner.scanSingleFileForTests(CheckTestUtils.inputFile("src/test/files/checks/AbstractMethodDetection.java"), new VisitorsBridge(visitor));
 
     assertThat(visitor.lines).containsExactly(14, 15, 16, 17, 19);

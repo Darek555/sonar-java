@@ -20,10 +20,10 @@
 package org.sonar.java.checks;
 
 import org.sonar.check.Rule;
-import org.sonar.java.matcher.MethodMatcher;
 import org.sonar.java.matcher.TypeCriteria;
 import org.sonar.java.model.ExpressionUtils;
 import org.sonar.plugins.java.api.IssuableSubscriptionVisitor;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.AssignmentExpressionTree;
 import org.sonar.plugins.java.api.tree.BaseTreeVisitor;
@@ -45,8 +45,8 @@ import java.util.List;
 @Rule(key = "S2200")
 public class CompareToResultTestCheck extends IssuableSubscriptionVisitor {
 
-  private static final MethodMatcher COMPARE_TO = MethodMatcher.create()
-    .ofType(TypeCriteria.subtypeOf("java.lang.Comparable"))
+  private static final MethodMatchers COMPARE_TO = MethodMatchers.create()
+    .ofSubType("java.lang.Comparable")
     .name("compareTo")
     .withParameters(TypeCriteria.anyType());
 

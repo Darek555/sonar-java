@@ -25,8 +25,6 @@ import java.util.LinkedList;
 import java.util.List;
 import org.sonar.check.Rule;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
-import org.sonar.java.matcher.MethodMatcher;
-import org.sonar.java.matcher.NameCriteria;
 import org.sonar.java.model.ExpressionUtils;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.semantic.MethodMatchers;
@@ -86,10 +84,11 @@ public class WaitInWhileLoopCheck extends AbstractMethodDetection {
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatchers.or(
-      MethodMatcher.create().name("wait").withoutParameters(),
-      MethodMatcher.create().name("wait").addParameter("long"),
-      MethodMatcher.create().name("wait").addParameter("long").addParameter("int"),
-      MethodMatcher.create().ofType("java.util.concurrent.locks.Condition").name(NameCriteria.startsWith("await")).withAnyParameters()
+      MethodMatchers.create().ofAnyType().name("wait")
+        .withoutParameters()
+        .withParameters("long")
+        .withParameters("long", "int"),
+      MethodMatchers.create().ofType("java.util.concurrent.locks.Condition").startWithName("await").withAnyParameters()
     );
   }
 }

@@ -22,8 +22,6 @@ package org.sonar.java.checks.security;
 import java.util.Arrays;
 import java.util.List;
 import org.sonar.check.Rule;
-import org.sonar.java.matcher.MethodMatcher;
-import org.sonar.java.matcher.NameCriteria;
 import org.sonar.plugins.java.api.IssuableSubscriptionVisitor;
 import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.semantic.Symbol;
@@ -36,10 +34,10 @@ import org.sonar.plugins.java.api.tree.Tree;
 public class StandardInputReadCheck extends IssuableSubscriptionVisitor {
 
   private static final MethodMatchers METHOD_MATCHERS = MethodMatchers.or(
-    MethodMatcher.create().ofType("java.lang.System").name("setIn").withAnyParameters(),
-    MethodMatcher.create().ofType("java.io.Console").name(NameCriteria.startsWith("read")).withAnyParameters());
+    MethodMatchers.create().ofType("java.lang.System").name("setIn").withAnyParameters(),
+    MethodMatchers.create().ofType("java.io.Console").startWithName("read").withAnyParameters());
 
-  private static final MethodMatcher CLOSE_METHOD = MethodMatcher.create().name("close").withoutParameters();
+  private static final MethodMatchers CLOSE_METHOD = MethodMatchers.create().ofAnyType().name("close").withoutParameters();
 
   @Override
   public List<Tree.Kind> nodesToVisit() {

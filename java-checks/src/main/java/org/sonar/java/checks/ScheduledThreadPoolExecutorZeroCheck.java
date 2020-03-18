@@ -21,8 +21,6 @@ package org.sonar.java.checks;
 
 import org.sonar.check.Rule;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
-import org.sonar.java.matcher.MethodMatcher;
-import org.sonar.java.matcher.TypeCriteria;
 import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.ExpressionTree;
 import org.sonar.plugins.java.api.tree.LiteralTree;
@@ -38,8 +36,8 @@ public class ScheduledThreadPoolExecutorZeroCheck extends AbstractMethodDetectio
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatchers.or(
-      MethodMatcher.create().ofType(TypeCriteria.subtypeOf("java.util.concurrent.ThreadPoolExecutor")).name("setCorePoolSize").addParameter("int"),
-      MethodMatcher.create().ofType("java.util.concurrent.ScheduledThreadPoolExecutor").name("<init>").addParameter("int")
+      MethodMatchers.create().ofSubType("java.util.concurrent.ThreadPoolExecutor").name("setCorePoolSize").withParameters("int"),
+      MethodMatchers.create().ofType("java.util.concurrent.ScheduledThreadPoolExecutor").constructor().withParameters("int")
     );
   }
 

@@ -21,8 +21,6 @@ package org.sonar.java.checks;
 
 import org.sonar.check.Rule;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
-import org.sonar.java.matcher.MethodMatcher;
-import org.sonar.java.matcher.NameCriteria;
 import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.ExpressionTree;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
@@ -31,16 +29,16 @@ import org.sonar.plugins.java.api.tree.Tree;
 @Rule(key = "S2701")
 public class BooleanLiteralInAssertionsCheck extends AbstractMethodDetection {
 
-  private static final String ASSERT = "assert";
-
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatchers.or(
-      MethodMatcher.create().ofType("org.junit.Assert").name(NameCriteria.startsWith(ASSERT)).withAnyParameters(),
-      MethodMatcher.create().ofType("org.junit.jupiter.api.Assertions").name(NameCriteria.startsWith(ASSERT)).withAnyParameters(),
-      MethodMatcher.create().ofType("junit.framework.Assert").name(NameCriteria.startsWith(ASSERT)).withAnyParameters(),
-      MethodMatcher.create().ofType("junit.framework.TestCase").name(NameCriteria.startsWith(ASSERT)).withAnyParameters(),
-      MethodMatcher.create().ofType("org.fest.assertions.Assertions").name("assertThat").addParameter("boolean")
+      MethodMatchers.create()
+        .ofType("org.junit.Assert")
+        .ofType("org.junit.jupiter.api.Assertions")
+        .ofType("junit.framework.Assert")
+        .ofType("junit.framework.TestCase")
+        .startWithName("assert").withAnyParameters(),
+      MethodMatchers.create().ofType("org.fest.assertions.Assertions").name("assertThat").withParameters("boolean")
       );
   }
 

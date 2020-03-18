@@ -23,7 +23,6 @@ import java.util.Arrays;
 import java.util.List;
 import javax.annotation.CheckForNull;
 import org.sonar.check.Rule;
-import org.sonar.java.matcher.MethodMatcher;
 import org.sonar.java.matcher.TypeCriteria;
 import org.sonar.plugins.java.api.IssuableSubscriptionVisitor;
 import org.sonar.plugins.java.api.semantic.MethodMatchers;
@@ -40,16 +39,12 @@ import org.sonar.plugins.java.api.tree.UnaryExpressionTree;
 @Rule(key = "S2676")
 public class AbsOnNegativeCheck extends IssuableSubscriptionVisitor {
 
-  private static final MethodMatchers MATH_ABS_METHODS = MethodMatchers.or(
-    MethodMatcher.create()
+  private static final MethodMatchers MATH_ABS_METHODS =
+    MethodMatchers.create()
       .ofType("java.lang.Math")
       .name("abs")
-      .addParameter("int"),
-    MethodMatcher.create()
-      .ofType("java.lang.Math")
-      .name("abs")
-      .addParameter("long")
-  );
+      .withParameters("int")
+      .withParameters("long");
 
   private static final MethodMatchers NEGATIVE_METHODS = MethodMatchers.or(
     MethodMatchers.create()

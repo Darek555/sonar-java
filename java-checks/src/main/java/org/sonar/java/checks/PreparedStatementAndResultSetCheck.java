@@ -25,9 +25,6 @@ import org.apache.commons.lang.StringUtils;
 import org.sonar.check.Rule;
 import org.sonar.java.checks.helpers.ReassignmentFinder;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
-import org.sonar.java.matcher.MethodMatcher;
-import org.sonar.java.matcher.NameCriteria;
-import org.sonar.java.matcher.TypeCriteria;
 import org.sonar.java.model.ExpressionUtils;
 import org.sonar.java.model.LiteralUtils;
 import org.sonar.plugins.java.api.semantic.MethodMatchers;
@@ -47,15 +44,15 @@ public class PreparedStatementAndResultSetCheck extends AbstractMethodDetection 
 
   private static final String INT = "int";
   private static final String JAVA_SQL_RESULTSET = "java.sql.ResultSet";
-  private static final MethodMatcher PREPARE_STATEMENT = MethodMatcher.create()
-    .ofType("java.sql.Connection").name(NameCriteria.startsWith("prepareStatement")).withAnyParameters();
+  private static final MethodMatchers PREPARE_STATEMENT = MethodMatchers.create()
+    .ofType("java.sql.Connection").startWithName("prepareStatement").withAnyParameters();
 
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatchers.or(
-      MethodMatcher.create().ofType("java.sql.PreparedStatement").name(NameCriteria.startsWith("set")).addParameter(INT).addParameter(TypeCriteria.anyType()),
-      MethodMatcher.create().ofType(JAVA_SQL_RESULTSET).name(NameCriteria.startsWith("get")).addParameter(INT),
-      MethodMatcher.create().ofType(JAVA_SQL_RESULTSET).name(NameCriteria.startsWith("get")).addParameter(INT).addParameter(TypeCriteria.anyType()));
+      MethodMatchers.create().ofType("java.sql.PreparedStatement").startWithName("set").withParameters(t -> t.is(INT), t -> true),
+      MethodMatchers.create().ofType(JAVA_SQL_RESULTSET).startWithName("get").withParameters(INT).withParameters(t -> t.is(INT), t -> true)
+    );
   }
 
   @Override

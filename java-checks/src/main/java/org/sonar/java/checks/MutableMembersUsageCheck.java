@@ -26,8 +26,6 @@ import java.util.LinkedList;
 import java.util.List;
 import javax.annotation.Nullable;
 import org.sonar.check.Rule;
-import org.sonar.java.matcher.MethodMatcher;
-import org.sonar.java.matcher.NameCriteria;
 import org.sonar.java.model.LiteralUtils;
 import org.sonar.plugins.java.api.JavaFileScanner;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
@@ -59,10 +57,8 @@ public class MutableMembersUsageCheck extends BaseTreeVisitor implements JavaFil
     "com.google.common.collect.ImmutableCollection");
 
   private static final MethodMatchers UNMODIFIABLE_COLLECTION_CALL = MethodMatchers.or(
-    MethodMatcher.create().ofType("java.util.Collections").name(NameCriteria.startsWith("unmodifiable")).withAnyParameters(),
-    MethodMatcher.create().ofType("java.util.Collections").name(NameCriteria.startsWith("singleton")).withAnyParameters(),
-    MethodMatcher.create().ofType("java.util.Set").name("of").withAnyParameters(),
-    MethodMatcher.create().ofType("java.util.List").name("of").withAnyParameters()
+    MethodMatchers.create().ofType("java.util.Collections").startWithName("unmodifiable").startWithName("singleton").withAnyParameters(),
+    MethodMatchers.create().ofType("java.util.Set").ofType("java.util.List").name("of").withAnyParameters()
   );
 
   private JavaFileScannerContext context;

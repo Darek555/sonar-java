@@ -25,9 +25,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.sonar.check.Rule;
-import org.sonar.java.matcher.MethodMatcher;
-import org.sonar.java.matcher.NameCriteria;
-import org.sonar.java.matcher.TypeCriteria;
 import org.sonar.java.model.ModifiersUtils;
 import org.sonar.plugins.java.api.JavaFileScanner;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
@@ -58,63 +55,56 @@ public class AssertionsCompletenessCheck extends BaseTreeVisitor implements Java
   private static final String ASSERTJ_SUPERTYPE = "org.assertj.core.api.AbstractAssert";
   private static final String TRUTH_SUPERTYPE = "com.google.common.truth.TestVerb";
   private static final String JAVA6_ABSTRACT_SOFT_ASSERT = "org.assertj.core.api.Java6AbstractStandardSoftAssertions";
-  private static final MethodMatcher MOCKITO_VERIFY = MethodMatcher.create()
-    .ofType(TypeCriteria.subtypeOf("org.mockito.Mockito")).name("verify").withAnyParameters();
-  private static final MethodMatchers ASSERTJ_ASSERT_ALL = MethodMatchers.or(
-    MethodMatcher.create().ofType(TypeCriteria.subtypeOf("org.assertj.core.api.SoftAssertions")).name("assertAll").withAnyParameters(),
-    MethodMatcher.create().ofType(TypeCriteria.subtypeOf("org.assertj.core.api.Java6SoftAssertions")).name("assertAll").withAnyParameters());
-  private static final MethodMatcher ASSERTJ_ASSERT_THAT = MethodMatcher.create()
-    .ofType(TypeCriteria.subtypeOf("org.assertj.core.api.AbstractSoftAssertions"))
-    .name(NameCriteria.startsWith("assertThat"))
+  private static final MethodMatchers MOCKITO_VERIFY = MethodMatchers.create()
+    .ofSubType("org.mockito.Mockito").name("verify").withAnyParameters();
+  private static final MethodMatchers ASSERTJ_ASSERT_ALL =
+    MethodMatchers.create().ofSubType("org.assertj.core.api.SoftAssertions").ofSubType("org.assertj.core.api.Java6SoftAssertions").name("assertAll").withAnyParameters();
+  private static final MethodMatchers ASSERTJ_ASSERT_THAT = MethodMatchers.create()
+    .ofSubType("org.assertj.core.api.AbstractSoftAssertions")
+    .startWithName("assertThat")
     .withAnyParameters();
-  private static final MethodMatcher ASSERTJ_ASSERT_SOFTLY = MethodMatcher.create()
-    .ofType(TypeCriteria.subtypeOf("org.assertj.core.api.SoftAssertions")).name("assertSoftly").withAnyParameters();
+  private static final MethodMatchers ASSERTJ_ASSERT_SOFTLY = MethodMatchers.create()
+    .ofSubType("org.assertj.core.api.SoftAssertions").name("assertSoftly").withAnyParameters();
 
   private static final MethodMatchers FEST_LIKE_ASSERT_THAT = MethodMatchers.or(
+    MethodMatchers.create().name("assertThat").withParameters(t -> true)
     // Fest 1.X
-    assertThatOnType("org.fest.assertions.Assertions"),
+    .ofSubType("org.fest.assertions.Assertions")
     // Fest 2.X
-    assertThatOnType("org.fest.assertions.api.Assertions"),
+    .ofSubType("org.fest.assertions.api.Assertions")
     // AssertJ 1.X
-    assertThatOnType("org.assertj.core.api.AbstractSoftAssertions"),
+    .ofSubType("org.assertj.core.api.AbstractSoftAssertions")
     // AssertJ 2.X
-    assertThatOnType("org.assertj.core.api.Assertions"),
-    assertThatOnType("org.assertj.core.api.Java6Assertions"),
-    assertThatOnType("org.assertj.core.api.AbstractStandardSoftAssertions"),
-    assertThatOnType(JAVA6_ABSTRACT_SOFT_ASSERT),
+    .ofSubType("org.assertj.core.api.Assertions")
+    .ofSubType("org.assertj.core.api.Java6Assertions")
+    .ofSubType("org.assertj.core.api.AbstractStandardSoftAssertions")
+    .ofSubType(JAVA6_ABSTRACT_SOFT_ASSERT)
     // AssertJ 3.X
-    assertThatOnType("org.assertj.core.api.StrictAssertions"),
-    // Truth 0.29
-    methodWithName("com.google.common.truth.Truth", NameCriteria.startsWith("assert")),
+    .ofSubType("org.assertj.core.api.StrictAssertions"),
+
+    MethodMatchers.create().startWithName("assert").withAnyParameters()
+      // Truth 0.29
+    .ofSubType("com.google.common.truth.Truth")
     // Truth8 0.39
-    methodWithName("com.google.common.truth.Truth8", NameCriteria.startsWith("assert"))
+    .ofSubType("com.google.common.truth.Truth8")
   );
 
   private static final MethodMatchers FEST_LIKE_EXCLUSIONS = MethodMatchers.or(
-    methodWithName(FEST_ASSERT_SUPERTYPE, NameCriteria.startsWith("as")),
-    methodWithName(FEST_ASSERT_SUPERTYPE, NameCriteria.startsWith("using")),
-    methodWithName(FEST_ASSERT_SUPERTYPE, NameCriteria.startsWith("with")),
-    methodWithName(FEST_ASSERT_SUPERTYPE, NameCriteria.is("describedAs")),
-    methodWithName(FEST_ASSERT_SUPERTYPE, NameCriteria.is("overridingErrorMessage")),
-    methodWithName(ASSERTJ_SUPERTYPE, NameCriteria.startsWith("as")),
-    methodWithName(ASSERTJ_SUPERTYPE, NameCriteria.startsWith("using")),
-    methodWithName(ASSERTJ_SUPERTYPE, NameCriteria.startsWith("with")),
-    methodWithName(ASSERTJ_SUPERTYPE, NameCriteria.is("describedAs")),
-    methodWithName(ASSERTJ_SUPERTYPE, NameCriteria.is("overridingErrorMessage")),
+    MethodMatchers.create().withAnyParameters()
+      .ofSubType(FEST_ASSERT_SUPERTYPE)
+      .ofSubType(ASSERTJ_SUPERTYPE)
+      .startWithName("as")
+      .startWithName("using")
+      .startWithName("with")
+      .name("describedAs")
+      .name("overridingErrorMessage"),
+
     // Truth has assertWithMessage, Truth8 does not
-    methodWithName(TRUTH_SUPERTYPE, NameCriteria.is("that"))
+    MethodMatchers.create().ofSubType(TRUTH_SUPERTYPE).name("that").withAnyParameters()
   );
 
   private Boolean chainedToAnyMethodButFestExclusions = null;
   private JavaFileScannerContext context;
-
-  private static MethodMatcher assertThatOnType(String type) {
-    return MethodMatcher.create().ofType(TypeCriteria.subtypeOf(type)).name("assertThat").addParameter(TypeCriteria.anyType());
-  }
-
-  private static MethodMatcher methodWithName(String superType, NameCriteria nameCriteria) {
-    return MethodMatcher.create().ofType(TypeCriteria.subtypeOf(superType)).name(nameCriteria).withAnyParameters();
-  }
 
   private static boolean isMethodCalledOnJava6AbstractStandardSoftAssertions(MethodInvocationTree mit) {
     // Java6AbstractStandardSoftAssertions does not contain 'assertAll()' method so this class should not be used

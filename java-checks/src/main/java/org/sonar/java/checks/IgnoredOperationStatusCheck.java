@@ -21,9 +21,6 @@ package org.sonar.java.checks;
 
 import org.sonar.check.Rule;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
-import org.sonar.java.matcher.MethodMatcher;
-import org.sonar.java.matcher.NameCriteria;
-import org.sonar.java.matcher.TypeCriteria;
 import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 import org.sonar.plugins.java.api.tree.Tree;
@@ -33,34 +30,37 @@ import org.sonar.plugins.java.api.tree.VariableTree;
 public class IgnoredOperationStatusCheck extends AbstractMethodDetection {
 
   private static final String FILE = "java.io.File";
-  private static final TypeCriteria SUBTYPE_OF_CONDITION = TypeCriteria.subtypeOf("java.util.concurrent.locks.Condition");
-  private static final TypeCriteria SUBTYPE_OF_BLOCKING_QUEUE = TypeCriteria.subtypeOf("java.util.concurrent.BlockingQueue");
+  private static final String CONDITION = "java.util.concurrent.locks.Condition";
+  private static final String BLOCKING_QUEUE = "java.util.concurrent.BlockingQueue";
 
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatchers.or(
-      MethodMatcher.create().ofType(TypeCriteria.subtypeOf("java.util.concurrent.locks.Lock")).name("tryLock").withoutParameters(),
+      MethodMatchers.create().ofSubType("java.util.concurrent.locks.Lock").name("tryLock").withoutParameters(),
+      MethodMatchers.create().ofType(FILE).withoutParameters()
+        .name("delete")
+        .name("exists")
+        .name("createNewFile")
+        .startWithName("can")
+        .startWithName("is"),
 
-      MethodMatcher.create().ofType(FILE).name("delete").withoutParameters(),
-      MethodMatcher.create().ofType(FILE).name("exists").withoutParameters(),
-      MethodMatcher.create().ofType(FILE).name("createNewFile").withoutParameters(),
-      MethodMatcher.create().ofType(FILE).name("renameTo").addParameter(FILE),
-      MethodMatcher.create().ofType(FILE).name(NameCriteria.startsWith("can")).withoutParameters(),
-      MethodMatcher.create().ofType(FILE).name(NameCriteria.startsWith("is")).withoutParameters(),
-      MethodMatcher.create().ofType(FILE).name(NameCriteria.startsWith("set")).withAnyParameters(),
+      MethodMatchers.create().ofType(FILE).withAnyParameters()
+        .startWithName("set"),
 
-      MethodMatcher.create().ofType(TypeCriteria.subtypeOf("java.util.Iterator")).name("hasNext").withoutParameters(),
-      MethodMatcher.create().ofType(TypeCriteria.subtypeOf("java.util.Enumeration")).name("hasMoreElements").withoutParameters(),
+      MethodMatchers.create().ofType(FILE).name("renameTo").withParameters(FILE),
 
-      MethodMatcher.create().ofType(SUBTYPE_OF_CONDITION).name("await").addParameter("long").addParameter("java.util.concurrent.TimeUnit"),
-      MethodMatcher.create().ofType(SUBTYPE_OF_CONDITION).name("awaitUntil").addParameter("java.util.Date"),
-      MethodMatcher.create().ofType(SUBTYPE_OF_CONDITION).name("awaitNanos").addParameter("long"),
+      MethodMatchers.create().ofSubType("java.util.Iterator").name("hasNext").withoutParameters(),
+      MethodMatchers.create().ofSubType("java.util.Enumeration").name("hasMoreElements").withoutParameters(),
 
-      MethodMatcher.create().ofType("java.util.concurrent.CountDownLatch").name("await").addParameter("long").addParameter("java.util.concurrent.TimeUnit"),
-      MethodMatcher.create().ofType("java.util.concurrent.Semaphore").name("tryAcquire").withAnyParameters(),
+      MethodMatchers.create().ofSubType(CONDITION).name("await").withParameters("long", "java.util.concurrent.TimeUnit"),
+      MethodMatchers.create().ofSubType(CONDITION).name("awaitUntil").withParameters("java.util.Date"),
+      MethodMatchers.create().ofSubType(CONDITION).name("awaitNanos").withParameters("long"),
 
-      MethodMatcher.create().ofType(SUBTYPE_OF_BLOCKING_QUEUE).name("offer").withAnyParameters(),
-      MethodMatcher.create().ofType(SUBTYPE_OF_BLOCKING_QUEUE).name("remove").withAnyParameters());
+      MethodMatchers.create().ofType("java.util.concurrent.CountDownLatch").name("await").withParameters("long", "java.util.concurrent.TimeUnit"),
+      MethodMatchers.create().ofType("java.util.concurrent.Semaphore").name("tryAcquire").withAnyParameters(),
+
+      MethodMatchers.create().ofSubType(BLOCKING_QUEUE).name("offer").withAnyParameters(),
+      MethodMatchers.create().ofSubType(BLOCKING_QUEUE).name("remove").withAnyParameters());
   }
 
   @Override

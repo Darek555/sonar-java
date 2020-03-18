@@ -21,8 +21,6 @@ package org.sonar.java.checks.spring;
 
 import org.sonar.check.Rule;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
-import org.sonar.java.matcher.MethodMatcher;
-import org.sonar.java.matcher.TypeCriteria;
 import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.MemberSelectExpressionTree;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
@@ -36,8 +34,8 @@ public class SpringSecurityDisableCSRFCheck extends AbstractMethodDetection {
 
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
-    return MethodMatcher.create()
-      .ofType(TypeCriteria.subtypeOf("org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer"))
+    return MethodMatchers.create()
+      .ofSubType("org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer")
       .name("disable").withoutParameters();
   }
 

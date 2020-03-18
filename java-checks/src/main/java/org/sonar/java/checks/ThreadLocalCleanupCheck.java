@@ -22,9 +22,8 @@ package org.sonar.java.checks;
 import java.util.Arrays;
 import java.util.List;
 import org.sonar.check.Rule;
-import org.sonar.java.matcher.MethodMatcher;
-import org.sonar.java.matcher.TypeCriteria;
 import org.sonar.plugins.java.api.IssuableSubscriptionVisitor;
+import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.ClassTree;
 import org.sonar.plugins.java.api.tree.IdentifierTree;
@@ -36,9 +35,9 @@ import org.sonar.plugins.java.api.tree.VariableTree;
 public class ThreadLocalCleanupCheck extends IssuableSubscriptionVisitor {
 
   private static final String THREAD_LOCAL = "java.lang.ThreadLocal";
-  private static final MethodMatcher THREADLOCAL_SET = MethodMatcher.create()
-    .ofType(THREAD_LOCAL).name("set").addParameter(TypeCriteria.anyType());
-  private static final MethodMatcher THREADLOCAL_REMOVE = MethodMatcher.create()
+  private static final MethodMatchers THREADLOCAL_SET = MethodMatchers.create()
+    .ofType(THREAD_LOCAL).name("set").withParameters(t -> true);
+  private static final MethodMatchers THREADLOCAL_REMOVE = MethodMatchers.create()
     .ofType(THREAD_LOCAL).name("remove").withoutParameters();
 
   @Override

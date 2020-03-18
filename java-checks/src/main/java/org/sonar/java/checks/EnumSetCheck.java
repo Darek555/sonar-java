@@ -22,8 +22,6 @@ package org.sonar.java.checks;
 import java.util.Collections;
 import java.util.List;
 import org.sonar.check.Rule;
-import org.sonar.java.matcher.MethodMatcher;
-import org.sonar.java.matcher.NameCriteria;
 import org.sonar.java.model.JUtils;
 import org.sonar.plugins.java.api.IssuableSubscriptionVisitor;
 import org.sonar.plugins.java.api.semantic.MethodMatchers;
@@ -37,13 +35,13 @@ import org.sonar.plugins.java.api.tree.VariableTree;
 @Rule(key = "S1641")
 public class EnumSetCheck extends IssuableSubscriptionVisitor {
 
-  private static final MethodMatcher COLLECTIONS_UNMODIFIABLE = MethodMatcher.create().ofType("java.util.Collections").name("unmodifiableSet").withAnyParameters();
+  private static final MethodMatchers COLLECTIONS_UNMODIFIABLE = MethodMatchers.create().ofType("java.util.Collections").name("unmodifiableSet").withAnyParameters();
   private static final MethodMatchers SET_CREATION_METHODS = MethodMatchers.or(
     // Java 9 factory methods
-    MethodMatcher.create().ofType("java.util.Set").name("of").withAnyParameters(),
+    MethodMatchers.create().ofType("java.util.Set").name("of").withAnyParameters(),
     // guava
-    MethodMatcher.create().ofType("com.google.common.collect.ImmutableSet").name("of").withAnyParameters(),
-    MethodMatcher.create().ofType("com.google.common.collect.Sets").name(NameCriteria.any()).withAnyParameters());
+    MethodMatchers.create().ofType("com.google.common.collect.ImmutableSet").name("of").withAnyParameters(),
+    MethodMatchers.create().ofType("com.google.common.collect.Sets").anyName().withAnyParameters());
 
   @Override
   public List<Kind> nodesToVisit() {
