@@ -144,7 +144,7 @@ public class CustomUnclosedResourcesCheck extends SECheck {
     if (rule.length() > 0) {
       return MethodMatcherFactory.methodMatcher(rule);
     } else {
-      return MethodMatchers.empty();
+      return MethodMatchers.none();
     }
   }
 
@@ -249,7 +249,7 @@ public class CustomUnclosedResourcesCheck extends SECheck {
 
     private MethodMatchers constructorClasses() {
       if (classConstructor == null) {
-        classConstructor = MethodMatchers.empty();
+        classConstructor = MethodMatchers.none();
         if (constructor.length() > 0) {
           classConstructor = MethodMatcherFactory.constructorMatcher(constructor);
         }

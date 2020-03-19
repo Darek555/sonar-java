@@ -23,7 +23,6 @@ import java.util.Arrays;
 import java.util.List;
 import javax.annotation.CheckForNull;
 import org.sonar.check.Rule;
-import org.sonar.java.matcher.TypeCriteria;
 import org.sonar.plugins.java.api.IssuableSubscriptionVisitor;
 import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.semantic.Symbol;
@@ -41,24 +40,24 @@ public class AbsOnNegativeCheck extends IssuableSubscriptionVisitor {
 
   private static final MethodMatchers MATH_ABS_METHODS =
     MethodMatchers.create()
-      .ofType("java.lang.Math")
-      .name("abs")
-      .withParameters("int")
-      .withParameters("long");
+      .ofTypes("java.lang.Math")
+      .names("abs")
+      .addParametersMatcher("int")
+      .addParametersMatcher("long");
 
   private static final MethodMatchers NEGATIVE_METHODS = MethodMatchers.or(
     MethodMatchers.create()
       .ofAnyType()
-      .name("hashCode")
-      .withoutParameters(),
+      .names("hashCode")
+      .addWithoutParametersMatcher(),
     MethodMatchers.create()
-      .ofSubType("java.util.Random")
+      .ofSubTypes("java.util.Random")
       .names("nextInt", "nextLong")
-      .withoutParameters(),
+      .addWithoutParametersMatcher(),
     MethodMatchers.create()
-      .ofSubType("java.lang.Comparable")
-      .name("compareTo")
-      .withParameters(TypeCriteria.anyType())
+      .ofSubTypes("java.lang.Comparable")
+      .names("compareTo")
+      .addParametersMatcher(MethodMatchers.ANY)
   );
 
   @Override

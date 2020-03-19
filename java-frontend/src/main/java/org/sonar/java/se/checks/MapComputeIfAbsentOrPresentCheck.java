@@ -29,7 +29,6 @@ import java.util.stream.Collectors;
 import org.sonar.check.Rule;
 import org.sonar.java.JavaVersionAwareVisitor;
 import org.sonar.java.cfg.CFG;
-import org.sonar.java.matcher.TypeCriteria;
 import org.sonar.java.model.ExpressionUtils;
 import org.sonar.java.se.CheckerContext;
 import org.sonar.java.se.ExplodedGraph;
@@ -50,12 +49,14 @@ import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 import org.sonar.plugins.java.api.tree.MethodTree;
 import org.sonar.plugins.java.api.tree.Tree;
 
+import static org.sonar.plugins.java.api.semantic.MethodMatchers.ANY;
+
 @Rule(key = "S3824")
 public class MapComputeIfAbsentOrPresentCheck extends SECheck implements JavaVersionAwareVisitor {
 
-  private static final MethodMatchers.Builder JAVA_UTIL_MAP = MethodMatchers.create().ofSubType("java.util.Map");
-  private static final MethodMatchers MAP_GET = JAVA_UTIL_MAP.name("get").withParameters(TypeCriteria.anyType());
-  private static final MethodMatchers MAP_PUT = JAVA_UTIL_MAP.name("put").withParameters(TypeCriteria.anyType(), TypeCriteria.anyType());
+  private static final MethodMatchers.NameBuilder JAVA_UTIL_MAP = MethodMatchers.create().ofSubTypes("java.util.Map");
+  private static final MethodMatchers MAP_GET = JAVA_UTIL_MAP.names("get").addParametersMatcher(ANY);
+  private static final MethodMatchers MAP_PUT = JAVA_UTIL_MAP.names("put").addParametersMatcher(ANY, ANY);
 
   private final Multimap<SymbolicValue, MapGetInvocation> mapGetInvocations = LinkedListMultimap.create();
   private final List<CheckIssue> checkIssues = new ArrayList<>();

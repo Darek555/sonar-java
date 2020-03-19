@@ -57,8 +57,8 @@ public class NullDereferenceCheck extends SECheck {
     "\"NullPointerException\" will be thrown when invoking method \"%s()\".");
 
   private static final String JAVA_LANG_NPE = "java.lang.NullPointerException";
-  private static final MethodMatchers OPTIONAL_OR_ELSE_GET_MATCHER = MethodMatchers.create().ofType("java.util.Optional").name("orElseGet")
-    .withParameters("java.util.function.Supplier");
+  private static final MethodMatchers OPTIONAL_OR_ELSE_GET_MATCHER = MethodMatchers.create().ofTypes("java.util.Optional").names("orElseGet")
+    .addParametersMatcher("java.util.function.Supplier");
 
   private static class NullDereferenceIssue {
     final ExplodedGraph.Node node;

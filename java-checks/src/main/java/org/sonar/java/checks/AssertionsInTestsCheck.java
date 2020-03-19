@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import javax.annotation.Nullable;
 import org.sonar.api.utils.log.Logger;
@@ -60,25 +61,27 @@ public class AssertionsInTestsCheck extends BaseTreeVisitor implements JavaFileS
     // fest 1.x / 2.X
     MethodMatchers.create().ofSubTypes("org.fest.assertions.GenericAssert", "org.fest.assertions.api.AbstractAssert").anyName().withAnyParameters(),
     // rest assured 2.0
-    MethodMatchers.create().ofType("io.restassured.response.ValidatableResponseOptions").withAnyParameters()
-      .name("body")
-      .name("time")
-      .startWithName("content")
-      .startWithName("status")
-      .startWithName("header")
-      .startWithName("cookie")
-      .startWithName("spec"),
+    MethodMatchers.create().ofTypes("io.restassured.response.ValidatableResponseOptions")
+      .name(name -> name.equals("body") ||
+        name.equals("time") ||
+        name.startsWith("time") ||
+        name.startsWith("content") ||
+        name.startsWith("status") ||
+        name.startsWith("header") ||
+        name.startsWith("cookie") ||
+        name.startsWith("spec"))
+      .withAnyParameters(),
     // assertJ
     MethodMatchers.create().ofSubTypes("org.assertj.core.api.AbstractAssert").anyName().withAnyParameters(),
     // spring
-    MethodMatchers.create().ofType("org.springframework.test.web.servlet.ResultActions").name("andExpect").withParameters(t -> true),
+    MethodMatchers.create().ofTypes("org.springframework.test.web.servlet.ResultActions").names("andExpect").addParametersMatcher(t -> true),
     // JMockit
-    MethodMatchers.create().ofType("mockit.Verifications").constructor().withAnyParameters(),
+    MethodMatchers.create().ofTypes("mockit.Verifications").constructor().withAnyParameters(),
     // Eclipse Vert.x
-    MethodMatchers.create().ofType("io.vertx.ext.unit.TestContext").startWithName("asyncAssert").withoutParameters());
+    MethodMatchers.create().ofTypes("io.vertx.ext.unit.TestContext").name(name -> name.startsWith("asyncAssert")).addWithoutParametersMatcher());
 
   private static final MethodMatchers REACTIVE_X_TEST_METHODS =
-    MethodMatchers.create().ofSubTypes("rx.Observable", "io.reactivex.Observable").name("test").withAnyParameters();
+    MethodMatchers.create().ofSubTypes("rx.Observable", "io.reactivex.Observable").names("test").withAnyParameters();
 
   @RuleProperty(
     key = "customAssertionMethods",
@@ -134,15 +137,15 @@ public class AssertionsInTestsCheck extends BaseTreeVisitor implements JavaFileS
       List<MethodMatchers> customMethodMatchers = new ArrayList<>(fullyQualifiedMethodSymbols.length);
       for (String fullyQualifiedMethodSymbol : fullyQualifiedMethodSymbols) {
         String[] methodMatcherParts = fullyQualifiedMethodSymbol.split("#");
-        MethodMatchers.Builder methodMatchers = MethodMatchers.create();
         if (methodMatcherParts.length == 2 && !isEmpty(methodMatcherParts[0].trim()) && !isEmpty(methodMatcherParts[1].trim())) {
           String methodName = methodMatcherParts[1].trim();
+          Predicate<String> namePredicate;
           if (methodName.endsWith("*")) {
-            methodMatchers = methodMatchers.startWithName(methodName.substring(0, methodName.length() - 1));
+            namePredicate = name -> name.startsWith(methodName.substring(0, methodName.length() - 1));
           } else {
-            methodMatchers = methodMatchers.name(methodName);
+            namePredicate = name -> name.equals(methodName);
           }
-          customMethodMatchers.add(methodMatchers.ofSubType(methodMatcherParts[0].trim()).withAnyParameters());
+          customMethodMatchers.add(MethodMatchers.create().ofSubTypes(methodMatcherParts[0].trim()).name(namePredicate).withAnyParameters());
         } else {
           LOG.warn("Unable to create a corresponding matcher for custom assertion method, please check the format of the following symbol: '{}'", fullyQualifiedMethodSymbol);
         }

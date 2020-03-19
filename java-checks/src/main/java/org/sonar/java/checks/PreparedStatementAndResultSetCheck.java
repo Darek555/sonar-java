@@ -39,19 +39,21 @@ import org.sonar.plugins.java.api.tree.MemberSelectExpressionTree;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 import org.sonar.plugins.java.api.tree.Tree;
 
+import static org.sonar.plugins.java.api.semantic.MethodMatchers.ANY;
+
 @Rule(key = "S2695")
 public class PreparedStatementAndResultSetCheck extends AbstractMethodDetection {
 
   private static final String INT = "int";
   private static final String JAVA_SQL_RESULTSET = "java.sql.ResultSet";
   private static final MethodMatchers PREPARE_STATEMENT = MethodMatchers.create()
-    .ofType("java.sql.Connection").startWithName("prepareStatement").withAnyParameters();
+    .ofTypes("java.sql.Connection").name(name -> name.startsWith("prepareStatement")).withAnyParameters();
 
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatchers.or(
-      MethodMatchers.create().ofType("java.sql.PreparedStatement").startWithName("set").withParameters(t -> t.is(INT), t -> true),
-      MethodMatchers.create().ofType(JAVA_SQL_RESULTSET).startWithName("get").withParameters(INT).withParameters(t -> t.is(INT), t -> true)
+      MethodMatchers.create().ofTypes("java.sql.PreparedStatement").name(name -> name.startsWith("set")).addParametersMatcher(INT, ANY),
+      MethodMatchers.create().ofTypes(JAVA_SQL_RESULTSET).name(name -> name.startsWith("get")).addParametersMatcher(INT).addParametersMatcher(INT, ANY)
     );
   }
 

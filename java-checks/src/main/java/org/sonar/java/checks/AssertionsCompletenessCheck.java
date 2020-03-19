@@ -47,6 +47,7 @@ import org.sonar.plugins.java.api.tree.VariableTree;
 
 import static java.util.Collections.emptyList;
 import static org.sonar.java.checks.helpers.UnitTestUtils.hasTestAnnotation;
+import static org.sonar.plugins.java.api.semantic.MethodMatchers.ANY;
 
 @Rule(key = "S2970")
 public class AssertionsCompletenessCheck extends BaseTreeVisitor implements JavaFileScanner {
@@ -56,51 +57,54 @@ public class AssertionsCompletenessCheck extends BaseTreeVisitor implements Java
   private static final String TRUTH_SUPERTYPE = "com.google.common.truth.TestVerb";
   private static final String JAVA6_ABSTRACT_SOFT_ASSERT = "org.assertj.core.api.Java6AbstractStandardSoftAssertions";
   private static final MethodMatchers MOCKITO_VERIFY = MethodMatchers.create()
-    .ofSubType("org.mockito.Mockito").name("verify").withAnyParameters();
+    .ofSubTypes("org.mockito.Mockito").names("verify").withAnyParameters();
   private static final MethodMatchers ASSERTJ_ASSERT_ALL =
-    MethodMatchers.create().ofSubType("org.assertj.core.api.SoftAssertions").ofSubType("org.assertj.core.api.Java6SoftAssertions").name("assertAll").withAnyParameters();
+    MethodMatchers.create()
+      .ofSubTypes("org.assertj.core.api.SoftAssertions", "org.assertj.core.api.Java6SoftAssertions")
+      .names("assertAll")
+      .withAnyParameters();
   private static final MethodMatchers ASSERTJ_ASSERT_THAT = MethodMatchers.create()
-    .ofSubType("org.assertj.core.api.AbstractSoftAssertions")
-    .startWithName("assertThat")
+    .ofSubTypes("org.assertj.core.api.AbstractSoftAssertions").name(name -> name.startsWith("assertThat"))
     .withAnyParameters();
   private static final MethodMatchers ASSERTJ_ASSERT_SOFTLY = MethodMatchers.create()
-    .ofSubType("org.assertj.core.api.SoftAssertions").name("assertSoftly").withAnyParameters();
+    .ofSubTypes("org.assertj.core.api.SoftAssertions").names("assertSoftly").withAnyParameters();
 
   private static final MethodMatchers FEST_LIKE_ASSERT_THAT = MethodMatchers.or(
-    MethodMatchers.create().name("assertThat").withParameters(t -> true)
-    // Fest 1.X
-    .ofSubType("org.fest.assertions.Assertions")
-    // Fest 2.X
-    .ofSubType("org.fest.assertions.api.Assertions")
-    // AssertJ 1.X
-    .ofSubType("org.assertj.core.api.AbstractSoftAssertions")
-    // AssertJ 2.X
-    .ofSubType("org.assertj.core.api.Assertions")
-    .ofSubType("org.assertj.core.api.Java6Assertions")
-    .ofSubType("org.assertj.core.api.AbstractStandardSoftAssertions")
-    .ofSubType(JAVA6_ABSTRACT_SOFT_ASSERT)
-    // AssertJ 3.X
-    .ofSubType("org.assertj.core.api.StrictAssertions"),
+    MethodMatchers.create()
+      .ofSubTypes(
+        // Fest 1.X
+        "org.fest.assertions.Assertions",
+        // Fest 2.X
+        "org.fest.assertions.api.Assertions",
+        // AssertJ 1.X
+        "org.assertj.core.api.AbstractSoftAssertions",
+        // AssertJ 2.X
+        "org.assertj.core.api.Assertions",
+        "org.assertj.core.api.Java6Assertions",
+        "org.assertj.core.api.AbstractStandardSoftAssertions",
+        JAVA6_ABSTRACT_SOFT_ASSERT,
+        // AssertJ 3.X
+        "org.assertj.core.api.StrictAssertions")
+      .names("assertThat")
+      .addParametersMatcher(ANY),
 
-    MethodMatchers.create().startWithName("assert").withAnyParameters()
-      // Truth 0.29
-    .ofSubType("com.google.common.truth.Truth")
-    // Truth8 0.39
-    .ofSubType("com.google.common.truth.Truth8")
-  );
+    MethodMatchers.create()
+      .ofSubTypes(
+        // Truth 0.29
+        "com.google.common.truth.Truth",
+        // Truth8 0.39
+        "com.google.common.truth.Truth8").name(name -> name.startsWith("assert"))
+      .withAnyParameters());
 
   private static final MethodMatchers FEST_LIKE_EXCLUSIONS = MethodMatchers.or(
-    MethodMatchers.create().withAnyParameters()
-      .ofSubType(FEST_ASSERT_SUPERTYPE)
-      .ofSubType(ASSERTJ_SUPERTYPE)
-      .startWithName("as")
-      .startWithName("using")
-      .startWithName("with")
-      .name("describedAs")
-      .name("overridingErrorMessage"),
+    MethodMatchers.create()
+      .ofSubTypes(FEST_ASSERT_SUPERTYPE, ASSERTJ_SUPERTYPE)
+      .name(name -> name.startsWith("as") || name.startsWith("using") || name.startsWith("with") ||
+        name.equals("describedAs") || name.equals("overridingErrorMessage"))
+      .withAnyParameters(),
 
     // Truth has assertWithMessage, Truth8 does not
-    MethodMatchers.create().ofSubType(TRUTH_SUPERTYPE).name("that").withAnyParameters()
+    MethodMatchers.create().ofSubTypes(TRUTH_SUPERTYPE).names("that").withAnyParameters()
   );
 
   private Boolean chainedToAnyMethodButFestExclusions = null;

@@ -34,7 +34,7 @@ public class ArrayHashCodeAndToStringCheck extends AbstractMethodDetection {
     return MethodMatchers.create()
       .ofType(Type::isArray)
       .names("toString", "hashCode")
-      .withoutParameters();
+      .addWithoutParametersMatcher();
   }
 
   @Override

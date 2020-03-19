@@ -39,7 +39,7 @@ public class ArraysAsListOfPrimitiveToStreamCheck extends AbstractMethodDetectio
 
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
-    return MethodMatchers.create().ofType("java.util.List").name("stream").withoutParameters();
+    return MethodMatchers.create().ofTypes("java.util.List").names("stream").addWithoutParametersMatcher();
   }
 
   @Override

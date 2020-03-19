@@ -44,16 +44,22 @@ public class AssertionArgumentOrderCheck extends AbstractMethodDetection {
   private static final String MESSAGE = "Swap these 2 arguments so they are in the correct order: expected value, actual value.";
 
   private static final MethodMatchers COLLECTION_CREATION_CALL = MethodMatchers.or(
-    MethodMatchers.create().ofType("java.util.Collections").startWithName("singleton").startWithName("empty").withAnyParameters(),
-    MethodMatchers.create().ofType("java.util.Arrays").name("asList").withAnyParameters());
+    MethodMatchers.create()
+      .ofTypes("java.util.Collections")
+      .name(name -> name.startsWith("singleton") || name.startsWith("empty"))
+      .withAnyParameters(),
+    MethodMatchers.create().ofTypes("java.util.Arrays").names("asList").withAnyParameters());
 
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatchers.or(
-      MethodMatchers.create().ofType(ORG_JUNIT_ASSERT).names("assertEquals", "assertSame", "assertNotSame").withAnyParameters(),
+      MethodMatchers.create().ofTypes(ORG_JUNIT_ASSERT)
+        .names("assertEquals", "assertSame", "assertNotSame")
+        .withAnyParameters(),
       // JUnit 5
-      MethodMatchers.create().ofType(ORG_JUNIT5_ASSERTIONS).withAnyParameters()
+      MethodMatchers.create().ofTypes(ORG_JUNIT5_ASSERTIONS)
         .names("assertArrayEquals", "assertEquals", "assertIterableEquals", "assertLinesMatch", "assertNotEquals", "assertNotSame", "assertSame")
+        .withAnyParameters()
     );
   }
 

@@ -67,58 +67,58 @@ public class XxeProcessingCheck extends SECheck {
   // XMLInputFactory
   private static final String XML_INPUT_FACTORY = "javax.xml.stream.XMLInputFactory";
   private static final MethodMatchers XML_INPUT_FACTORY_NEW_INSTANCE = MethodMatchers.create()
-    .ofType(XML_INPUT_FACTORY)
+    .ofTypes(XML_INPUT_FACTORY)
     .names(NEW_INSTANCE, "newFactory")
     .withAnyParameters();
 
   // DocumentBuilderFactory
   private static final String DOCUMENT_BUILDER_FACTORY = "javax.xml.parsers.DocumentBuilderFactory";
   private static final MethodMatchers DOCUMENT_BUILDER_FACTORY_NEW_INSTANCE = MethodMatchers.create()
-    .ofType(DOCUMENT_BUILDER_FACTORY)
-    .name(NEW_INSTANCE)
+    .ofTypes(DOCUMENT_BUILDER_FACTORY)
+    .names(NEW_INSTANCE)
     .withAnyParameters();
 
   // SAXParserFactory
   private static final String SAX_PARSER_FACTORY = "javax.xml.parsers.SAXParserFactory";
   private static final String SAX_PARSER = "javax.xml.parsers.SAXParser";
   private static final MethodMatchers SAX_PARSER_FACTORY_NEW_INSTANCE = MethodMatchers.create()
-    .ofType(SAX_PARSER_FACTORY)
-    .name(NEW_INSTANCE)
+    .ofTypes(SAX_PARSER_FACTORY)
+    .names(NEW_INSTANCE)
     .withAnyParameters();
 
   // SchemaFactory and Validator
   private static final String SCHEMA_FACTORY = "javax.xml.validation.SchemaFactory";
   private static final MethodMatchers SCHEMA_FACTORY_NEW_INSTANCE = MethodMatchers.create()
-    .ofType(SCHEMA_FACTORY)
-    .name(NEW_INSTANCE)
+    .ofTypes(SCHEMA_FACTORY)
+    .names(NEW_INSTANCE)
     .withAnyParameters();
   private static final String VALIDATOR = "javax.xml.validation.Validator";
 
   // TransformerFactory
   private static final String TRANSFORMER_FACTORY = "javax.xml.transform.TransformerFactory";
   private static final MethodMatchers TRANSFORMER_FACTORY_NEW_INSTANCE = MethodMatchers.create()
-    .ofSubType(TRANSFORMER_FACTORY)
-    .name(NEW_INSTANCE)
+    .ofSubTypes(TRANSFORMER_FACTORY)
+    .names(NEW_INSTANCE)
     .withAnyParameters();
 
   // TransformerFactory
   private static final String XML_READER = "org.xml.sax.XMLReader";
   private static final MethodMatchers CREATE_XML_READER = MethodMatchers.create()
-    .ofType("org.xml.sax.helpers.XMLReaderFactory")
-    .name("createXMLReader")
+    .ofTypes("org.xml.sax.helpers.XMLReaderFactory")
+    .names("createXMLReader")
     .withAnyParameters();
 
   // SAXBuilder
   private static final String SAX_BUILDER = "org.jdom2.input.SAXBuilder";
   private static final MethodMatchers SAX_BUILDER_CONSTRUCTOR = MethodMatchers.create()
-    .ofType(SAX_BUILDER)
+    .ofTypes(SAX_BUILDER)
     .constructor()
     .withAnyParameters();
 
   // SAXReader
   private static final String SAX_READER = "org.dom4j.io.SAXReader";
   private static final MethodMatchers SAX_READER_CONSTRUCTOR = MethodMatchers.create()
-    .ofType(SAX_READER)
+    .ofTypes(SAX_READER)
     .constructor()
     .withAnyParameters();
 
@@ -157,28 +157,28 @@ public class XxeProcessingCheck extends SECheck {
 
   private static final MethodMatchers FEATURES_AND_PROPERTIES_SETTERS = MethodMatchers.or(
     MethodMatchers.create().ofSubTypes(DOCUMENT_BUILDER_FACTORY, TRANSFORMER_FACTORY)
-      .name("setAttribute").withParameters(JAVA_LANG_STRING, JAVA_LANG_OBJECT),
+      .names("setAttribute").addParametersMatcher(JAVA_LANG_STRING, JAVA_LANG_OBJECT),
     MethodMatchers.create().ofSubTypes(XML_INPUT_FACTORY, SAX_PARSER, SCHEMA_FACTORY, VALIDATOR, XML_READER, SAX_BUILDER)
-      .name("setProperty").withParameters(JAVA_LANG_STRING, JAVA_LANG_OBJECT),
+      .names("setProperty").addParametersMatcher(JAVA_LANG_STRING, JAVA_LANG_OBJECT),
     MethodMatchers.create().ofSubTypes(DOCUMENT_BUILDER_FACTORY, SAX_PARSER_FACTORY, XML_READER, SAX_BUILDER, SAX_READER)
-      .name("setFeature").withParameters(JAVA_LANG_STRING, BOOLEAN));
+      .names("setFeature").addParametersMatcher(JAVA_LANG_STRING, BOOLEAN));
 
   private static final MethodMatchers TRANSFERRING_METHOD_CALLS = MethodMatchers.or(
-    MethodMatchers.create().ofType(SAX_PARSER_FACTORY).name("newSAXParser").withAnyParameters(),
-    MethodMatchers.create().ofType(SCHEMA_FACTORY).name("newSchema").withAnyParameters(),
-    MethodMatchers.create().ofType("javax.xml.validation.Schema").name("newValidator").withAnyParameters(),
-    MethodMatchers.create().ofType(SAX_PARSER).name("getXMLReader").withAnyParameters()
+    MethodMatchers.create().ofTypes(SAX_PARSER_FACTORY).names("newSAXParser").withAnyParameters(),
+    MethodMatchers.create().ofTypes(SCHEMA_FACTORY).names("newSchema").withAnyParameters(),
+    MethodMatchers.create().ofTypes("javax.xml.validation.Schema").names("newValidator").withAnyParameters(),
+    MethodMatchers.create().ofTypes(SAX_PARSER).names("getXMLReader").withAnyParameters()
   );
 
   private static final MethodMatchers PARSING_METHODS = MethodMatchers.or(
-    MethodMatchers.create().ofSubType(DOCUMENT_BUILDER_FACTORY).name("newDocumentBuilder").withoutParameters(),
-    MethodMatchers.create().ofSubType(TRANSFORMER_FACTORY).name("newTransformer").withAnyParameters(),
-    MethodMatchers.create().ofSubType(XML_INPUT_FACTORY).name(n -> n.startsWith("create")).withAnyParameters(),
-    MethodMatchers.create().ofSubType(VALIDATOR).name("validate").withAnyParameters(),
-    MethodMatchers.create().ofSubType(SAX_PARSER).name("parse").withAnyParameters(),
-    MethodMatchers.create().ofSubType(XML_READER).name("parse").withAnyParameters(),
-    MethodMatchers.create().ofSubType(SAX_BUILDER).name("build").withAnyParameters(),
-    MethodMatchers.create().ofSubType(SAX_READER).name("read").withAnyParameters()
+    MethodMatchers.create().ofSubTypes(DOCUMENT_BUILDER_FACTORY).names("newDocumentBuilder").addWithoutParametersMatcher(),
+    MethodMatchers.create().ofSubTypes(TRANSFORMER_FACTORY).names("newTransformer").withAnyParameters(),
+    MethodMatchers.create().ofSubTypes(XML_INPUT_FACTORY).name(n -> n.startsWith("create")).withAnyParameters(),
+    MethodMatchers.create().ofSubTypes(VALIDATOR).names("validate").withAnyParameters(),
+    MethodMatchers.create().ofSubTypes(SAX_PARSER).names("parse").withAnyParameters(),
+    MethodMatchers.create().ofSubTypes(XML_READER).names("parse").withAnyParameters(),
+    MethodMatchers.create().ofSubTypes(SAX_BUILDER).names("build").withAnyParameters(),
+    MethodMatchers.create().ofSubTypes(SAX_READER).names("read").withAnyParameters()
   );
 
   private static final List<XxeProperty> PROPERTIES_TO_CHECK = ImmutableList.<XxeProperty>builder()

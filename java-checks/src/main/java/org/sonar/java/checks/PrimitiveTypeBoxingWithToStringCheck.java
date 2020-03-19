@@ -46,8 +46,8 @@ public class PrimitiveTypeBoxingWithToStringCheck extends BaseTreeVisitor implem
     "java.lang.Float",
     "java.lang.Double",
     "java.lang.Boolean")
-    .name("toString")
-    .withoutParameters();
+    .names("toString")
+    .addWithoutParametersMatcher();
 
   private JavaFileScannerContext context;
 

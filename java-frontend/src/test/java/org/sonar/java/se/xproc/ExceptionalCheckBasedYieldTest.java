@@ -108,7 +108,7 @@ public class ExceptionalCheckBasedYieldTest {
 
   private static class TestSECheck extends SECheck {
 
-    private static final MethodMatchers MATCHER = MethodMatchers.create().ofType("foo.bar.A").name("plantFlowers").withParameters("boolean");
+    private static final MethodMatchers MATCHER = MethodMatchers.create().ofTypes("foo.bar.A").names("plantFlowers").addParametersMatcher("boolean");
 
     @Override
     public ProgramState checkPreStatement(CheckerContext context, Tree syntaxNode) {

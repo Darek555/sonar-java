@@ -43,7 +43,7 @@ import org.sonar.plugins.java.api.tree.TryStatementTree;
 public class ServletMethodsExceptionsThrownCheck extends IssuableSubscriptionVisitor {
 
   private static final MethodMatchers IS_SERVLET_DO_METHOD = MethodMatchers.create()
-    .ofSubType("javax.servlet.http.HttpServlet").startWithName("do").withAnyParameters();
+    .ofSubTypes("javax.servlet.http.HttpServlet").name(name -> name.startsWith("do")).withAnyParameters();
 
   private final Deque<Boolean> shouldCheck = new ArrayDeque<>();
   private final Deque<List<Type>> tryCatches = new ArrayDeque<>();

@@ -32,7 +32,7 @@ public class CallToFileDeleteOnExitMethodCheck extends AbstractMethodDetection {
 
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
-    return MethodMatchers.create().ofType("java.io.File").name("deleteOnExit").withoutParameters();
+    return MethodMatchers.create().ofTypes("java.io.File").names("deleteOnExit").addWithoutParametersMatcher();
   }
 
   @Override

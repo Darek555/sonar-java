@@ -65,24 +65,27 @@ public class PublicStaticMutableMembersCheck extends IssuableSubscriptionVisitor
   private static final String DECORATE = "decorate";
   // java.util and apache commons
   private static final MethodMatchers UNMODIFIABLE_METHOD_CALLS = MethodMatchers.or(
-    MethodMatchers.create().ofType("java.util.Collections").startWithName("singleton").startWithName("empty").withAnyParameters(),
-    MethodMatchers.create().ofAnyType().startWithName("unmodifiable").withAnyParameters(),
+    MethodMatchers.create().ofTypes("java.util.Collections").name(name -> name.startsWith("singleton") || name.startsWith("empty")).withAnyParameters(),
+    MethodMatchers.create().ofAnyType().name(name -> name.startsWith("unmodifiable")).withAnyParameters(),
     // Java 9s
-    MethodMatchers.create().ofType("java.util.Set").ofType("java.util.List").ofType("java.util.Map").name("of").withAnyParameters(),
+    MethodMatchers.create().ofTypes("java.util.Set", "java.util.List", "java.util.Map").names("of").withAnyParameters(),
     // apache...
-    MethodMatchers.create().withAnyParameters().name(DECORATE)
+    MethodMatchers.create()
       // commons 3.X
-      .ofSubType("org.apache.commons.collections.map.UnmodifiableMap")
-      .ofSubType("org.apache.commons.collections.list.UnmodifiableList")
-      .ofSubType("org.apache.commons.collections.set.UnmodifiableSet")
-      // commons 4.X
-      .ofSubType("org.apache.commons.collections4.map.UnmodifiableMap")
-      .ofSubType("org.apache.commons.collections4.set.UnmodifiableSet")
-      .ofSubType("org.apache.commons.collections4.list.UnmodifiableList")
+      .ofSubTypes(
+        "org.apache.commons.collections.map.UnmodifiableMap",
+        "org.apache.commons.collections.list.UnmodifiableList",
+        "org.apache.commons.collections.set.UnmodifiableSet",
+        // commons 4.X
+        "org.apache.commons.collections4.map.UnmodifiableMap",
+        "org.apache.commons.collections4.set.UnmodifiableSet",
+        "org.apache.commons.collections4.list.UnmodifiableList")
+      .names(DECORATE)
+      .withAnyParameters()
   );
 
   private static final MethodMatchers ARRAYS_AS_LIST = MethodMatchers.create()
-    .ofType("java.util.Arrays").name("asList").withAnyParameters();
+    .ofTypes("java.util.Arrays").names("asList").withAnyParameters();
 
   private static final Set<String> ACCEPTED_TYPES = ImmutableSet.of(
     "com.google.common.collect.ImmutableMap",

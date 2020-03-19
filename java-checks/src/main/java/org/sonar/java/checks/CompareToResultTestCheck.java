@@ -19,8 +19,10 @@
  */
 package org.sonar.java.checks;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 import org.sonar.check.Rule;
-import org.sonar.java.matcher.TypeCriteria;
 import org.sonar.java.model.ExpressionUtils;
 import org.sonar.plugins.java.api.IssuableSubscriptionVisitor;
 import org.sonar.plugins.java.api.semantic.MethodMatchers;
@@ -38,17 +40,15 @@ import org.sonar.plugins.java.api.tree.Tree.Kind;
 import org.sonar.plugins.java.api.tree.UnaryExpressionTree;
 import org.sonar.plugins.java.api.tree.VariableTree;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import static org.sonar.plugins.java.api.semantic.MethodMatchers.ANY;
 
 @Rule(key = "S2200")
 public class CompareToResultTestCheck extends IssuableSubscriptionVisitor {
 
   private static final MethodMatchers COMPARE_TO = MethodMatchers.create()
-    .ofSubType("java.lang.Comparable")
-    .name("compareTo")
-    .withParameters(TypeCriteria.anyType());
+    .ofSubTypes("java.lang.Comparable")
+    .names("compareTo")
+    .addParametersMatcher(ANY);
 
   @Override
   public List<Kind> nodesToVisit() {

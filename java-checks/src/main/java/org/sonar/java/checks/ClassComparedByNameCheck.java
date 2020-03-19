@@ -69,9 +69,9 @@ public class ClassComparedByNameCheck extends AbstractMethodDetection {
     private boolean useClassGetName = false;
 
     private static final MethodMatchers METHOD_MATCHERS = MethodMatchers.create()
-      .ofType("java.lang.Class")
+      .ofTypes("java.lang.Class")
       .names("getName", "getSimpleName")
-      .withoutParameters();
+      .addWithoutParametersMatcher();
 
     @Override
     public void visitMethodInvocation(MethodInvocationTree tree) {

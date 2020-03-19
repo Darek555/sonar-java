@@ -33,12 +33,16 @@ public class BooleanLiteralInAssertionsCheck extends AbstractMethodDetection {
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatchers.or(
       MethodMatchers.create()
-        .ofType("org.junit.Assert")
-        .ofType("org.junit.jupiter.api.Assertions")
-        .ofType("junit.framework.Assert")
-        .ofType("junit.framework.TestCase")
-        .startWithName("assert").withAnyParameters(),
-      MethodMatchers.create().ofType("org.fest.assertions.Assertions").name("assertThat").withParameters("boolean")
+        .ofTypes(
+          "org.junit.Assert",
+          "org.junit.jupiter.api.Assertions",
+          "junit.framework.Assert",
+          "junit.framework.TestCase").name(name -> name.startsWith("assert"))
+        .withAnyParameters(),
+      MethodMatchers.create()
+        .ofTypes("org.fest.assertions.Assertions")
+        .names("assertThat")
+        .addParametersMatcher("boolean")
       );
   }
 

@@ -162,7 +162,7 @@ public class StaticFieldInitializationCheck extends AbstractInSynchronizeChecker
 
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
-    return MethodMatchers.empty();
+    return MethodMatchers.none();
   }
 
 }

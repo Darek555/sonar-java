@@ -49,8 +49,8 @@ import org.sonar.plugins.java.api.tree.WhileStatementTree;
 @Rule(key = "S2189")
 public class NoWayOutLoopCheck extends SECheck {
 
-  private static final MethodMatchers THREAD_RUN_MATCHER = MethodMatchers.create().ofSubType("java.lang.Thread")
-    .name("run").withoutParameters();
+  private static final MethodMatchers THREAD_RUN_MATCHER = MethodMatchers.create().ofSubTypes("java.lang.Thread")
+    .names("run").addWithoutParametersMatcher();
 
   private enum UpdateType {
     INCREMENT, DECREMENT, INDETERMINATE

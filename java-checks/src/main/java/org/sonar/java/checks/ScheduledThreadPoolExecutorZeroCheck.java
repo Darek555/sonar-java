@@ -36,8 +36,8 @@ public class ScheduledThreadPoolExecutorZeroCheck extends AbstractMethodDetectio
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatchers.or(
-      MethodMatchers.create().ofSubType("java.util.concurrent.ThreadPoolExecutor").name("setCorePoolSize").withParameters("int"),
-      MethodMatchers.create().ofType("java.util.concurrent.ScheduledThreadPoolExecutor").constructor().withParameters("int")
+      MethodMatchers.create().ofSubTypes("java.util.concurrent.ThreadPoolExecutor").names("setCorePoolSize").addParametersMatcher("int"),
+      MethodMatchers.create().ofTypes("java.util.concurrent.ScheduledThreadPoolExecutor").constructor().addParametersMatcher("int")
     );
   }
 

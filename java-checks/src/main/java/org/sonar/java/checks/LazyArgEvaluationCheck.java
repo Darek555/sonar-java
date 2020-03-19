@@ -49,13 +49,13 @@ import org.sonar.plugins.java.api.tree.MethodTree;
 import org.sonar.plugins.java.api.tree.NewClassTree;
 import org.sonar.plugins.java.api.tree.Tree;
 
-import static org.sonar.java.matcher.TypeCriteria.anyType;
+import static org.sonar.plugins.java.api.semantic.MethodMatchers.ANY;
 
 @Rule(key = "S2629")
 public class LazyArgEvaluationCheck extends BaseTreeVisitor implements JavaFileScanner {
 
-  private static final TypeCriteria STRING = TypeCriteria.is("java.lang.String");
-  private static final TypeCriteria OBJECT_ARR = TypeCriteria.is("java.lang.Object[]");
+  private static final String STRING = "java.lang.String";
+  private static final String OBJECT_ARR = "java.lang.Object[]";
 
   interface LogLevels {
     /**
@@ -89,21 +89,21 @@ public class LazyArgEvaluationCheck extends BaseTreeVisitor implements JavaFileS
       ;
 
       private static final TypeCriteria LOGGER = TypeCriteria.subtypeOf("org.slf4j.Logger");
-      private static final TypeCriteria MARKER = TypeCriteria.is("org.slf4j.Marker");
+      private static final String MARKER = "org.slf4j.Marker";
 
       @Override
       public MethodMatchers log() {
         return MethodMatchers.create()
           .ofType(LOGGER)
-          .name(toString().toLowerCase(Locale.ROOT))
-          .withParameters(STRING)
-          .withParameters(STRING, anyType())
-          .withParameters(STRING, anyType(), anyType())
-          .withParameters(STRING, OBJECT_ARR)
-          .withParameters(MARKER, STRING)
-          .withParameters(MARKER, STRING, anyType())
-          .withParameters(MARKER, STRING, anyType(), anyType())
-          .withParameters(MARKER, STRING, OBJECT_ARR);
+          .names(toString().toLowerCase(Locale.ROOT))
+          .addParametersMatcher(STRING)
+          .addParametersMatcher(STRING, ANY)
+          .addParametersMatcher(STRING, ANY, ANY)
+          .addParametersMatcher(STRING, OBJECT_ARR)
+          .addParametersMatcher(MARKER, STRING)
+          .addParametersMatcher(MARKER, STRING, ANY)
+          .addParametersMatcher(MARKER, STRING, ANY, ANY)
+          .addParametersMatcher(MARKER, STRING, OBJECT_ARR);
       }
 
       @Override
@@ -161,9 +161,9 @@ public class LazyArgEvaluationCheck extends BaseTreeVisitor implements JavaFileS
       private static final Predicate<Type> SUPPLIER = TypeCriteria.subtypeOf("org.apache.logging.log4j.util.Supplier")
         .or(TypeCriteria.subtypeOf("org.apache.logging.log4j.util.MessageSupplier"));
 
-      private static final MethodMatchers TESTS = MethodMatchers.create().ofType(LOGGER).name("isEnabled")
-        .withParameters(LEVEL)
-        .withParameters(LEVEL, MARKER);
+      private static final MethodMatchers TESTS = MethodMatchers.create().ofType(LOGGER).names("isEnabled")
+        .addParametersMatcher(LEVEL)
+        .addParametersMatcher(LEVEL, MARKER);
 
       private static final MethodMatcher LOG = MethodMatcher.create().ofType(LOGGER).name("log").withAnyParameters();
 

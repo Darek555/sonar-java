@@ -36,7 +36,7 @@ import org.sonar.plugins.java.api.tree.Tree;
 @Rule(key = "S3981")
 public class CollectionSizeAndArrayLengthCheck extends IssuableSubscriptionVisitor {
 
-  private static final MethodMatchers COLLECTION_SIZE = MethodMatchers.create().ofSubType("java.util.Collection").name("size").withoutParameters();
+  private static final MethodMatchers COLLECTION_SIZE = MethodMatchers.create().ofSubTypes("java.util.Collection").names("size").addWithoutParametersMatcher();
   private static final String COLLECTION_ISSUE_MSG = "The size of %s is always \">=0\", so update this test to use isEmpty().";
   private static final String ARRAY_ISSUE_MSG = "The length of %s is always \">=0\", so update this test to either \"==0\" or \">0\".";
 

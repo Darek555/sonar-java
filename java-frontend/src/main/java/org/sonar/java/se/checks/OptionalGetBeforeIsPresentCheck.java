@@ -43,16 +43,16 @@ import org.sonar.plugins.java.api.tree.Tree;
 @Rule(key = "S3655")
 public class OptionalGetBeforeIsPresentCheck extends SECheck {
 
-  private static final MethodMatchers.Builder JAVA_UTIL_OPTIONAL = MethodMatchers.create().ofType("java.util.Optional");
+  private static final MethodMatchers.NameBuilder JAVA_UTIL_OPTIONAL = MethodMatchers.create().ofTypes("java.util.Optional");
   private static final ExceptionalYieldChecker EXCEPTIONAL_YIELD_CHECKER = new ExceptionalYieldChecker(
     "\"NoSuchElementException\" will be thrown when invoking method \"%s()\" without verifying Optional parameter.");
-  private static final MethodMatchers OPTIONAL_GET = JAVA_UTIL_OPTIONAL.name("get").withoutParameters();
-  private static final MethodMatchers OPTIONAL_ORELSE = JAVA_UTIL_OPTIONAL.name("orElse").withAnyParameters();
-  private static final MethodMatchers OPTIONAL_TEST_METHODS = JAVA_UTIL_OPTIONAL.names("isPresent", "isEmpty").withoutParameters();
-  private static final MethodMatchers OPTIONAL_EMPTY = JAVA_UTIL_OPTIONAL.name("empty").withoutParameters();
-  private static final MethodMatchers OPTIONAL_OF = JAVA_UTIL_OPTIONAL.name("of").withAnyParameters();
-  private static final MethodMatchers OPTIONAL_OF_NULLABLE = JAVA_UTIL_OPTIONAL.name("ofNullable").withAnyParameters();
-  private static final MethodMatchers OPTIONAL_FILTER = JAVA_UTIL_OPTIONAL.name("filter").withAnyParameters();
+  private static final MethodMatchers OPTIONAL_GET = JAVA_UTIL_OPTIONAL.names("get").addWithoutParametersMatcher();
+  private static final MethodMatchers OPTIONAL_ORELSE = JAVA_UTIL_OPTIONAL.names("orElse").withAnyParameters();
+  private static final MethodMatchers OPTIONAL_TEST_METHODS = JAVA_UTIL_OPTIONAL.names("isPresent", "isEmpty").addWithoutParametersMatcher();
+  private static final MethodMatchers OPTIONAL_EMPTY = JAVA_UTIL_OPTIONAL.names("empty").addWithoutParametersMatcher();
+  private static final MethodMatchers OPTIONAL_OF = JAVA_UTIL_OPTIONAL.names("of").withAnyParameters();
+  private static final MethodMatchers OPTIONAL_OF_NULLABLE = JAVA_UTIL_OPTIONAL.names("ofNullable").withAnyParameters();
+  private static final MethodMatchers OPTIONAL_FILTER = JAVA_UTIL_OPTIONAL.names("filter").withAnyParameters();
 
   private enum OptionalConstraint implements Constraint {
     PRESENT, NOT_PRESENT;

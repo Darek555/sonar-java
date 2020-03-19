@@ -69,7 +69,7 @@ public class ControllerWithSessionAttributesCheck extends IssuableSubscriptionVi
    */
   private static class MethodInvocationVisitor extends BaseTreeVisitor {
     private static final MethodMatchers SET_COMPLETE = MethodMatchers.create()
-      .ofType("org.springframework.web.bind.support.SessionStatus").name("setComplete").withAnyParameters();
+      .ofTypes("org.springframework.web.bind.support.SessionStatus").names("setComplete").withAnyParameters();
 
     boolean setCompleteIsCalled;
 

@@ -64,9 +64,9 @@ import static org.sonar.java.model.ExpressionUtils.skipParentheses;
 public class CatchUsesExceptionWithContextCheck extends BaseTreeVisitor implements JavaFileScanner {
 
   private static final MethodMatchers GET_MESSAGE_METHODS = MethodMatchers.create()
-    .ofSubType("java.lang.Throwable")
+    .ofSubTypes("java.lang.Throwable")
     .names("getMessage", "getLocalizedMessage")
-    .withoutParameters();
+    .addWithoutParametersMatcher();
 
   private static final String JAVA_UTIL_LOGGING_LOGGER = "java.util.logging.Logger";
   private static final String SLF4J_LOGGER = "org.slf4j.Logger";

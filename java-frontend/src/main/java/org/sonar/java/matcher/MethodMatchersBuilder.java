@@ -38,7 +38,7 @@ import org.sonar.plugins.java.api.tree.MethodTree;
 import org.sonar.plugins.java.api.tree.NewClassTree;
 import org.sonar.plugins.java.api.tree.Tree;
 
-public class MethodMatchersBuilder implements MethodMatchers.Builder {
+public class MethodMatchersBuilder implements MethodMatchers.TypeBuilder, MethodMatchers.NameBuilder, MethodMatchers.ParametersBuilder, MethodMatchers {
 
   @Nullable
   private final Predicate<Type> typePredicate;
@@ -61,140 +61,88 @@ public class MethodMatchersBuilder implements MethodMatchers.Builder {
     this.parametersPredicate = parametersPredicate;
   }
 
-  @Override
-  public Builder ofSubType(String fullyQualifiedTypeName) {
-    return ofType(type -> type.isSubtypeOf(fullyQualifiedTypeName));
+  private static <T> Predicate<T> substituteAny(Predicate<T> predicate, String... names) {
+    if (Arrays.asList(names).contains(MethodMatchers.ANY)) {
+      if (names.length > 1) {
+        throw new IllegalStateException("Incompatible MethodMatchers.ANY with other predicates.");
+      }
+      return e -> true;
+    }
+    return predicate;
   }
 
   @Override
-  public Builder ofSubTypes(String... fullyQualifiedTypeNames) {
-    Builder builder = this;
-    for (String name : fullyQualifiedTypeNames) {
-      builder = builder.ofSubType(name);
-    }
-    return builder;
+  public NameBuilder ofSubTypes(String... fullyQualifiedTypeNames) {
+    return ofType(substituteAny(type -> Arrays.stream(fullyQualifiedTypeNames).anyMatch(type::isSubtypeOf), fullyQualifiedTypeNames));
   }
 
   @Override
-  public Builder ofAnyType() {
-    if (typePredicate != null) {
-      throw new IllegalStateException("Incompatible 'any type' added to others type predicates.");
-    }
+  public NameBuilder ofAnyType() {
     return ofType(type -> true);
   }
 
   @Override
-  public Builder ofType(String fullyQualifiedTypeName) {
-    return ofType(type -> type.is(fullyQualifiedTypeName));
+  public NameBuilder ofTypes(String... fullyQualifiedTypeNames) {
+    return ofType(substituteAny(type -> Arrays.stream(fullyQualifiedTypeNames).anyMatch(type::is), fullyQualifiedTypeNames));
   }
 
   @Override
-  public Builder ofTypes(String... fullyQualifiedTypeNames) {
-    Builder builder = this;
-    for (String name : fullyQualifiedTypeNames) {
-      builder = builder.ofType(name);
-    }
-    return builder;
-  }
-
-  @Override
-  public Builder ofType(Predicate<Type> typePredicate) {
+  public NameBuilder ofType(Predicate<Type> typePredicate) {
     return new MethodMatchersBuilder(or(this.typePredicate, typePredicate), namePredicate, parametersPredicate);
   }
 
   @Override
-  public Builder name(String methodName) {
-    return name(methodName::equals);
+  public ParametersBuilder names(String... names) {
+    List<String> nameList = Arrays.asList(names);
+    return name(substituteAny(nameList::contains, names));
   }
 
   @Override
-  public Builder names(String... names) {
-    Builder builder = this;
-    for (String name : names) {
-      builder = builder.name(name);
-    }
-    return builder;
+  public ParametersBuilder anyName() {
+    return names(MethodMatchers.ANY);
   }
 
   @Override
-  public Builder anyName() {
-    if (namePredicate != null) {
-      throw new IllegalStateException("Incompatible 'any name' added to others name predicates.");
-    }
-    return name(n -> true);
+  public ParametersBuilder constructor() {
+    return names(MethodMatchers.CONSTRUCTOR);
   }
 
   @Override
-  public Builder startWithName(String name) {
-    return name(n -> n.startsWith(name));
-  }
-
-  @Override
-  public Builder constructor() {
-    return name("<init>");
-  }
-
-  @Override
-  public Builder name(Predicate<String> namePredicate) {
+  public ParametersBuilder name(Predicate<String> namePredicate) {
     return new MethodMatchersBuilder(typePredicate, or(this.namePredicate, namePredicate), parametersPredicate);
   }
 
   @Override
-  public Builder withParameters(String... parametersType) {
-    return withParameters(Arrays.stream(parametersType).<Predicate<Type>>map(parameterType -> (type -> type.is(parameterType)))
+  public ParametersBuilder addParametersMatcher(String... parametersType) {
+    return withParameters(Arrays.stream(parametersType)
+      .<Predicate<Type>>map(parameterType -> substituteAny(type -> type.is(parameterType), parameterType))
       .collect(Collectors.toList()));
   }
 
-  @Override
-  @SafeVarargs
-  public final Builder withParameters(Predicate<Type>... parametersType) {
-    return withParameters(Arrays.asList(parametersType));
-  }
-
-  private Builder withParameters(List<Predicate<Type>> parametersType) {
-    return withParameters((List<Type> actualTypes) -> exactMatchesParameters(parametersType, actualTypes));
+  private ParametersBuilder withParameters(List<Predicate<Type>> parametersType) {
+    return addParametersMatcher((List<Type> actualTypes) -> exactMatchesParameters(parametersType, actualTypes));
   }
 
   @Override
-  public MethodMatchers.Builder withoutParameters() {
+  public ParametersBuilder addWithoutParametersMatcher() {
     return withParameters(Collections.emptyList());
   }
 
   @Override
-  public MethodMatchers.Builder withAnyParameters() {
+  public ParametersBuilder withAnyParameters() {
     if (parametersPredicate != null) {
       throw new IllegalStateException("Incompatible 'any parameters' constraint added to existing parameters constraint.");
     }
-    return withParameters((List<Type> actualParameters) -> true);
+    return addParametersMatcher((List<Type> actualParameters) -> true);
   }
 
   @Override
-  public Builder withParameters(Predicate<List<Type>> parametersPredicate) {
+  public ParametersBuilder addParametersMatcher(Predicate<List<Type>> parametersPredicate) {
     return new MethodMatchersBuilder(typePredicate, namePredicate, or(this.parametersPredicate, parametersPredicate));
-  }
-
-  @Override
-  public Builder startWithParameters(String... parametersType) {
-    return startWithParameters(Arrays.stream(parametersType).<Predicate<Type>>map(parameterType -> (type -> type.is(parameterType)))
-      .collect(Collectors.toList()));
-  }
-
-  @Override
-  @SafeVarargs
-  public final Builder startWithParameters(Predicate<Type>... parametersType) {
-    return startWithParameters(Arrays.asList(parametersType));
-  }
-
-  private Builder startWithParameters(List<Predicate<Type>> parametersType) {
-    return withParameters((List<Type> actualTypes) -> startWithParameters(parametersType, actualTypes));
   }
 
   private static boolean exactMatchesParameters(List<Predicate<Type>> expectedTypes, List<Type> actualTypes) {
     return actualTypes.size() == expectedTypes.size() && matchesParameters(expectedTypes, actualTypes);
-  }
-
-  private static boolean startWithParameters(List<Predicate<Type>> expectedTypes, List<Type> actualTypes) {
-    return actualTypes.size() >= expectedTypes.size() && matchesParameters(expectedTypes, actualTypes);
   }
 
   private static boolean matchesParameters(List<Predicate<Type>> expectedTypes, List<Type> actualTypes) {
@@ -206,27 +154,40 @@ public class MethodMatchersBuilder implements MethodMatchers.Builder {
     return true;
   }
 
+  @Override
   public boolean matches(NewClassTree newClassTree) {
     return matches(newClassTree.constructorSymbol(), null);
   }
 
+  @Override
   public boolean matches(MethodInvocationTree mit) {
     IdentifierTree id = getIdentifier(mit);
     return matches(id.symbol(), getCallSiteType(mit));
   }
 
+  @Override
   public boolean matches(MethodTree methodTree) {
     Symbol.MethodSymbol symbol = methodTree.symbol();
     Symbol.TypeSymbol enclosingClass = symbol.enclosingClass();
     return enclosingClass != null && matches(symbol, enclosingClass.type());
   }
 
+  @Override
   public boolean matches(MethodReferenceTree methodReferenceTree) {
     return matches(methodReferenceTree.method().symbol(), getCallSiteType(methodReferenceTree));
   }
 
+  @Override
   public boolean matches(Symbol symbol) {
     return matches(symbol, null);
+  }
+
+  @Override
+  public MethodMatchers build() {
+    if (typePredicate == null || namePredicate == null || parametersPredicate == null) {
+      throw new IllegalStateException("MethodMatchers need to be fully initialized.");
+    }
+    return this;
   }
 
   private boolean matches(Symbol symbol, @Nullable Type callSiteType) {

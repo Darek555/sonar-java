@@ -96,18 +96,18 @@ public class UnclosedResourcesCheck extends SECheck {
   private static final String JAVA_NIO_FILE_FILES = "java.nio.file.Files";
 
   private static final MethodMatchers JDBC_RESOURCE_CREATIONS = MethodMatchers.or(
-    MethodMatchers.create().ofType(JAVA_SQL_CONNECTION).names("createStatement", "prepareStatement", "prepareCall").withAnyParameters(),
-    MethodMatchers.create().ofType(JAVA_SQL_STATEMENT).name("executeQuery").withParameters("java.lang.String"),
-    MethodMatchers.create().ofType(JAVA_SQL_STATEMENT).names(PreStatementVisitor.GET_RESULT_SET, "getGeneratedKeys").withoutParameters(),
-    MethodMatchers.create().ofType("java.sql.PreparedStatement").name("executeQuery").withoutParameters(),
-    MethodMatchers.create().ofType("javax.sql.DataSource").name("getConnection").withAnyParameters(),
-    MethodMatchers.create().ofType("java.sql.DriverManager").name("getConnection").withAnyParameters()
+    MethodMatchers.create().ofTypes(JAVA_SQL_CONNECTION).names("createStatement", "prepareStatement", "prepareCall").withAnyParameters().build(),
+    MethodMatchers.create().ofTypes(JAVA_SQL_STATEMENT).names("executeQuery").addParametersMatcher("java.lang.String").build(),
+    MethodMatchers.create().ofTypes(JAVA_SQL_STATEMENT).names(PreStatementVisitor.GET_RESULT_SET, "getGeneratedKeys").addWithoutParametersMatcher().build(),
+    MethodMatchers.create().ofTypes("java.sql.PreparedStatement").names("executeQuery").addWithoutParametersMatcher().build(),
+    MethodMatchers.create().ofTypes("javax.sql.DataSource").names("getConnection").withAnyParameters().build(),
+    MethodMatchers.create().ofTypes("java.sql.DriverManager").names("getConnection").withAnyParameters().build()
   );
 
   private static final MethodMatchers STREAMS_BACKED_BY_RESOURCE = MethodMatchers.or(
-    MethodMatchers.create().ofType(JAVA_NIO_FILE_FILES)
+    MethodMatchers.create().ofTypes(JAVA_NIO_FILE_FILES)
       .names("lines", "newDirectoryStream", "list", "find", "walk")
-      .withAnyParameters()
+      .withAnyParameters().build()
   );
 
   private static final String STREAM_TOP_HIERARCHY = "java.util.stream.BaseStream";
@@ -123,9 +123,9 @@ public class UnclosedResourcesCheck extends SECheck {
   };
 
   private static final MethodMatchers CLOSEABLE_EXCEPTIONS = MethodMatchers.create()
-    .ofType("java.nio.file.FileSystems")
-    .name("getDefault")
-    .withoutParameters();
+    .ofTypes("java.nio.file.FileSystems")
+    .names("getDefault")
+    .addWithoutParametersMatcher().build();
 
   @Override
   public void init(MethodTree methodTree, CFG cfg) {

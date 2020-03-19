@@ -26,17 +26,17 @@ import org.sonar.plugins.java.api.tree.MethodReferenceTree;
 import org.sonar.plugins.java.api.tree.MethodTree;
 import org.sonar.plugins.java.api.tree.NewClassTree;
 
-public class EmptyMethodMatchers implements MethodMatchers {
+public class NoneMethodMatchers implements MethodMatchers {
 
-  private EmptyMethodMatchers() {
+  private NoneMethodMatchers() {
   }
 
-  public static EmptyMethodMatchers getInstance() {
+  public static NoneMethodMatchers getInstance() {
     return LazyHolder.INSTANCE;
   }
 
   private static class LazyHolder {
-    private static final EmptyMethodMatchers INSTANCE = new EmptyMethodMatchers();
+    private static final NoneMethodMatchers INSTANCE = new NoneMethodMatchers();
   }
 
   @Override

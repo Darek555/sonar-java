@@ -43,7 +43,7 @@ public class DisallowedConstructorCheck extends AbstractMethodDetection {
   protected MethodMatchers getMethodInvocationMatchers() {
     MethodMatcher invocationMatcher = MethodMatcher.create().name("<init>");
     if (StringUtils.isEmpty(className)) {
-      return MethodMatchers.empty();
+      return MethodMatchers.none();
     }
     invocationMatcher.ofType(className);
     if (allOverloads) {

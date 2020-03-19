@@ -35,8 +35,8 @@ public class CloneableImplementingCloneCheck extends IssuableSubscriptionVisitor
 
   private static final MethodMatchers CLONE_MATCHER = MethodMatchers.create()
     .ofAnyType()
-    .name("clone")
-    .withoutParameters();
+    .names("clone")
+    .addWithoutParametersMatcher();
 
   @Override
   public List<Kind> nodesToVisit() {

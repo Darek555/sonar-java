@@ -38,8 +38,8 @@ import org.sonar.plugins.java.api.tree.Tree;
 public class ObjectOutputStreamCheck extends SECheck {
 
   private static final MethodMatchers FILES_NEW_OUTPUT_STREAM = MethodMatchers.create()
-    .ofType("java.nio.file.Files")
-    .name("newOutputStream")
+    .ofTypes("java.nio.file.Files")
+    .names("newOutputStream")
     .withAnyParameters();
 
   private static class FileOutputStreamAppendConstraint implements Constraint {

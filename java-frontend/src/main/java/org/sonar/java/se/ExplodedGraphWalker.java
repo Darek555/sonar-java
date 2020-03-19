@@ -116,19 +116,19 @@ public class ExplodedGraphWalker {
   @VisibleForTesting
   static final int MAX_EXEC_PROGRAM_POINT = 2;
 
-  private static final MethodMatchers SYSTEM_EXIT_MATCHER = MethodMatchers.create().ofType("java.lang.System").name("exit").withParameters("int");
+  private static final MethodMatchers SYSTEM_EXIT_MATCHER = MethodMatchers.create().ofTypes("java.lang.System").names("exit").addParametersMatcher("int").build();
   private static final String JAVA_LANG_OBJECT = "java.lang.Object";
-  private static final MethodMatchers.Builder JAVA_LANG_OBJECT_SUBTYPE = MethodMatchers.create().ofSubType(JAVA_LANG_OBJECT);
-  private static final MethodMatchers OBJECT_WAIT_MATCHER = JAVA_LANG_OBJECT_SUBTYPE.name("wait")
-    .withoutParameters()
-    .withParameters("long")
-    .withParameters("long", "int");
-  private static final MethodMatchers GET_CLASS_MATCHER = JAVA_LANG_OBJECT_SUBTYPE.name("getClass").withoutParameters();
-  private static final MethodMatchers THREAD_SLEEP_MATCHER = MethodMatchers.create().ofType("java.lang.Thread").name("sleep").withAnyParameters();
-  private static final MethodMatchers EQUALS = MethodMatchers.create().ofAnyType().name("equals").withParameters(JAVA_LANG_OBJECT);
+  private static final MethodMatchers.NameBuilder JAVA_LANG_OBJECT_SUBTYPE = MethodMatchers.create().ofSubTypes(JAVA_LANG_OBJECT);
+  private static final MethodMatchers OBJECT_WAIT_MATCHER = JAVA_LANG_OBJECT_SUBTYPE.names("wait")
+    .addWithoutParametersMatcher()
+    .addParametersMatcher("long")
+    .addParametersMatcher("long", "int").build();
+  private static final MethodMatchers GET_CLASS_MATCHER = JAVA_LANG_OBJECT_SUBTYPE.names("getClass").addWithoutParametersMatcher().build();
+  private static final MethodMatchers THREAD_SLEEP_MATCHER = MethodMatchers.create().ofTypes("java.lang.Thread").names("sleep").withAnyParameters().build();
+  private static final MethodMatchers EQUALS = MethodMatchers.create().ofAnyType().names("equals").addParametersMatcher(JAVA_LANG_OBJECT).build();
   public static final MethodMatchers EQUALS_METHODS = MethodMatchers.or(
     EQUALS,
-    MethodMatchers.create().ofType("java.util.Objects").name("equals").withAnyParameters());
+    MethodMatchers.create().ofTypes("java.util.Objects").names("equals").withAnyParameters().build());
 
   private final AlwaysTrueOrFalseExpressionCollector alwaysTrueOrFalseExpressionCollector;
   private MethodTree methodTree;

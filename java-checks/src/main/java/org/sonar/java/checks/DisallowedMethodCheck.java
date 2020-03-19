@@ -46,7 +46,7 @@ public class DisallowedMethodCheck extends AbstractMethodDetection {
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
     if (StringUtils.isEmpty(methodName)) {
-      return MethodMatchers.empty();
+      return MethodMatchers.none();
     }
     MethodMatcher invocationMatcher = MethodMatcher.create().name(methodName);
     if (StringUtils.isNotEmpty(className)) {

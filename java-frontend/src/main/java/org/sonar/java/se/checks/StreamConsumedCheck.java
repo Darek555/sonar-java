@@ -64,16 +64,16 @@ public class StreamConsumedCheck extends SECheck {
         "allMatch", "noneMatch", "average", "summaryStatistics", "sum")
       .withAnyParameters(),
     MethodMatchers.create()
-      .ofSubType("java.util.stream.BaseStream")
+      .ofSubTypes("java.util.stream.BaseStream")
       .names("iterator", "spliterator")
-      .withoutParameters()
+      .addWithoutParametersMatcher()
   );
 
 
-  private static final MethodMatchers.Builder JAVA_UTIL_STREAM_BASESTREAM =  MethodMatchers.create()
-    .ofSubType("java.util.stream.BaseStream");
+  private static final MethodMatchers.NameBuilder JAVA_UTIL_STREAM_BASESTREAM =  MethodMatchers.create()
+    .ofSubTypes("java.util.stream.BaseStream");
   private static final MethodMatchers BASE_STREAM_INTERMEDIATE_OPERATIONS = MethodMatchers.or(
-    JAVA_UTIL_STREAM_BASESTREAM.names("sequential", "parallel", "unordered").withoutParameters(),
+    JAVA_UTIL_STREAM_BASESTREAM.names("sequential", "parallel", "unordered").addWithoutParametersMatcher(),
     JAVA_UTIL_STREAM_BASESTREAM.names("onClose").withAnyParameters());
 
   @Override
