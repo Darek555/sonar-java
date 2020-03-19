@@ -103,7 +103,7 @@ public class StaticFieldUpateCheck extends AbstractInSynchronizeChecker {
   }
 
   @Override
-  public void leaveNode(Tree tree) {odMatcher.create().ofType("java.lang.Thread").name("sleep").withAnyParame
+  public void leaveNode(Tree tree) {
     // use AbstractInSynchronizeChecker logic to keep updated synchronized blocks tracking
     super.leaveNode(tree);
 

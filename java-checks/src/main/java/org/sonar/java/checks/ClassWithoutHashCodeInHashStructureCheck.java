@@ -36,12 +36,14 @@ public class ClassWithoutHashCodeInHashStructureCheck extends IssuableSubscripti
   private static final MethodMatchers EQUALS_MATCHER = MethodMatchers.create()
     .ofAnyType()
     .names("equals")
-    .addParametersMatcher("java.lang.Object");
+    .addParametersMatcher("java.lang.Object")
+    .build();
 
   private static final MethodMatchers HASHCODE_MATCHER = MethodMatchers.create()
     .ofAnyType()
     .names("hashCode")
-    .addWithoutParametersMatcher();
+    .addWithoutParametersMatcher()
+    .build();
 
   @Override
   public List<Tree.Kind> nodesToVisit() {

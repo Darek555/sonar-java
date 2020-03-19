@@ -50,7 +50,7 @@ import org.sonar.plugins.java.api.tree.WhileStatementTree;
 public class NoWayOutLoopCheck extends SECheck {
 
   private static final MethodMatchers THREAD_RUN_MATCHER = MethodMatchers.create().ofSubTypes("java.lang.Thread")
-    .names("run").addWithoutParametersMatcher();
+    .names("run").addWithoutParametersMatcher().build();
 
   private enum UpdateType {
     INCREMENT, DECREMENT, INDETERMINATE

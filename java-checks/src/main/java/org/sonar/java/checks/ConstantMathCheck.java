@@ -52,23 +52,24 @@ public class ConstantMathCheck extends IssuableSubscriptionVisitor {
       .addParametersMatcher(DOUBLE)
       .addParametersMatcher(FLOAT)
       .addParametersMatcher("int")
-      .addParametersMatcher("long");
+      .addParametersMatcher("long")
+      .build();
 
   private static final MethodMatchers TRUNCATION_METHODS = MethodMatchers.or(
-    MethodMatchers.create().ofTypes(MATH_PACKAGE_NAME).names(CEIL).addParametersMatcher(DOUBLE).addParametersMatcher(FLOAT),
-    MethodMatchers.create().ofTypes(MATH_PACKAGE_NAME).names(FLOOR).addParametersMatcher(DOUBLE).addParametersMatcher(FLOAT),
-    MethodMatchers.create().ofTypes(MATH_PACKAGE_NAME).names("rint").addParametersMatcher(DOUBLE),
-    MethodMatchers.create().ofTypes(MATH_PACKAGE_NAME).names(ROUND).addParametersMatcher(DOUBLE).addParametersMatcher(FLOAT),
-    MethodMatchers.create().ofTypes(MATH_PACKAGE_NAME).names(ROUND).addParametersMatcher(DOUBLE).addParametersMatcher(FLOAT)
+    MethodMatchers.create().ofTypes(MATH_PACKAGE_NAME).names(CEIL).addParametersMatcher(DOUBLE).addParametersMatcher(FLOAT).build(),
+    MethodMatchers.create().ofTypes(MATH_PACKAGE_NAME).names(FLOOR).addParametersMatcher(DOUBLE).addParametersMatcher(FLOAT).build(),
+    MethodMatchers.create().ofTypes(MATH_PACKAGE_NAME).names("rint").addParametersMatcher(DOUBLE).build(),
+    MethodMatchers.create().ofTypes(MATH_PACKAGE_NAME).names(ROUND).addParametersMatcher(DOUBLE).addParametersMatcher(FLOAT).build(),
+    MethodMatchers.create().ofTypes(MATH_PACKAGE_NAME).names(ROUND).addParametersMatcher(DOUBLE).addParametersMatcher(FLOAT).build()
   );
 
   private static final MethodMatchers CONSTANT_WITH_ZERO_METHODS = MethodMatchers.or(
-    MethodMatchers.create().ofTypes(MATH_PACKAGE_NAME).names("atan2").addParametersMatcher(DOUBLE, DOUBLE),
-    MethodMatchers.create().ofTypes(MATH_PACKAGE_NAME).names("cos", "cosh", "expm1", "sin", "sinh", "tan", "tanh", "toRadians").addParametersMatcher(DOUBLE)
+    MethodMatchers.create().ofTypes(MATH_PACKAGE_NAME).names("atan2").addParametersMatcher(DOUBLE, DOUBLE).build(),
+    MethodMatchers.create().ofTypes(MATH_PACKAGE_NAME).names("cos", "cosh", "expm1", "sin", "sinh", "tan", "tanh", "toRadians").addParametersMatcher(DOUBLE).build()
   );
 
   private static final MethodMatchers CONSTANT_WITH_ZERO_OR_ONE_METHODS =
-    MethodMatchers.create().ofTypes(MATH_PACKAGE_NAME).names("acos", "asin", "atan", "cbrt", "exp", "log", "log10", "sqrt", "toDegrees").addParametersMatcher(DOUBLE);
+    MethodMatchers.create().ofTypes(MATH_PACKAGE_NAME).names("acos", "asin", "atan", "cbrt", "exp", "log", "log10", "sqrt", "toDegrees").addParametersMatcher(DOUBLE).build();
 
   @Override
   public List<Tree.Kind> nodesToVisit() {

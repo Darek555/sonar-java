@@ -55,8 +55,8 @@ import static org.sonar.plugins.java.api.semantic.MethodMatchers.ANY;
 public class MapComputeIfAbsentOrPresentCheck extends SECheck implements JavaVersionAwareVisitor {
 
   private static final MethodMatchers.NameBuilder JAVA_UTIL_MAP = MethodMatchers.create().ofSubTypes("java.util.Map");
-  private static final MethodMatchers MAP_GET = JAVA_UTIL_MAP.names("get").addParametersMatcher(ANY);
-  private static final MethodMatchers MAP_PUT = JAVA_UTIL_MAP.names("put").addParametersMatcher(ANY, ANY);
+  private static final MethodMatchers MAP_GET = JAVA_UTIL_MAP.names("get").addParametersMatcher(ANY).build();
+  private static final MethodMatchers MAP_PUT = JAVA_UTIL_MAP.names("put").addParametersMatcher(ANY, ANY).build();
 
   private final Multimap<SymbolicValue, MapGetInvocation> mapGetInvocations = LinkedListMultimap.create();
   private final List<CheckIssue> checkIssues = new ArrayList<>();

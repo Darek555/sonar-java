@@ -62,19 +62,21 @@ public class StreamConsumedCheck extends SECheck {
       .ofTypes(STREAM_TYPES.toArray(new String[0]))
       .names("forEach", "forEachOrdered", "toArray", "collect", "reduce", "findAny", "findFirst", "count", "min", "max", "anyMatch",
         "allMatch", "noneMatch", "average", "summaryStatistics", "sum")
-      .withAnyParameters(),
+      .withAnyParameters()
+      .build(),
     MethodMatchers.create()
       .ofSubTypes("java.util.stream.BaseStream")
       .names("iterator", "spliterator")
       .addWithoutParametersMatcher()
+      .build()
   );
 
 
   private static final MethodMatchers.NameBuilder JAVA_UTIL_STREAM_BASESTREAM =  MethodMatchers.create()
     .ofSubTypes("java.util.stream.BaseStream");
   private static final MethodMatchers BASE_STREAM_INTERMEDIATE_OPERATIONS = MethodMatchers.or(
-    JAVA_UTIL_STREAM_BASESTREAM.names("sequential", "parallel", "unordered").addWithoutParametersMatcher(),
-    JAVA_UTIL_STREAM_BASESTREAM.names("onClose").withAnyParameters());
+    JAVA_UTIL_STREAM_BASESTREAM.names("sequential", "parallel", "unordered").addWithoutParametersMatcher().build(),
+    JAVA_UTIL_STREAM_BASESTREAM.names("onClose").withAnyParameters().build());
 
   @Override
   public ProgramState checkPreStatement(CheckerContext context, Tree syntaxNode) {

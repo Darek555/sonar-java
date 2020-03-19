@@ -32,10 +32,10 @@ public class AssertionFailInCatchBlockCheck extends AbstractMethodDetection {
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatchers.or(
-      MethodMatchers.create().ofTypes("org.junit.Assert").names("fail").withAnyParameters(),
-      MethodMatchers.create().ofTypes("org.junit.jupiter.api.Assertions").names("fail").withAnyParameters(),
-      MethodMatchers.create().ofTypes("junit.framework.Assert").name(name -> name.startsWith("fail")).withAnyParameters(),
-      MethodMatchers.create().ofTypes("org.fest.assertions.Fail").names("fail").withAnyParameters());
+      MethodMatchers.create().ofTypes("org.junit.Assert").names("fail").withAnyParameters().build(),
+      MethodMatchers.create().ofTypes("org.junit.jupiter.api.Assertions").names("fail").withAnyParameters().build(),
+      MethodMatchers.create().ofTypes("junit.framework.Assert").name(name -> name.startsWith("fail")).withAnyParameters().build(),
+      MethodMatchers.create().ofTypes("org.fest.assertions.Fail").names("fail").withAnyParameters().build());
   }
 
   @Override

@@ -40,7 +40,8 @@ public class ObjectOutputStreamCheck extends SECheck {
   private static final MethodMatchers FILES_NEW_OUTPUT_STREAM = MethodMatchers.create()
     .ofTypes("java.nio.file.Files")
     .names("newOutputStream")
-    .withAnyParameters();
+    .withAnyParameters()
+    .build();
 
   private static class FileOutputStreamAppendConstraint implements Constraint {
     private final Tree node;

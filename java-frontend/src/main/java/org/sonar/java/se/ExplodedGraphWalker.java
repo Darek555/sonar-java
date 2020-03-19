@@ -122,7 +122,8 @@ public class ExplodedGraphWalker {
   private static final MethodMatchers OBJECT_WAIT_MATCHER = JAVA_LANG_OBJECT_SUBTYPE.names("wait")
     .addWithoutParametersMatcher()
     .addParametersMatcher("long")
-    .addParametersMatcher("long", "int").build();
+    .addParametersMatcher("long", "int")
+    .build();
   private static final MethodMatchers GET_CLASS_MATCHER = JAVA_LANG_OBJECT_SUBTYPE.names("getClass").addWithoutParametersMatcher().build();
   private static final MethodMatchers THREAD_SLEEP_MATCHER = MethodMatchers.create().ofTypes("java.lang.Thread").names("sleep").withAnyParameters().build();
   private static final MethodMatchers EQUALS = MethodMatchers.create().ofAnyType().names("equals").addParametersMatcher(JAVA_LANG_OBJECT).build();

@@ -57,9 +57,9 @@ public class MethodMatcher implements MethodMatchers {
   private void updateInternalMatcher() {
     if (methodName != null && parameters != null) {
       if (typeCriteria != null) {
-        internalMatcher = MethodMatchers.create().ofType(typeCriteria).name(methodName).addParametersMatcher(parameters);
+        internalMatcher = MethodMatchers.create().ofType(typeCriteria).name(methodName).addParametersMatcher(parameters).build();
       } else {
-        internalMatcher = MethodMatchers.create().ofAnyType().name(methodName).addParametersMatcher(parameters);
+        internalMatcher = MethodMatchers.create().ofAnyType().name(methodName).addParametersMatcher(parameters).build();
       }
     }
   }

@@ -46,17 +46,17 @@ public class PreferStreamAnyMatchCheck extends AbstractMethodDetection {
 
   private static final MethodMatchers FIND_METHODS = MethodMatchers.or(
     STREAM_TYPES.stream()
-      .map(type -> MethodMatchers.create().ofTypes(type).names("findFirst", "findAny").addWithoutParametersMatcher())
+      .map(type -> MethodMatchers.create().ofTypes(type).names("findFirst", "findAny").addWithoutParametersMatcher().build())
       .collect(Collectors.toList()));
 
   private static final MethodMatchers MAP_METHODS = MethodMatchers.or(
     STREAM_TYPES.stream()
-      .map(type -> MethodMatchers.create().ofTypes(type).names("map").addParametersMatcher("java.util.function.Function"))
+      .map(type -> MethodMatchers.create().ofTypes(type).names("map").addParametersMatcher("java.util.function.Function").build())
       .collect(Collectors.toList()));
 
   private static final MethodMatchers FILTER_METHODS = MethodMatchers.or(
     STREAM_TYPES.stream()
-      .map(type -> MethodMatchers.create().ofTypes(type).names("filter").withAnyParameters())
+      .map(type -> MethodMatchers.create().ofTypes(type).names("filter").withAnyParameters().build())
       .collect(Collectors.toList()));
 
   private static final MethodMatcher BOOLEAN_VALUE = MethodMatcher.create().ofType("java.lang.Boolean")

@@ -57,7 +57,8 @@ public class MinMaxRangeCheck extends SECheck {
   private static final MethodMatchers MIN_MAX_MATCHER = MethodMatchers.create()
     .ofTypes("java.lang.Math")
     .names("min", "max")
-    .addParametersMatcher(ANY, ANY);
+    .addParametersMatcher(ANY, ANY)
+    .build();
 
   private enum Operation {
     MIN,

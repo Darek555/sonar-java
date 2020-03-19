@@ -103,7 +103,8 @@ public class LazyArgEvaluationCheck extends BaseTreeVisitor implements JavaFileS
           .addParametersMatcher(MARKER, STRING)
           .addParametersMatcher(MARKER, STRING, ANY)
           .addParametersMatcher(MARKER, STRING, ANY, ANY)
-          .addParametersMatcher(MARKER, STRING, OBJECT_ARR);
+          .addParametersMatcher(MARKER, STRING, OBJECT_ARR)
+          .build();
       }
 
       @Override
@@ -163,7 +164,8 @@ public class LazyArgEvaluationCheck extends BaseTreeVisitor implements JavaFileS
 
       private static final MethodMatchers TESTS = MethodMatchers.create().ofType(LOGGER).names("isEnabled")
         .addParametersMatcher(LEVEL)
-        .addParametersMatcher(LEVEL, MARKER);
+        .addParametersMatcher(LEVEL, MARKER)
+        .build();
 
       private static final MethodMatcher LOG = MethodMatcher.create().ofType(LOGGER).name("log").withAnyParameters();
 

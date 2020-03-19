@@ -47,19 +47,22 @@ public class AssertionArgumentOrderCheck extends AbstractMethodDetection {
     MethodMatchers.create()
       .ofTypes("java.util.Collections")
       .name(name -> name.startsWith("singleton") || name.startsWith("empty"))
-      .withAnyParameters(),
-    MethodMatchers.create().ofTypes("java.util.Arrays").names("asList").withAnyParameters());
+      .withAnyParameters()
+      .build(),
+    MethodMatchers.create().ofTypes("java.util.Arrays").names("asList").withAnyParameters().build());
 
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatchers.or(
       MethodMatchers.create().ofTypes(ORG_JUNIT_ASSERT)
         .names("assertEquals", "assertSame", "assertNotSame")
-        .withAnyParameters(),
+        .withAnyParameters()
+        .build(),
       // JUnit 5
       MethodMatchers.create().ofTypes(ORG_JUNIT5_ASSERTIONS)
         .names("assertArrayEquals", "assertEquals", "assertIterableEquals", "assertLinesMatch", "assertNotEquals", "assertNotSame", "assertSame")
         .withAnyParameters()
+        .build()
     );
   }
 

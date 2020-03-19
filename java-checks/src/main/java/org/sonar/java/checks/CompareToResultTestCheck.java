@@ -48,7 +48,8 @@ public class CompareToResultTestCheck extends IssuableSubscriptionVisitor {
   private static final MethodMatchers COMPARE_TO = MethodMatchers.create()
     .ofSubTypes("java.lang.Comparable")
     .names("compareTo")
-    .addParametersMatcher(ANY);
+    .addParametersMatcher(ANY)
+    .build();
 
   @Override
   public List<Kind> nodesToVisit() {

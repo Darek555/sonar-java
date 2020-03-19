@@ -41,7 +41,7 @@ public class AssertionsWithoutMessageCheck extends AbstractMethodDetection {
 
   private static final String GENERIC_ASSERT = "org.fest.assertions.GenericAssert";
   private static final MethodMatchers FEST_AS_METHOD = MethodMatchers.create()
-    .ofSubTypes(GENERIC_ASSERT).names("as").addParametersMatcher("java.lang.String");
+    .ofSubTypes(GENERIC_ASSERT).names("as").addParametersMatcher("java.lang.String").build();
   private static final Set<String> ASSERT_METHODS_WITH_ONE_PARAM = ImmutableSet.of("assertNull", "assertNotNull");
   private static final Set<String> ASSERT_METHODS_WITH_TWO_PARAMS = ImmutableSet.of("assertEquals", "assertSame", "assertNotSame", "assertThat");
   private static final Set<String> JUNIT5_ASSERT_METHODS_IGNORED = ImmutableSet.of("assertAll", "assertLinesMatch");
@@ -51,11 +51,11 @@ public class AssertionsWithoutMessageCheck extends AbstractMethodDetection {
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatchers.or(
-      MethodMatchers.create().ofTypes("org.junit.jupiter.api.Assertions").name(name -> name.startsWith(ASSERT)).withAnyParameters(),
-      MethodMatchers.create().ofTypes("org.junit.Assert").name(name -> name.startsWith(ASSERT) || name.equals("fail")).withAnyParameters(),
-      MethodMatchers.create().ofTypes("junit.framework.Assert").name(name -> name.startsWith(ASSERT) || name.startsWith("fail")).withAnyParameters(),
-      MethodMatchers.create().ofTypes("org.fest.assertions.Fail").name(name -> name.startsWith("fail")).withAnyParameters(),
-      MethodMatchers.create().ofSubTypes(GENERIC_ASSERT).anyName().withAnyParameters()
+      MethodMatchers.create().ofTypes("org.junit.jupiter.api.Assertions").name(name -> name.startsWith(ASSERT)).withAnyParameters().build(),
+      MethodMatchers.create().ofTypes("org.junit.Assert").name(name -> name.startsWith(ASSERT) || name.equals("fail")).withAnyParameters().build(),
+      MethodMatchers.create().ofTypes("junit.framework.Assert").name(name -> name.startsWith(ASSERT) || name.startsWith("fail")).withAnyParameters().build(),
+      MethodMatchers.create().ofTypes("org.fest.assertions.Fail").name(name -> name.startsWith("fail")).withAnyParameters().build(),
+      MethodMatchers.create().ofSubTypes(GENERIC_ASSERT).anyName().withAnyParameters().build()
     );
   }
 

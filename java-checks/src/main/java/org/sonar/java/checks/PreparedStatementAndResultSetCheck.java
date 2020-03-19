@@ -47,13 +47,13 @@ public class PreparedStatementAndResultSetCheck extends AbstractMethodDetection 
   private static final String INT = "int";
   private static final String JAVA_SQL_RESULTSET = "java.sql.ResultSet";
   private static final MethodMatchers PREPARE_STATEMENT = MethodMatchers.create()
-    .ofTypes("java.sql.Connection").name(name -> name.startsWith("prepareStatement")).withAnyParameters();
+    .ofTypes("java.sql.Connection").name(name -> name.startsWith("prepareStatement")).withAnyParameters().build();
 
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatchers.or(
-      MethodMatchers.create().ofTypes("java.sql.PreparedStatement").name(name -> name.startsWith("set")).addParametersMatcher(INT, ANY),
-      MethodMatchers.create().ofTypes(JAVA_SQL_RESULTSET).name(name -> name.startsWith("get")).addParametersMatcher(INT).addParametersMatcher(INT, ANY)
+      MethodMatchers.create().ofTypes("java.sql.PreparedStatement").name(name -> name.startsWith("set")).addParametersMatcher(INT, ANY).build(),
+      MethodMatchers.create().ofTypes(JAVA_SQL_RESULTSET).name(name -> name.startsWith("get")).addParametersMatcher(INT).addParametersMatcher(INT, ANY).build()
     );
   }
 

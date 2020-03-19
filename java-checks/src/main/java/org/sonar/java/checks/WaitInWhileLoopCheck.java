@@ -87,8 +87,9 @@ public class WaitInWhileLoopCheck extends AbstractMethodDetection {
       MethodMatchers.create().ofAnyType().names("wait")
         .addWithoutParametersMatcher()
         .addParametersMatcher("long")
-        .addParametersMatcher("long", "int"),
-      MethodMatchers.create().ofTypes("java.util.concurrent.locks.Condition").name(name -> name.startsWith("await")).withAnyParameters()
+        .addParametersMatcher("long", "int")
+        .build(),
+      MethodMatchers.create().ofTypes("java.util.concurrent.locks.Condition").name(name -> name.startsWith("await")).withAnyParameters().build()
     );
   }
 }

@@ -39,8 +39,8 @@ import org.sonar.plugins.java.api.tree.Tree;
 @Rule(key = "S2203")
 public class CollectInsteadOfForeachCheck extends AbstractMethodDetection {
 
-  private static final MethodMatchers FOREACH = MethodMatchers.create().ofTypes("java.util.stream.Stream").names("forEach").withAnyParameters();
-  private static final MethodMatchers ADD = MethodMatchers.create().ofSubTypes("java.util.List").names("add").withAnyParameters();
+  private static final MethodMatchers FOREACH = MethodMatchers.create().ofTypes("java.util.stream.Stream").names("forEach").withAnyParameters().build();
+  private static final MethodMatchers ADD = MethodMatchers.create().ofSubTypes("java.util.List").names("add").withAnyParameters().build();
 
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {

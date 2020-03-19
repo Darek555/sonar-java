@@ -40,7 +40,8 @@ public class AbstractMethodDetectionTest {
     Visitor visitor = new Visitor(
       MethodMatchers.create().ofTypes("A").names("method")
         .addParametersMatcher("int")
-        .addParametersMatcher("java.lang.String[]"));
+        .addParametersMatcher("java.lang.String[]")
+        .build());
     JavaAstScanner.scanSingleFileForTests(CheckTestUtils.inputFile("src/test/files/checks/AbstractMethodDetection.java"), new VisitorsBridge(visitor));
 
     assertThat(visitor.lines).hasSize(3);
@@ -50,7 +51,7 @@ public class AbstractMethodDetectionTest {
   @Test
   public void withAnyParameters() throws Exception {
     Visitor visitor = new Visitor(
-      MethodMatchers.create().ofTypes("A").names("method").withAnyParameters());
+      MethodMatchers.create().ofTypes("A").names("method").withAnyParameters().build());
     JavaAstScanner.scanSingleFileForTests(CheckTestUtils.inputFile("src/test/files/checks/AbstractMethodDetection.java"), new VisitorsBridge(visitor));
 
     assertThat(visitor.lines).containsExactly(14, 15, 16, 17, 19);
@@ -59,7 +60,7 @@ public class AbstractMethodDetectionTest {
   @Test
   public void withoutParameter() throws Exception {
     Visitor visitor = new Visitor(
-      MethodMatchers.create().ofTypes("A").names("method").addWithoutParametersMatcher());
+      MethodMatchers.create().ofTypes("A").names("method").addWithoutParametersMatcher().build());
     JavaAstScanner.scanSingleFileForTests(CheckTestUtils.inputFile("src/test/files/checks/AbstractMethodDetection.java"), new VisitorsBridge(visitor));
 
     assertThat(visitor.lines).containsExactly(14);

@@ -35,13 +35,18 @@ import org.sonar.plugins.java.api.tree.VariableTree;
 @Rule(key = "S1641")
 public class EnumSetCheck extends IssuableSubscriptionVisitor {
 
-  private static final MethodMatchers COLLECTIONS_UNMODIFIABLE = MethodMatchers.create().ofTypes("java.util.Collections").names("unmodifiableSet").withAnyParameters();
+  private static final MethodMatchers COLLECTIONS_UNMODIFIABLE = MethodMatchers.create()
+    .ofTypes("java.util.Collections")
+    .names("unmodifiableSet")
+    .withAnyParameters()
+    .build();
+
   private static final MethodMatchers SET_CREATION_METHODS = MethodMatchers.or(
     // Java 9 factory methods
-    MethodMatchers.create().ofTypes("java.util.Set").names("of").withAnyParameters(),
+    MethodMatchers.create().ofTypes("java.util.Set").names("of").withAnyParameters().build(),
     // guava
-    MethodMatchers.create().ofTypes("com.google.common.collect.ImmutableSet").names("of").withAnyParameters(),
-    MethodMatchers.create().ofTypes("com.google.common.collect.Sets").anyName().withAnyParameters());
+    MethodMatchers.create().ofTypes("com.google.common.collect.ImmutableSet").names("of").withAnyParameters().build(),
+    MethodMatchers.create().ofTypes("com.google.common.collect.Sets").anyName().withAnyParameters().build());
 
   @Override
   public List<Kind> nodesToVisit() {

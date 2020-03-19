@@ -65,10 +65,10 @@ public class PublicStaticMutableMembersCheck extends IssuableSubscriptionVisitor
   private static final String DECORATE = "decorate";
   // java.util and apache commons
   private static final MethodMatchers UNMODIFIABLE_METHOD_CALLS = MethodMatchers.or(
-    MethodMatchers.create().ofTypes("java.util.Collections").name(name -> name.startsWith("singleton") || name.startsWith("empty")).withAnyParameters(),
-    MethodMatchers.create().ofAnyType().name(name -> name.startsWith("unmodifiable")).withAnyParameters(),
+    MethodMatchers.create().ofTypes("java.util.Collections").name(name -> name.startsWith("singleton") || name.startsWith("empty")).withAnyParameters().build(),
+    MethodMatchers.create().ofAnyType().name(name -> name.startsWith("unmodifiable")).withAnyParameters().build(),
     // Java 9s
-    MethodMatchers.create().ofTypes("java.util.Set", "java.util.List", "java.util.Map").names("of").withAnyParameters(),
+    MethodMatchers.create().ofTypes("java.util.Set", "java.util.List", "java.util.Map").names("of").withAnyParameters().build(),
     // apache...
     MethodMatchers.create()
       // commons 3.X
@@ -82,10 +82,11 @@ public class PublicStaticMutableMembersCheck extends IssuableSubscriptionVisitor
         "org.apache.commons.collections4.list.UnmodifiableList")
       .names(DECORATE)
       .withAnyParameters()
+      .build()
   );
 
   private static final MethodMatchers ARRAYS_AS_LIST = MethodMatchers.create()
-    .ofTypes("java.util.Arrays").names("asList").withAnyParameters();
+    .ofTypes("java.util.Arrays").names("asList").withAnyParameters().build();
 
   private static final Set<String> ACCEPTED_TYPES = ImmutableSet.of(
     "com.google.common.collect.ImmutableMap",

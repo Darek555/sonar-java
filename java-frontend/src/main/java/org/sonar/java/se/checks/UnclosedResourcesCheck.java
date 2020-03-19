@@ -107,7 +107,8 @@ public class UnclosedResourcesCheck extends SECheck {
   private static final MethodMatchers STREAMS_BACKED_BY_RESOURCE = MethodMatchers.or(
     MethodMatchers.create().ofTypes(JAVA_NIO_FILE_FILES)
       .names("lines", "newDirectoryStream", "list", "find", "walk")
-      .withAnyParameters().build()
+      .withAnyParameters()
+      .build()
   );
 
   private static final String STREAM_TOP_HIERARCHY = "java.util.stream.BaseStream";
@@ -125,7 +126,8 @@ public class UnclosedResourcesCheck extends SECheck {
   private static final MethodMatchers CLOSEABLE_EXCEPTIONS = MethodMatchers.create()
     .ofTypes("java.nio.file.FileSystems")
     .names("getDefault")
-    .addWithoutParametersMatcher().build();
+    .addWithoutParametersMatcher()
+    .build();
 
   @Override
   public void init(MethodTree methodTree, CFG cfg) {

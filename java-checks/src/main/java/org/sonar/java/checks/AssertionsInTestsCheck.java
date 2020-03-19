@@ -59,7 +59,7 @@ public class AssertionsInTestsCheck extends BaseTreeVisitor implements JavaFileS
 
   private static final MethodMatchers ASSERTION_INVOCATION_MATCHERS = MethodMatchers.or(
     // fest 1.x / 2.X
-    MethodMatchers.create().ofSubTypes("org.fest.assertions.GenericAssert", "org.fest.assertions.api.AbstractAssert").anyName().withAnyParameters(),
+    MethodMatchers.create().ofSubTypes("org.fest.assertions.GenericAssert", "org.fest.assertions.api.AbstractAssert").anyName().withAnyParameters().build(),
     // rest assured 2.0
     MethodMatchers.create().ofTypes("io.restassured.response.ValidatableResponseOptions")
       .name(name -> name.equals("body") ||
@@ -70,18 +70,19 @@ public class AssertionsInTestsCheck extends BaseTreeVisitor implements JavaFileS
         name.startsWith("header") ||
         name.startsWith("cookie") ||
         name.startsWith("spec"))
-      .withAnyParameters(),
+      .withAnyParameters()
+      .build(),
     // assertJ
-    MethodMatchers.create().ofSubTypes("org.assertj.core.api.AbstractAssert").anyName().withAnyParameters(),
+    MethodMatchers.create().ofSubTypes("org.assertj.core.api.AbstractAssert").anyName().withAnyParameters().build(),
     // spring
-    MethodMatchers.create().ofTypes("org.springframework.test.web.servlet.ResultActions").names("andExpect").addParametersMatcher(t -> true),
+    MethodMatchers.create().ofTypes("org.springframework.test.web.servlet.ResultActions").names("andExpect").addParametersMatcher(t -> true).build(),
     // JMockit
-    MethodMatchers.create().ofTypes("mockit.Verifications").constructor().withAnyParameters(),
+    MethodMatchers.create().ofTypes("mockit.Verifications").constructor().withAnyParameters().build(),
     // Eclipse Vert.x
-    MethodMatchers.create().ofTypes("io.vertx.ext.unit.TestContext").name(name -> name.startsWith("asyncAssert")).addWithoutParametersMatcher());
+    MethodMatchers.create().ofTypes("io.vertx.ext.unit.TestContext").name(name -> name.startsWith("asyncAssert")).addWithoutParametersMatcher().build());
 
   private static final MethodMatchers REACTIVE_X_TEST_METHODS =
-    MethodMatchers.create().ofSubTypes("rx.Observable", "io.reactivex.Observable").names("test").withAnyParameters();
+    MethodMatchers.create().ofSubTypes("rx.Observable", "io.reactivex.Observable").names("test").withAnyParameters().build();
 
   @RuleProperty(
     key = "customAssertionMethods",
@@ -145,7 +146,7 @@ public class AssertionsInTestsCheck extends BaseTreeVisitor implements JavaFileS
           } else {
             namePredicate = name -> name.equals(methodName);
           }
-          customMethodMatchers.add(MethodMatchers.create().ofSubTypes(methodMatcherParts[0].trim()).name(namePredicate).withAnyParameters());
+          customMethodMatchers.add(MethodMatchers.create().ofSubTypes(methodMatcherParts[0].trim()).name(namePredicate).withAnyParameters().build());
         } else {
           LOG.warn("Unable to create a corresponding matcher for custom assertion method, please check the format of the following symbol: '{}'", fullyQualifiedMethodSymbol);
         }

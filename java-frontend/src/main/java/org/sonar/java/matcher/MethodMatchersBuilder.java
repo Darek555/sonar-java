@@ -22,6 +22,7 @@ package org.sonar.java.matcher;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import javax.annotation.CheckForNull;
@@ -61,9 +62,9 @@ public class MethodMatchersBuilder implements MethodMatchers.TypeBuilder, Method
     this.parametersPredicate = parametersPredicate;
   }
 
-  private static <T> Predicate<T> substituteAny(Predicate<T> predicate, String... names) {
-    if (Arrays.asList(names).contains(MethodMatchers.ANY)) {
-      if (names.length > 1) {
+  private static <T> Predicate<T> substituteAny(Predicate<T> predicate, String... elements) {
+    if (Arrays.asList(elements).contains(ANY)) {
+      if (elements.length > 1) {
         throw new IllegalStateException("Incompatible MethodMatchers.ANY with other predicates.");
       }
       return e -> true;
@@ -71,19 +72,41 @@ public class MethodMatchersBuilder implements MethodMatchers.TypeBuilder, Method
     return predicate;
   }
 
+  private static <T> Predicate<T> substituteAnyAndCreateEfficientPredicate(
+    String[] elements,
+    Function<String, Predicate<T>> singleElementPredicate,
+    Function<List<String>, Predicate<T>> multiElementsPredicate) {
+    if (elements.length == 0) {
+      throw new IllegalStateException("Method arguments can not be empty, otherwise the predicate would be always false.");
+    }
+    if (elements.length == 1) {
+      String singleElement = elements[0];
+      return substituteAny(singleElementPredicate.apply(singleElement), elements);
+    } else {
+      List<String> multiElements = Arrays.asList(elements);
+      return substituteAny(multiElementsPredicate.apply(multiElements), elements);
+    }
+  }
+
   @Override
   public NameBuilder ofSubTypes(String... fullyQualifiedTypeNames) {
-    return ofType(substituteAny(type -> Arrays.stream(fullyQualifiedTypeNames).anyMatch(type::isSubtypeOf), fullyQualifiedTypeNames));
+    return ofType(substituteAnyAndCreateEfficientPredicate(
+      fullyQualifiedTypeNames,
+      name -> (type -> type.isSubtypeOf(name)),
+      names -> (type -> names.stream().anyMatch(type::isSubtypeOf))));
   }
 
   @Override
   public NameBuilder ofAnyType() {
-    return ofType(type -> true);
+    return ofTypes(ANY);
   }
 
   @Override
   public NameBuilder ofTypes(String... fullyQualifiedTypeNames) {
-    return ofType(substituteAny(type -> Arrays.stream(fullyQualifiedTypeNames).anyMatch(type::is), fullyQualifiedTypeNames));
+    return ofType(substituteAnyAndCreateEfficientPredicate(
+      fullyQualifiedTypeNames,
+      name -> (type -> type.is(name)),
+      names -> (type -> names.stream().anyMatch(type::is))));
   }
 
   @Override
@@ -93,13 +116,15 @@ public class MethodMatchersBuilder implements MethodMatchers.TypeBuilder, Method
 
   @Override
   public ParametersBuilder names(String... names) {
-    List<String> nameList = Arrays.asList(names);
-    return name(substituteAny(nameList::contains, names));
+    return name(substituteAnyAndCreateEfficientPredicate(
+      names,
+      name -> name::equals,
+      nameList -> nameList::contains));
   }
 
   @Override
   public ParametersBuilder anyName() {
-    return names(MethodMatchers.ANY);
+    return names(ANY);
   }
 
   @Override
@@ -216,9 +241,6 @@ public class MethodMatchersBuilder implements MethodMatchers.TypeBuilder, Method
   }
 
   private boolean isSearchedMethod(Symbol.MethodSymbol symbol, @Nullable Type callSiteType) {
-    if (typePredicate == null || namePredicate == null || parametersPredicate == null) {
-      throw new IllegalStateException("MethodMatchers need to be fully initialized.");
-    }
     Type type = callSiteType;
     if (type == null) {
       Symbol owner = symbol.owner();

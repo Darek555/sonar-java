@@ -39,7 +39,8 @@ public class CollectionIsEmptyCheck extends BaseTreeVisitor implements JavaFileS
   private static final MethodMatchers SIZE_METHOD = MethodMatchers.create()
     .ofSubTypes(JAVA_UTIL_COLLECTION)
     .names("size")
-    .addWithoutParametersMatcher();
+    .addWithoutParametersMatcher()
+    .build();
 
   private JavaFileScannerContext context;
 
