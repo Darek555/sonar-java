@@ -32,64 +32,75 @@ import org.sonar.plugins.java.api.tree.MethodTree;
 import org.sonar.plugins.java.api.tree.NewClassTree;
 
 /**
- * <pre>
- * Immutable helper interface to help to identify method with given Type, Name and Parameter lists.
- *
+ * Immutable helper interface to help to identify method with given a Type, Name and Parameters.
+ * <p>
  * The starting point to define a MethodMatchers is {@link #create()}.
+ * <p>
  * It is required to provide the following:
- *
- * - a type definition
- *   - ofSubTypes(String... fullyQualifiedTypeNames)
- *   - ofTypes(String... fullyQualifiedTypeNames)
- *   - ofType(Predicate<Type> typePredicate)
- *   - ofAnyType()                  // same as ofType(type -> true)
- *
- * - a method name
- *   - names(String... names)
- *   - constructor()
- *   - name(Predicate<String> namePredicate)
- *   - anyName()                    // same as name(name -> true)
- *
- * - a list of parameters, 1 or more call to:
+ * <ul>
+ *  <li> a type definition
+ *    <ul>
+ *      <li> {@link TypeBuilder#ofSubTypes(String...)} </li>
+ *      <li> {@link TypeBuilder#ofTypes(String...)} </li>
+ *      <li> {@link TypeBuilder#ofType(Predicate<Type>)} </li>
+ *      <li> {@link TypeBuilder#ofAnyType()}          // same as ofType(type -> true) </li>
+ *   </ul>
+ *  </li>
+ *  <li> a method name
+ *   <ul>
+ *    <li> {@link NameBuilder#names(String...)} </li>
+ *    <li> {@link NameBuilder#constructor()} </li>
+ *    <li> {@link NameBuilder#name(Predicate<String>)} </li>
+ *    <li> {@link NameBuilder#anyName()}                    // same as name(name -> true) </li>
+ *   </ul>
+ *  </li>
+ *  <li>a list of parameters, 1 or more call to:
+ * <p>
  *   (It is possible to define several parameters matcher, to match several method signatures)
- *   - addWithoutParametersMatcher()
- *   - addParametersMatcher(String...parametersType)
- *   - addParametersMatcher(Predicate<List<Type>>parametersType)
- *   - withAnyParameters()          // same as withParameters((List<Type> parameters) -> true)
- *
+ *   <ul>
+ *     <li> {@link ParametersBuilder#addWithoutParametersMatcher()} </li>
+ *     <li> {@link ParametersBuilder#addParametersMatcher(String...)} </li>
+ *     <li> {@link ParametersBuilder#addParametersMatcher(Predicate<List<Type>>)} </li>
+ *     <li> {@link ParametersBuilder#withAnyParameters()}          // same as withParameters((List<Type> parameters) -> true) </li>
+ *   </ul>
+ *  </li>
+ * </ul>
  * The matcher will return true only when the three predicates are respected.
- *
+ * <p>
  * Examples:
+ * <pre>
+ *- match method "a" and "b" from any type, and without parameters:
+ *    MethodMatchers.create().ofAnyType().names("a", "b").addWithoutParametersMatcher();
  *
- * - match method "a" and "b" from any type, and without parameters
- *     MethodMatchers.create().ofAnyType().names("a", "b").addWithoutParametersMatcher();
- *
- * - match method "a" and "b" from (subtype) of A, and "b" and "c" from B, with any parameters:
- *     MethodMatchers.or(
- *       MethodMatchers.create().ofSubTypes("A").names("a", "b").withAnyParameters(),
- *       MethodMatchers.create().ofSubTypes("B").names("b", "c").withAnyParameters());
- *
- * - match method "f" with any type and with:
- *     MethodMatchers.create().ofAnyType().names("f")
- *     - one parameter of type either int or long
+ *- match method "a" and "b" from (subtype) of A, and "b" and "c" from B, with any parameters:
+ *    MethodMatchers.or(
+ *      MethodMatchers.create().ofSubTypes("A").names("a", "b").withAnyParameters(),
+ *      MethodMatchers.create().ofSubTypes("B").names("b", "c").withAnyParameters());
+ *- match method "f" with any type and with:
+ *    MethodMatchers.create().ofAnyType().names("f")
+ *      - one parameter of type either int or long
  *        .addParametersMatcher("int").addParametersMatcher("long");
- *     - one parameter of type int or one parameter of type long with any other number of parameters
+ *      - one parameter of type int or one parameter of type long with any other number of parameters
  *        .addParametersMatcher("int").addParametersMatcher(params -> params.size() >= 1 && params.get(0).is("long"));
  *
- * - match any method with any type, with parameter int, any, int
- *     MethodMatchers.create().ofAnyType().anyName().withParameters("int", ANY, "int");
+ *- match any method with any type, with parameter int, any, int:
+ *    MethodMatchers.create().ofAnyType().anyName().withParameters("int", ANY, "int");
  *
- * - match any type AND method name "a" OR "b" AND parameter int OR long
- *     MethodMatchers.create().ofAnyType().names("a", "b").addParametersMatcher("int").addParametersMatcher("long")
+ *- match any type AND method name "a" OR "b" AND parameter int OR long:
+ *    MethodMatchers.create().ofAnyType().names("a", "b").addParametersMatcher("int").addParametersMatcher("long")
  * </pre>
  */
 @Beta
 public interface MethodMatchers {
 
   boolean matches(NewClassTree newClassTree);
+
   boolean matches(MethodInvocationTree mit);
+
   boolean matches(MethodTree methodTree);
+
   boolean matches(MethodReferenceTree methodReferenceTree);
+
   boolean matches(Symbol symbol);
 
   static MethodMatchers.TypeBuilder create() {
@@ -97,6 +108,7 @@ public interface MethodMatchers {
   }
 
   // Methods related to combination
+
   /**
    * Combine multiple method matcher. The matcher will match any of the given matcher.
    */
@@ -164,18 +176,32 @@ public interface MethodMatchers {
 
   interface ParametersBuilder {
     /**
-     * With any number of parameters of any types
+     * Match a method signature with any number of parameters of any types.
+     * Others method adding parameters matchers can not be called with this method.
      */
     MethodMatchers.ParametersBuilder withAnyParameters();
 
     /**
-     * Exact method signature.
-     * Can be called multiple time to match any of the method signatures.
+     * Match a method signature without parameters.
+     * Others method adding parameters matcher can be called to match multiples signatures.
      */
     MethodMatchers.ParametersBuilder addWithoutParametersMatcher();
+
+    /**
+     * Match a method signature with exactly the types provided.
+     * Others method adding parameters matcher can be called to match multiples signatures.
+     */
     MethodMatchers.ParametersBuilder addParametersMatcher(String... parametersType);
+
+    /**
+     * Match a method signature respecting the predicate.
+     * Others method adding parameters matcher can be called to match multiples signatures.
+     */
     MethodMatchers.ParametersBuilder addParametersMatcher(Predicate<List<Type>> parametersType);
 
+    /**
+     * Build a MethodMatchers. Throw an Exception if the MethodMatchers is not correctly setup (no parameters list defined).
+     */
     MethodMatchers build();
   }
 
