@@ -377,6 +377,14 @@ class FieldDefaults {
     int id; //NoIssue
     @lombok.experimental.PackagePrivate String name; // WithIssue
   }
+  @lombok.experimental.FieldDefaults(level = lombok.AccessLevel.NONE)
+  class C {
+    int id; // WithIssue
+  }
+  @lombok.experimental.FieldDefaults(makeFinal=getValue()) // does not compile - for coverage only
+  class MakeFinalFalseAnnotationException extends RuntimeException {  // WithIssue
+    private String name; // WithIssue
+  }
 
   @lombok.experimental.FieldDefaults(makeFinal=true, level = lombok.AccessLevel.PRIVATE)
   @lombok.AllArgsConstructor
