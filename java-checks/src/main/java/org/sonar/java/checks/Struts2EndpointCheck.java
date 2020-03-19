@@ -34,7 +34,7 @@ import org.sonar.plugins.java.api.tree.Tree;
 @Rule(key = "S4531")
 public class Struts2EndpointCheck extends IssuableSubscriptionVisitor {
 
-  private static final MethodMatcher STRUTS2_METHOD = MethodMatcher.create().ofType(TypeCriteria.anyType()).name("execute").withoutParameters();
+  private static final MethodMatcher STRUTS2_METHOD = MethodMatcher.create().ofType(TypeCriteria.anyType()).names("execute").addWithoutParametersMatcher();
 
   @Override
   public List<Tree.Kind> nodesToVisit() {

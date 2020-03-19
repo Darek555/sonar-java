@@ -36,13 +36,13 @@ import org.sonar.plugins.java.api.tree.Tree;
 @Rule(key = "S4510")
 public class XmlDeserializationCheck extends AbstractMethodDetection {
 
-  private static final MethodMatcher READ_OBJECT = MethodMatcher.create().ofType("java.beans.XMLDecoder")
-    .name("readObject").withAnyParameters();
+  private static final MethodMatcher READ_OBJECT = MethodMatcher.create().ofTypes("java.beans.XMLDecoder")
+    .names("readObject").withAnyParameters();
   private static final String MESSAGE = "Make sure deserializing with XMLDecoder is safe here.";
 
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
-    return MethodMatcher.create().ofType("java.beans.XMLDecoder").name("<init>").withAnyParameters();
+    return MethodMatcher.create().ofTypes("java.beans.XMLDecoder").names("<init>").withAnyParameters();
   }
 
   @Override

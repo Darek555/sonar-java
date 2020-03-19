@@ -19,12 +19,9 @@
  */
 package org.sonar.java.checks;
 
-import java.util.Arrays;
-import java.util.List;
 import org.sonar.check.Rule;
 import org.sonar.java.JavaVersionAwareVisitor;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
-import org.sonar.java.matcher.MethodMatcher;
 import org.sonar.plugins.java.api.JavaVersion;
 import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
@@ -34,13 +31,13 @@ import org.sonar.plugins.java.api.tree.Tree;
 @Rule(key = "S2143")
 public class DateAndTimesCheck extends AbstractMethodDetection implements JavaVersionAwareVisitor {
 
-  private static final List<MethodMatcher> METHOD_MATCHERS = Arrays.asList(
-    MethodMatcher.create().ofType("java.util.Calendar").name("getInstance").withAnyParameters(),
-    MethodMatcher.create().ofType("java.util.Date").name("<init>").withAnyParameters());
+  private static final MethodMatchers METHOD_MATCHERS = MethodMatchers.or(
+    MethodMatchers.create().ofTypes("java.util.Calendar").names("getInstance").withAnyParameters().build(),
+    MethodMatchers.create().ofTypes("java.util.Date").constructor().withAnyParameters().build());
 
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
-    return MethodMatchers.or(METHOD_MATCHERS);
+    return METHOD_MATCHERS;
   }
 
   @Override

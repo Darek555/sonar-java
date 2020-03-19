@@ -33,7 +33,7 @@ public class ReceivingIntentsCheck extends AbstractMethodDetection {
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatcher.create()
-      .ofType("android.content.Context").name("registerReceiver").withAnyParameters();
+      .ofTypes("android.content.Context").names("registerReceiver").withAnyParameters();
   }
 
   @Override

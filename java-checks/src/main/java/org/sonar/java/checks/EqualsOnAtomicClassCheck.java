@@ -21,8 +21,6 @@ package org.sonar.java.checks;
 
 import org.sonar.check.Rule;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
-import org.sonar.java.matcher.MethodMatcher;
-import org.sonar.java.matcher.TypeCriteria;
 import org.sonar.java.model.ExpressionUtils;
 import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
@@ -32,17 +30,11 @@ public class EqualsOnAtomicClassCheck extends AbstractMethodDetection {
 
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
-    return MethodMatchers.or(
-      equalsInvocationMatcher("java.util.concurrent.atomic.AtomicBoolean"),
-      equalsInvocationMatcher("java.util.concurrent.atomic.AtomicInteger"),
-      equalsInvocationMatcher("java.util.concurrent.atomic.AtomicLong"));
-  }
-
-  private static MethodMatcher equalsInvocationMatcher(String fullyQualifiedName) {
-    return MethodMatcher.create()
-      .ofType(TypeCriteria.is(fullyQualifiedName))
-      .name("equals")
-      .addParameter("java.lang.Object");
+    return MethodMatchers.create()
+      .ofTypes("java.util.concurrent.atomic.AtomicBoolean", "java.util.concurrent.atomic.AtomicInteger", "java.util.concurrent.atomic.AtomicLong")
+      .names("equals")
+      .addParametersMatcher("java.lang.Object")
+      .build();
   }
 
   @Override

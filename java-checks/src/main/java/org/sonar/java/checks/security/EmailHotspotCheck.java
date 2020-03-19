@@ -30,7 +30,7 @@ public class EmailHotspotCheck extends AbstractMethodDetection {
 
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
-    return MethodMatcher.create().ofType("javax.mail.internet.MimeMessage").name("<init>").withAnyParameters();
+    return MethodMatcher.create().ofTypes("javax.mail.internet.MimeMessage").names("<init>").withAnyParameters();
   }
 
   @Override

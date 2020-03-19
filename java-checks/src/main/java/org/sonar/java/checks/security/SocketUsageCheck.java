@@ -48,19 +48,19 @@ public class SocketUsageCheck extends AbstractMethodDetection {
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatchers.or(
       // === java.net ===
-      MethodMatcher.create().ofType("java.net.Socket").name(INIT).withAnyParameters(),
-      MethodMatcher.create().ofType("java.net.ServerSocket").name(INIT).withAnyParameters(),
-      MethodMatcher.create().ofType(JAVAX_NET_SOCKET_FACTORY).name(INIT).withAnyParameters(),
-      MethodMatcher.create().ofType(JAVAX_NET_SOCKET_FACTORY).name("createSocket").withAnyParameters(),
+      MethodMatcher.create().ofTypes("java.net.Socket").names(INIT).withAnyParameters(),
+      MethodMatcher.create().ofTypes("java.net.ServerSocket").names(INIT).withAnyParameters(),
+      MethodMatcher.create().ofTypes(JAVAX_NET_SOCKET_FACTORY).names(INIT).withAnyParameters(),
+      MethodMatcher.create().ofTypes(JAVAX_NET_SOCKET_FACTORY).names("createSocket").withAnyParameters(),
 
       // === java.nio.channels ===
-      MethodMatcher.create().ofType("java.nio.channels.AsynchronousServerSocketChannel").name(OPEN_METHOD).withAnyParameters(),
-      MethodMatcher.create().ofType("java.nio.channels.AsynchronousSocketChannel").name(OPEN_METHOD).withAnyParameters(),
-      MethodMatcher.create().ofType("java.nio.channels.SocketChannel").name(OPEN_METHOD).withAnyParameters(),
-      MethodMatcher.create().ofType("java.nio.channels.ServerSocketChannel").name(OPEN_METHOD).withAnyParameters(),
+      MethodMatcher.create().ofTypes("java.nio.channels.AsynchronousServerSocketChannel").names(OPEN_METHOD).withAnyParameters(),
+      MethodMatcher.create().ofTypes("java.nio.channels.AsynchronousSocketChannel").names(OPEN_METHOD).withAnyParameters(),
+      MethodMatcher.create().ofTypes("java.nio.channels.SocketChannel").names(OPEN_METHOD).withAnyParameters(),
+      MethodMatcher.create().ofTypes("java.nio.channels.ServerSocketChannel").names(OPEN_METHOD).withAnyParameters(),
 
       // === Netty ===
-      MethodMatcher.create().ofType("io.netty.channel.ChannelInitializer").name(INIT).withAnyParameters());
+      MethodMatcher.create().ofTypes("io.netty.channel.ChannelInitializer").names(INIT).withAnyParameters());
   }
 
   @Override

@@ -33,7 +33,7 @@ public class OpenSAML2AuthenticationBypassCheck extends AbstractMethodDetection 
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatcher.create()
         .ofType(type -> type.isSubtypeOf("org.opensaml.xml.parse.BasicParserPool") || type.isSubtypeOf("org.opensaml.xml.parse.StaticBasicParserPool"))
-        .name("setIgnoreComments")
+        .names("setIgnoreComments")
         .addParameter("boolean");
   }
 

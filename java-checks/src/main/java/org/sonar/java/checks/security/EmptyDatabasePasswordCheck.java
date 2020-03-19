@@ -39,7 +39,7 @@ public class EmptyDatabasePasswordCheck extends AbstractMethodDetection {
   private static final Pattern EMPTY_PASSWORD_PATTERN = Pattern.compile(".*password\\s*=\\s*([&;\\)].*|$)");
   private static final Pattern URL_PATTERN = Pattern.compile("(jdbc:mysql://[^:]*:?(?<password>.*)@.*)|(jdbc:oracle:[^:]*:?.*/(?<password2>.*)@.*)");
   private static final MethodMatchers METHOD_MATCHERS = MethodMatcher.create()
-    .ofType("java.sql.DriverManager").name("getConnection").withAnyParameters();
+    .ofTypes("java.sql.DriverManager").names("getConnection").withAnyParameters();
 
 
   @Override

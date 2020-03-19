@@ -58,7 +58,7 @@ public class SMTPSSLServerIdentityCheck extends AbstractMethodDetection {
 
   private static final MethodMatcher HASHTABLE_PUT = MethodMatcher.create()
     .ofType(TypeCriteria.subtypeOf(HASHTABLE))
-    .name("put")
+    .names("put")
     .withAnyParameters();
 
   @Override
@@ -113,7 +113,7 @@ public class SMTPSSLServerIdentityCheck extends AbstractMethodDetection {
 
     private static final MethodMatcher SET_SSL_CHECK_SERVER_ID = MethodMatcher.create()
       .ofType(TypeCriteria.subtypeOf(APACHE_EMAIL))
-      .name("setSSLCheckServerIdentity")
+      .names("setSSLCheckServerIdentity")
       .addParameter(BOOLEAN);
 
     @Override

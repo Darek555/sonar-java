@@ -32,10 +32,10 @@ public class StreamPeekCheck extends AbstractMethodDetection {
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatchers.or(
-      MethodMatcher.create().ofType("java.util.stream.Stream").name("peek").withAnyParameters(),
-      MethodMatcher.create().ofType("java.util.stream.IntStream").name("peek").withAnyParameters(),
-      MethodMatcher.create().ofType("java.util.stream.LongStream").name("peek").withAnyParameters(),
-      MethodMatcher.create().ofType("java.util.stream.DoubleStream").name("peek").withAnyParameters()
+      MethodMatcher.create().ofTypes("java.util.stream.Stream").names("peek").withAnyParameters(),
+      MethodMatcher.create().ofTypes("java.util.stream.IntStream").names("peek").withAnyParameters(),
+      MethodMatcher.create().ofTypes("java.util.stream.LongStream").names("peek").withAnyParameters(),
+      MethodMatcher.create().ofTypes("java.util.stream.DoubleStream").names("peek").withAnyParameters()
     );
   }
 

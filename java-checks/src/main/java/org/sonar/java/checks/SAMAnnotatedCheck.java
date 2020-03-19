@@ -109,6 +109,6 @@ public class SAMAnnotatedCheck extends IssuableSubscriptionVisitor implements Ja
   }
 
   private static MethodMatcher methodMatcherWithName(String name, String... parameters) {
-    return MethodMatcher.create().ofType(TypeCriteria.anyType()).name(name).withParameters(parameters);
+    return MethodMatcher.create().ofType(TypeCriteria.anyType()).names(name).addParametersMatcher(parameters);
   }
 }

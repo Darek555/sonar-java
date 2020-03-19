@@ -61,16 +61,16 @@ public class CryptographicKeySizeCheck extends AbstractMethodDetection {
     "DSA", 2048,
     "AES", 128);
 
-  private static final MethodMatcher KEY_GEN_INIT = MethodMatcher.create().ofType(KEY_GENERATOR).name("init").addParameter("int");
-  private static final MethodMatcher KEY_PAIR_GEN_INITIALIZE = MethodMatcher.create().ofType(KEY_PAIR_GENERATOR).name("initialize").addParameter("int");
+  private static final MethodMatcher KEY_GEN_INIT = MethodMatcher.create().ofTypes(KEY_GENERATOR).names("init").addParameter("int");
+  private static final MethodMatcher KEY_PAIR_GEN_INITIALIZE = MethodMatcher.create().ofTypes(KEY_PAIR_GENERATOR).names("initialize").addParameter("int");
   private static final MethodMatcher KEY_PAIR_GEN_INITIALIZE_WITH_SOURCE = KEY_PAIR_GEN_INITIALIZE.copy().addParameter("java.security.SecureRandom");
 
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatchers.or(
-      MethodMatcher.create().ofType(KEY_GENERATOR).name(GET_INSTANCE_METHOD).addParameter(STRING),
-      MethodMatcher.create().ofType(KEY_PAIR_GENERATOR).name(GET_INSTANCE_METHOD).addParameter(STRING),
-      MethodMatcher.create().ofType(EC_GEN_PARAMETER_SPEC).name("<init>").addParameter(STRING));
+      MethodMatcher.create().ofTypes(KEY_GENERATOR).names(GET_INSTANCE_METHOD).addParameter(STRING),
+      MethodMatcher.create().ofTypes(KEY_PAIR_GENERATOR).names(GET_INSTANCE_METHOD).addParameter(STRING),
+      MethodMatcher.create().ofTypes(EC_GEN_PARAMETER_SPEC).names("<init>").addParameter(STRING));
   }
 
   @Override

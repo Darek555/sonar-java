@@ -64,7 +64,7 @@ public class MethodMatcher implements MethodMatchers {
     }
   }
 
-  public MethodMatcher name(String methodName) {
+  public MethodMatcher names(String methodName) {
     Preconditions.checkState(this.methodName == null);
     this.methodName = NameCriteria.is(methodName);
     updateInternalMatcher();
@@ -85,7 +85,7 @@ public class MethodMatcher implements MethodMatchers {
     return this;
   }
 
-  public MethodMatcher ofType(String fullyQualifiedTypeName) {
+  public MethodMatcher ofTypes(String fullyQualifiedTypeName) {
     Preconditions.checkState(typeCriteria == null);
     this.typeCriteria = TypeCriteria.is(fullyQualifiedTypeName);
     updateInternalMatcher();
@@ -108,9 +108,9 @@ public class MethodMatcher implements MethodMatchers {
     return this;
   }
 
-  public MethodMatcher withParameters(String... parameterTypes) {
+  public MethodMatcher addParametersMatcher(String... parameterTypes) {
     if (parameterTypes.length == 0) {
-      return withoutParameters();
+      return addWithoutParametersMatcher();
     }
     for (String type : parameterTypes) {
       addParameter(type);
@@ -119,9 +119,9 @@ public class MethodMatcher implements MethodMatchers {
     return this;
   }
 
-  public MethodMatcher withParameters(TypeCriteria... parameterTypes) {
+  public MethodMatcher addParametersMatcher(TypeCriteria... parameterTypes) {
     if (parameterTypes.length == 0) {
-      return withoutParameters();
+      return addWithoutParametersMatcher();
     }
     for (TypeCriteria type : parameterTypes) {
       addParameter(type);
@@ -137,7 +137,7 @@ public class MethodMatcher implements MethodMatchers {
     return this;
   }
 
-  public MethodMatcher withoutParameters() {
+  public MethodMatcher addWithoutParametersMatcher() {
     Preconditions.checkState(parameters == null);
     parameters = ParametersCriteria.none();
     updateInternalMatcher();

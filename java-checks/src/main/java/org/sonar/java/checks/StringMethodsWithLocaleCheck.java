@@ -36,19 +36,19 @@ import org.sonar.plugins.java.api.tree.Tree;
 public class StringMethodsWithLocaleCheck extends AbstractMethodDetection {
 
   private static final String STRING = "java.lang.String";
-  private static final MethodMatcher STRING_FORMAT = stringMethod().name("format").withAnyParameters();
+  private static final MethodMatcher STRING_FORMAT = stringMethod().names("format").withAnyParameters();
 
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatchers.or(
-      stringMethod().name("toUpperCase").withoutParameters(),
-      stringMethod().name("toLowerCase").withoutParameters(),
+      stringMethod().names("toUpperCase").addWithoutParametersMatcher(),
+      stringMethod().names("toLowerCase").addWithoutParametersMatcher(),
       STRING_FORMAT
     );
   }
 
   private static MethodMatcher stringMethod() {
-    return MethodMatcher.create().ofType(STRING);
+    return MethodMatcher.create().ofTypes(STRING);
   }
 
   @Override

@@ -44,7 +44,7 @@ public class HostnameVerifierImplementationCheck extends IssuableSubscriptionVis
   private static final TypeCriteria TYPE_CRITERIA_STRING = TypeCriteria.is("java.lang.String");
   private static final TypeCriteria TYPE_CRITERIA_SSL_SESSION = TypeCriteria.is("javax.net.ssl.SSLSession");
   private static final MethodMatcher VERIFY_METHOD_MATCHER = MethodMatcher.create().ofType(TypeCriteria.subtypeOf("javax.net.ssl.HostnameVerifier"))
-    .name("verify")
+    .names("verify")
     .addParameter(TYPE_CRITERIA_STRING)
     .addParameter(TYPE_CRITERIA_SSL_SESSION);
 

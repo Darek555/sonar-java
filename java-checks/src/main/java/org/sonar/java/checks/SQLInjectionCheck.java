@@ -47,38 +47,38 @@ public class SQLInjectionCheck extends IssuableSubscriptionVisitor {
   private static final String SPRING_JDBC_OPERATIONS = "org.springframework.jdbc.core.JdbcOperations";
 
   private static final MethodMatchers SQL_INJECTION_SUSPECTS = MethodMatchers.or(
-    MethodMatcher.create().ofType(TypeCriteria.subtypeOf("org.hibernate.Session")).name("createQuery").withAnyParameters(),
-    MethodMatcher.create().ofType(TypeCriteria.subtypeOf("org.hibernate.Session")).name("createSQLQuery").withAnyParameters(),
+    MethodMatcher.create().ofType(TypeCriteria.subtypeOf("org.hibernate.Session")).names("createQuery").withAnyParameters(),
+    MethodMatcher.create().ofType(TypeCriteria.subtypeOf("org.hibernate.Session")).names("createSQLQuery").withAnyParameters(),
 
-    matcherBuilder(JAVA_SQL_STATEMENT).name("executeQuery").withAnyParameters(),
-    matcherBuilder(JAVA_SQL_STATEMENT).name("execute").withAnyParameters(),
-    matcherBuilder(JAVA_SQL_STATEMENT).name("executeUpdate").withAnyParameters(),
-    matcherBuilder(JAVA_SQL_STATEMENT).name("executeLargeUpdate").withAnyParameters(),
-    matcherBuilder(JAVA_SQL_STATEMENT).name("addBatch").withAnyParameters(),
+    matcherBuilder(JAVA_SQL_STATEMENT).names("executeQuery").withAnyParameters(),
+    matcherBuilder(JAVA_SQL_STATEMENT).names("execute").withAnyParameters(),
+    matcherBuilder(JAVA_SQL_STATEMENT).names("executeUpdate").withAnyParameters(),
+    matcherBuilder(JAVA_SQL_STATEMENT).names("executeLargeUpdate").withAnyParameters(),
+    matcherBuilder(JAVA_SQL_STATEMENT).names("addBatch").withAnyParameters(),
 
-    matcherBuilder(JAVA_SQL_CONNECTION).name("prepareStatement").withAnyParameters(),
-    matcherBuilder(JAVA_SQL_CONNECTION).name("prepareCall").withAnyParameters(),
-    matcherBuilder(JAVA_SQL_CONNECTION).name("nativeSQL").withAnyParameters(),
+    matcherBuilder(JAVA_SQL_CONNECTION).names("prepareStatement").withAnyParameters(),
+    matcherBuilder(JAVA_SQL_CONNECTION).names("prepareCall").withAnyParameters(),
+    matcherBuilder(JAVA_SQL_CONNECTION).names("nativeSQL").withAnyParameters(),
 
-    MethodMatcher.create().ofType("javax.persistence.EntityManager").name("createNativeQuery").withAnyParameters(),
-    MethodMatcher.create().ofType("javax.persistence.EntityManager").name("createQuery").withAnyParameters(),
+    MethodMatcher.create().ofTypes("javax.persistence.EntityManager").names("createNativeQuery").withAnyParameters(),
+    MethodMatcher.create().ofTypes("javax.persistence.EntityManager").names("createQuery").withAnyParameters(),
 
-    matcherBuilder(SPRING_JDBC_OPERATIONS).name("batchUpdate").withAnyParameters(),
-    matcherBuilder(SPRING_JDBC_OPERATIONS).name("execute").withAnyParameters(),
-    matcherBuilder(SPRING_JDBC_OPERATIONS).name("query").withAnyParameters(),
-    matcherBuilder(SPRING_JDBC_OPERATIONS).name("queryForList").withAnyParameters(),
-    matcherBuilder(SPRING_JDBC_OPERATIONS).name("queryForMap").withAnyParameters(),
-    matcherBuilder(SPRING_JDBC_OPERATIONS).name("queryForObject").withAnyParameters(),
-    matcherBuilder(SPRING_JDBC_OPERATIONS).name("queryForRowSet").withAnyParameters(),
-    matcherBuilder(SPRING_JDBC_OPERATIONS).name("queryForInt").withAnyParameters(),
-    matcherBuilder(SPRING_JDBC_OPERATIONS).name("queryForLong").withAnyParameters(),
-    matcherBuilder(SPRING_JDBC_OPERATIONS).name("update").withAnyParameters(),
-    MethodMatcher.create().ofType("org.springframework.jdbc.core.PreparedStatementCreatorFactory").name("<init>").withAnyParameters(),
-    MethodMatcher.create().ofType("org.springframework.jdbc.core.PreparedStatementCreatorFactory").name("newPreparedStatementCreator").withAnyParameters(),
+    matcherBuilder(SPRING_JDBC_OPERATIONS).names("batchUpdate").withAnyParameters(),
+    matcherBuilder(SPRING_JDBC_OPERATIONS).names("execute").withAnyParameters(),
+    matcherBuilder(SPRING_JDBC_OPERATIONS).names("query").withAnyParameters(),
+    matcherBuilder(SPRING_JDBC_OPERATIONS).names("queryForList").withAnyParameters(),
+    matcherBuilder(SPRING_JDBC_OPERATIONS).names("queryForMap").withAnyParameters(),
+    matcherBuilder(SPRING_JDBC_OPERATIONS).names("queryForObject").withAnyParameters(),
+    matcherBuilder(SPRING_JDBC_OPERATIONS).names("queryForRowSet").withAnyParameters(),
+    matcherBuilder(SPRING_JDBC_OPERATIONS).names("queryForInt").withAnyParameters(),
+    matcherBuilder(SPRING_JDBC_OPERATIONS).names("queryForLong").withAnyParameters(),
+    matcherBuilder(SPRING_JDBC_OPERATIONS).names("update").withAnyParameters(),
+    MethodMatcher.create().ofTypes("org.springframework.jdbc.core.PreparedStatementCreatorFactory").names("<init>").withAnyParameters(),
+    MethodMatcher.create().ofTypes("org.springframework.jdbc.core.PreparedStatementCreatorFactory").names("newPreparedStatementCreator").withAnyParameters(),
 
-    matcherBuilder("javax.jdo.PersistenceManager").name("newQuery").withAnyParameters(),
-    matcherBuilder("javax.jdo.Query").name("setFilter").withAnyParameters(),
-    matcherBuilder("javax.jdo.Query").name("setGrouping").withAnyParameters()
+    matcherBuilder("javax.jdo.PersistenceManager").names("newQuery").withAnyParameters(),
+    matcherBuilder("javax.jdo.Query").names("setFilter").withAnyParameters(),
+    matcherBuilder("javax.jdo.Query").names("setGrouping").withAnyParameters()
   );
 
   private static MethodMatcher matcherBuilder(String typeFQN) {

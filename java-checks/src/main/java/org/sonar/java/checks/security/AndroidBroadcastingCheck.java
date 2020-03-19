@@ -21,7 +21,6 @@ package org.sonar.java.checks.security;
 
 import org.sonar.check.Rule;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
-import org.sonar.java.matcher.MethodMatcher;
 import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 
@@ -32,19 +31,19 @@ public class AndroidBroadcastingCheck extends AbstractMethodDetection {
 
   private static final String MESSAGE = "Make sure that broadcasting intents is safe here.";
 
-  private static final MethodMatcher SEND_BROADCAST = androidContext().name("sendBroadcast").withAnyParameters();
-  private static final MethodMatcher SEND_BROADCAST_AS_USER = androidContext().name("sendBroadcastAsUser").withAnyParameters();
-  private static final MethodMatcher SEND_ORDERED_BROADCAST = androidContext().name("sendOrderedBroadcast").withAnyParameters();
-  private static final MethodMatcher SEND_ORDERED_BROADCAST_AS_USER = androidContext().name("sendOrderedBroadcastAsUser").withAnyParameters();
-  private static final MethodMatcher SEND_STICKY_BROADCAST = androidContext().name("sendStickyBroadcast").withAnyParameters();
-  private static final MethodMatcher SEND_STICKY_BROADCAST_AS_USER = androidContext().name("sendStickyBroadcastAsUser").withAnyParameters();
-  private static final MethodMatcher SEND_STICKY_ORDERED_BROADCAST = androidContext().name("sendStickyOrderedBroadcast").withAnyParameters();
-  private static final MethodMatcher SEND_STICKY_ORDERED_BROADCAST_AS_USER = androidContext().name("sendStickyOrderedBroadcastAsUser").withAnyParameters();
+  private static final MethodMatchers SEND_BROADCAST = androidContext().names("sendBroadcast").withAnyParameters().build();
+  private static final MethodMatchers SEND_BROADCAST_AS_USER = androidContext().names("sendBroadcastAsUser").withAnyParameters().build();
+  private static final MethodMatchers SEND_ORDERED_BROADCAST = androidContext().names("sendOrderedBroadcast").withAnyParameters().build();
+  private static final MethodMatchers SEND_ORDERED_BROADCAST_AS_USER = androidContext().names("sendOrderedBroadcastAsUser").withAnyParameters().build();
+  private static final MethodMatchers SEND_STICKY_BROADCAST = androidContext().names("sendStickyBroadcast").withAnyParameters().build();
+  private static final MethodMatchers SEND_STICKY_BROADCAST_AS_USER = androidContext().names("sendStickyBroadcastAsUser").withAnyParameters().build();
+  private static final MethodMatchers SEND_STICKY_ORDERED_BROADCAST = androidContext().names("sendStickyOrderedBroadcast").withAnyParameters().build();
+  private static final MethodMatchers SEND_STICKY_ORDERED_BROADCAST_AS_USER = androidContext().names("sendStickyOrderedBroadcastAsUser").withAnyParameters().build();
   private static final MethodMatchers STICKY_BROADCAST = MethodMatchers.or(SEND_STICKY_BROADCAST,
     SEND_STICKY_BROADCAST_AS_USER, SEND_STICKY_ORDERED_BROADCAST, SEND_STICKY_ORDERED_BROADCAST_AS_USER);
 
-  private static MethodMatcher androidContext() {
-    return MethodMatcher.create().ofType("android.content.Context");
+  private static MethodMatchers.NameBuilder androidContext() {
+    return MethodMatchers.create().ofTypes("android.content.Context");
   }
 
   @Override

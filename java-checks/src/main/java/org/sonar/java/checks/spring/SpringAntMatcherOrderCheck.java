@@ -45,14 +45,14 @@ public class SpringAntMatcherOrderCheck extends AbstractMethodDetection {
 
   private static final MethodMatcher ANT_MATCHERS = MethodMatcher.create()
     .ofType(TypeCriteria.subtypeOf("org.springframework.security.config.annotation.web.AbstractRequestMatcherRegistry"))
-    .name("antMatchers")
+    .names("antMatchers")
     .addParameter("java.lang.String[]");
 
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatcher.create()
       .ofType(TypeCriteria.is("org.springframework.security.config.annotation.web.builders.HttpSecurity"))
-      .name("authorizeRequests")
+      .names("authorizeRequests")
       .withAnyParameters();
   }
 

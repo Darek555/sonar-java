@@ -31,13 +31,13 @@ import static org.sonar.plugins.java.api.tree.Tree.Kind.NULL_LITERAL;
 public class EnvVariablesHotspotCheck extends AbstractMethodDetection {
 
   private static final MethodMatcher RUNTIME_EXEC =
-    MethodMatcher.create().ofType("java.lang.Runtime").name("exec").withAnyParameters();
+    MethodMatcher.create().ofTypes("java.lang.Runtime").names("exec").withAnyParameters();
 
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatchers.or(
-      MethodMatcher.create().ofType("java.lang.System").name("getenv").withAnyParameters(),
-      MethodMatcher.create().ofType("java.lang.ProcessBuilder").name("environment").withoutParameters(),
+      MethodMatcher.create().ofTypes("java.lang.System").names("getenv").withAnyParameters(),
+      MethodMatcher.create().ofTypes("java.lang.ProcessBuilder").names("environment").addWithoutParametersMatcher(),
       RUNTIME_EXEC
       );
   }

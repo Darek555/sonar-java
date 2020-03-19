@@ -29,12 +29,12 @@ import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 public class PopulateBeansCheck extends AbstractMethodDetection {
 
   private static final MethodMatchers METHOD_MATCHERS = MethodMatchers.or(
-    MethodMatcher.create().ofType("org.apache.commons.beanutils.BeanUtils").name("populate").withAnyParameters(),
-    MethodMatcher.create().ofType("org.apache.commons.beanutils.BeanUtils").name("setProperty").withAnyParameters(),
-    MethodMatcher.create().ofType("org.apache.commons.beanutils.BeanUtilsBean").name("populate").withAnyParameters(),
-    MethodMatcher.create().ofType("org.apache.commons.beanutils.BeanUtilsBean").name("setProperty").withAnyParameters(),
-    MethodMatcher.create().ofType("org.springframework.beans.PropertyAccessor").name("setPropertyValue").withAnyParameters(),
-    MethodMatcher.create().ofType("org.springframework.beans.PropertyAccessor").name("setPropertyValues").withAnyParameters());
+    MethodMatcher.create().ofTypes("org.apache.commons.beanutils.BeanUtils").names("populate").withAnyParameters(),
+    MethodMatcher.create().ofTypes("org.apache.commons.beanutils.BeanUtils").names("setProperty").withAnyParameters(),
+    MethodMatcher.create().ofTypes("org.apache.commons.beanutils.BeanUtilsBean").names("populate").withAnyParameters(),
+    MethodMatcher.create().ofTypes("org.apache.commons.beanutils.BeanUtilsBean").names("setProperty").withAnyParameters(),
+    MethodMatcher.create().ofTypes("org.springframework.beans.PropertyAccessor").names("setPropertyValue").withAnyParameters(),
+    MethodMatcher.create().ofTypes("org.springframework.beans.PropertyAccessor").names("setPropertyValues").withAnyParameters());
 
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {

@@ -43,8 +43,8 @@ public class WeakSSLContextCheck extends IssuableSubscriptionVisitor {
   private static final Set<String> STRONG_AFTER_JAVA_8 = new HashSet<>(Arrays.asList("TLS", "DTLS"));
 
   private static final MethodMatcher SSLCONTEXT_GETINSTANCE_MATCHER = MethodMatcher.create()
-    .ofType("javax.net.ssl.SSLContext")
-    .name("getInstance")
+    .ofTypes("javax.net.ssl.SSLContext")
+    .names("getInstance")
     .withAnyParameters();
   private boolean projectHasJava8OrHigher;
 

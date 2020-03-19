@@ -43,18 +43,18 @@ public class DataHashingCheck extends AbstractMethodDetection {
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
     List<MethodMatcher> matchers = new ArrayList<>();
-    matchers.add(MethodMatcher.create().ofType("java.security.MessageDigest").name("getInstance").withAnyParameters());
-    matchers.add(MethodMatcher.create().ofType(DIGEST_UTILS).name("<init>").withAnyParameters());
+    matchers.add(MethodMatcher.create().ofTypes("java.security.MessageDigest").names("getInstance").withAnyParameters());
+    matchers.add(MethodMatcher.create().ofTypes(DIGEST_UTILS).names("<init>").withAnyParameters());
     matchers.addAll(
       Stream.of("Md2", "Md5", "Sha", "Sha1", "Sha256", "Sha384", "Sha512")
         .flatMap(alg -> Stream.of("get" + alg + "Digest", alg.toLowerCase(Locale.ENGLISH), alg.toLowerCase(Locale.ENGLISH) + "Hex"))
-        .map(name -> MethodMatcher.create().ofType(DIGEST_UTILS).name(name).withAnyParameters())
+        .map(name -> MethodMatcher.create().ofTypes(DIGEST_UTILS).names(name).withAnyParameters())
         .collect(Collectors.toList()));
     matchers.addAll(
       Stream.of("md5", "sha1", "sha256", "sha384", "sha512")
-        .map(alg -> MethodMatcher.create().ofType("com.google.common.hash.Hashing").name(alg).withoutParameters())
+        .map(alg -> MethodMatcher.create().ofTypes("com.google.common.hash.Hashing").names(alg).addWithoutParametersMatcher())
         .collect(Collectors.toList()));
-    matchers.add(MethodMatcher.create().ofType(SECRET_KEY_FACTORY).name("getInstance").withAnyParameters());
+    matchers.add(MethodMatcher.create().ofTypes(SECRET_KEY_FACTORY).names("getInstance").withAnyParameters());
     return MethodMatchers.or(matchers);
   }
 

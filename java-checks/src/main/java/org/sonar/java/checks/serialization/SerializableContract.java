@@ -67,11 +67,11 @@ public final class SerializableContract {
   }
 
   public static MethodMatcher readObjectMatcher(String classFullyQualifiedName) {
-    return MethodMatcher.create().ofType(classFullyQualifiedName).name("readObject").addParameter("java.io.ObjectInputStream");
+    return MethodMatcher.create().ofTypes(classFullyQualifiedName).names("readObject").addParameter("java.io.ObjectInputStream");
   }
 
   public static MethodMatcher writeObjectMatcher(String classFullyQualifiedName) {
-    return MethodMatcher.create().ofType(classFullyQualifiedName).name("writeObject").addParameter("java.io.ObjectOutputStream");
+    return MethodMatcher.create().ofTypes(classFullyQualifiedName).names("writeObject").addParameter("java.io.ObjectOutputStream");
   }
 
   private static boolean methodThrows(MethodTree methodTree, String... throwClauseFullyQualifiedNames) {

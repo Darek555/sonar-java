@@ -42,13 +42,13 @@ public class FilePermissionsCheck extends IssuableSubscriptionVisitor {
   private static final String ISSUE_MESSAGE = "Make sure this permission is safe.";
   private static final Set<String> POSIX_OTHER_PERMISSIONS = new HashSet<>(Arrays.asList("OTHERS_READ", "OTHERS_WRITE", "OTHERS_EXECUTE"));
   private static final MethodMatcher POSIX_FILE_PERMISSIONS_FROM_STRING = MethodMatcher.create()
-    .name("fromString")
-    .ofType("java.nio.file.attribute.PosixFilePermissions")
-    .withParameters(JAVA_LANG_STRING);
+    .names("fromString")
+    .ofTypes("java.nio.file.attribute.PosixFilePermissions")
+    .addParametersMatcher(JAVA_LANG_STRING);
 
   private static final MethodMatcher RUNTIME_EXEC = MethodMatcher.create()
-    .name("exec")
-    .ofType("java.lang.Runtime")
+    .names("exec")
+    .ofTypes("java.lang.Runtime")
     .withAnyParameters();
 
   // 'other' group not being 0

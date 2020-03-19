@@ -55,7 +55,7 @@ public class InvalidDateValuesCheck extends AbstractMethodDetection {
   private static final String[] DATE_SET_METHODS = {"setDate", "setMonth", "setHours", "setMinutes", "setSeconds"};
 
   private static final List<MethodMatcher> DATE_METHODS_COMPARISON = ImmutableList.<MethodMatcher>builder()
-    .add(MethodMatcher.create().ofType(JAVA_UTIL_CALENDAR).name("get").addParameter("int"))
+    .add(MethodMatcher.create().ofTypes(JAVA_UTIL_CALENDAR).names("get").addParameter("int"))
     .addAll(dateGetMatchers())
     .build();
 
@@ -142,17 +142,17 @@ public class InvalidDateValuesCheck extends AbstractMethodDetection {
       matchers.add(dateMethodInvocationMatcherSetter(JAVA_UTIL_DATE, dateSetMethod));
       matchers.add(dateMethodInvocationMatcherSetter(JAVA_SQL_DATE, dateSetMethod));
     }
-    matchers.add(MethodMatcher.create().ofType(JAVA_UTIL_CALENDAR).name("set").addParameter("int").addParameter("int"));
-    matchers.add(MethodMatcher.create().ofType("java.util.GregorianCalendar").name("<init>").withAnyParameters());
+    matchers.add(MethodMatcher.create().ofTypes(JAVA_UTIL_CALENDAR).names("set").addParameter("int").addParameter("int"));
+    matchers.add(MethodMatcher.create().ofTypes("java.util.GregorianCalendar").names("<init>").withAnyParameters());
     return MethodMatchers.or(matchers);
   }
 
   private static MethodMatcher dateMethodInvocationMatcherGetter(String type, String methodName) {
-    return MethodMatcher.create().ofType(type).name(methodName).withoutParameters();
+    return MethodMatcher.create().ofTypes(type).names(methodName).addWithoutParametersMatcher();
   }
 
   private static MethodMatcher dateMethodInvocationMatcherSetter(String type, String methodName) {
-    return MethodMatcher.create().ofType(type).name(methodName).addParameter("int");
+    return MethodMatcher.create().ofTypes(type).names(methodName).addParameter("int");
   }
 
   @Override

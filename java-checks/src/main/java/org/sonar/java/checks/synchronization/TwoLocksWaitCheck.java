@@ -48,7 +48,7 @@ import static org.sonar.plugins.java.api.tree.Tree.Kind.METHOD;
 @Rule(key = "S3046")
 public class TwoLocksWaitCheck extends IssuableSubscriptionVisitor {
 
-  private static final MethodMatcher WAIT_MATCHER = MethodMatcher.create().name("wait").withoutParameters();
+  private static final MethodMatcher WAIT_MATCHER = MethodMatcher.create().names("wait").addWithoutParametersMatcher();
 
   private Deque<Counter> synchronizedStack = new LinkedList<>();
 

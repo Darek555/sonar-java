@@ -37,18 +37,18 @@ public class RandomFloatToIntCheck extends IssuableSubscriptionVisitor {
   private static final String NEXT_FLOAT = "nextFloat";
   private static final String NEXT_DOUBLE = "nextDouble";
 
-  private final MethodMatcher mathRandomMethodMatcher = MethodMatcher.create().ofType("java.lang.Math").name("random").withoutParameters();
+  private final MethodMatcher mathRandomMethodMatcher = MethodMatcher.create().ofTypes("java.lang.Math").names("random").addWithoutParametersMatcher();
 
   private final MethodMatchers methodMatchers = MethodMatchers.or(
-    MethodMatcher.create().ofType("java.util.Random").name(NEXT_DOUBLE).withoutParameters(),
-    MethodMatcher.create().ofType("java.util.Random").name(NEXT_FLOAT).withoutParameters(),
-    MethodMatcher.create().ofType("java.util.concurrent.ThreadLocalRandom").name(NEXT_DOUBLE).withAnyParameters(),
-    MethodMatcher.create().ofType("org.apache.commons.lang.math.JVMRandom").name(NEXT_DOUBLE).withoutParameters(),
-    MethodMatcher.create().ofType("org.apache.commons.lang.math.JVMRandom").name(NEXT_FLOAT).withoutParameters(),
-    MethodMatcher.create().ofType("org.apache.commons.lang.math.RandomUtils").name(NEXT_DOUBLE).withoutParameters(),
-    MethodMatcher.create().ofType("org.apache.commons.lang.math.RandomUtils").name(NEXT_FLOAT).withoutParameters(),
-    MethodMatcher.create().ofType("org.apache.commons.lang3.RandomUtils").name(NEXT_DOUBLE).withoutParameters(),
-    MethodMatcher.create().ofType("org.apache.commons.lang3.RandomUtils").name(NEXT_FLOAT).withoutParameters()
+    MethodMatcher.create().ofTypes("java.util.Random").names(NEXT_DOUBLE).addWithoutParametersMatcher(),
+    MethodMatcher.create().ofTypes("java.util.Random").names(NEXT_FLOAT).addWithoutParametersMatcher(),
+    MethodMatcher.create().ofTypes("java.util.concurrent.ThreadLocalRandom").names(NEXT_DOUBLE).withAnyParameters(),
+    MethodMatcher.create().ofTypes("org.apache.commons.lang.math.JVMRandom").names(NEXT_DOUBLE).addWithoutParametersMatcher(),
+    MethodMatcher.create().ofTypes("org.apache.commons.lang.math.JVMRandom").names(NEXT_FLOAT).addWithoutParametersMatcher(),
+    MethodMatcher.create().ofTypes("org.apache.commons.lang.math.RandomUtils").names(NEXT_DOUBLE).addWithoutParametersMatcher(),
+    MethodMatcher.create().ofTypes("org.apache.commons.lang.math.RandomUtils").names(NEXT_FLOAT).addWithoutParametersMatcher(),
+    MethodMatcher.create().ofTypes("org.apache.commons.lang3.RandomUtils").names(NEXT_DOUBLE).addWithoutParametersMatcher(),
+    MethodMatcher.create().ofTypes("org.apache.commons.lang3.RandomUtils").names(NEXT_FLOAT).addWithoutParametersMatcher()
   );
 
   @Override

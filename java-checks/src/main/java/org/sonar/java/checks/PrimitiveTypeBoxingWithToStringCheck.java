@@ -87,8 +87,8 @@ public class PrimitiveTypeBoxingWithToStringCheck extends BaseTreeVisitor implem
     }
     Type type = abstractTypedTree.symbolType();
     MethodMatcher valueOfMatcher = MethodMatcher.create()
-      .ofType(type.fullyQualifiedName())
-      .name("valueOf")
+      .ofTypes(type.fullyQualifiedName())
+      .names("valueOf")
       .addParameter(JUtils.primitiveType(type).fullyQualifiedName());
     return valueOfMatcher.matches((MethodInvocationTree) abstractTypedTree);
   }

@@ -151,36 +151,36 @@ public class DeprecatedHashAlgorithmCheck extends AbstractMethodDetection {
     ArrayList<MethodMatcher> matchers = new ArrayList<>();
     matchers
       .add(MethodMatcher.create()
-        .ofType("org.apache.commons.codec.digest.DigestUtils")
-        .name("getDigest")
+        .ofTypes("org.apache.commons.codec.digest.DigestUtils")
+        .names("getDigest")
         .addParameter(JAVA_LANG_STRING));
     for (String methodName : ALGORITHM_BY_METHOD_NAME.keySet()) {
       matchers.add(MethodMatcher.create()
-        .ofType("org.apache.commons.codec.digest.DigestUtils")
-        .name(methodName)
+        .ofTypes("org.apache.commons.codec.digest.DigestUtils")
+        .names(methodName)
         .withAnyParameters());
     }
     for (String cryptoApi : CRYPTO_APIS) {
       matchers
         .add(MethodMatcher.create()
-          .ofType(cryptoApi)
-          .name(GET_INSTANCE)
+          .ofTypes(cryptoApi)
+          .names(GET_INSTANCE)
           .addParameter(JAVA_LANG_STRING));
       matchers
         .add(MethodMatcher.create()
-          .ofType(cryptoApi)
-          .name(GET_INSTANCE)
+          .ofTypes(cryptoApi)
+          .names(GET_INSTANCE)
           .addParameter(JAVA_LANG_STRING)
           .addParameter(TypeCriteria.anyType()));
     }
     for (DeprecatedSpringPasswordEncoder pe : DeprecatedSpringPasswordEncoder.values()) {
-      matchers.add(MethodMatcher.create().ofType(pe.classFqn).name(pe.methodName).withAnyParameters());
+      matchers.add(MethodMatcher.create().ofTypes(pe.classFqn).names(pe.methodName).withAnyParameters());
     }
     for (String methodName : ImmutableList.of("md5", "sha1")) {
       matchers.add(MethodMatcher.create()
-        .ofType("com.google.common.hash.Hashing")
-        .name(methodName)
-        .withoutParameters());
+        .ofTypes("com.google.common.hash.Hashing")
+        .names(methodName)
+        .addWithoutParametersMatcher());
     }
     return MethodMatchers.or(matchers);
   }

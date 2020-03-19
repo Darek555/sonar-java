@@ -44,7 +44,7 @@ import static org.sonar.plugins.java.api.tree.Tree.Kind.SYNCHRONIZED_STATEMENT;
 @Rule(key = "S3067")
 public class SynchronizationOnGetClassCheck extends IssuableSubscriptionVisitor {
 
-  private static final MethodMatcher GET_CLASS_MATCHER = MethodMatcher.create().name("getClass").withoutParameters();
+  private static final MethodMatcher GET_CLASS_MATCHER = MethodMatcher.create().names("getClass").addWithoutParametersMatcher();
 
   @Override
   public List<Tree.Kind> nodesToVisit() {

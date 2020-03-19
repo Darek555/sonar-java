@@ -44,8 +44,8 @@ public class StaticFieldInitializationCheck extends AbstractInSynchronizeChecker
   private Deque<Boolean> withinStaticInitializer = new LinkedList<>();
   private Deque<Boolean> methodUsesLocks = new LinkedList<>();
   private MethodMatchers locks = MethodMatchers.or(
-    MethodMatcher.create().ofType("java.util.concurrent.locks.Lock").name("lock").withoutParameters(),
-    MethodMatcher.create().ofType("java.util.concurrent.locks.Lock").name("tryLock").withoutParameters()
+    MethodMatcher.create().ofTypes("java.util.concurrent.locks.Lock").names("lock").addWithoutParametersMatcher(),
+    MethodMatcher.create().ofTypes("java.util.concurrent.locks.Lock").names("tryLock").addWithoutParametersMatcher()
   );
 
   @Override

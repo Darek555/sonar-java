@@ -62,11 +62,11 @@ public class ReplaceGuavaWithJava8Check extends AbstractMethodDetection implemen
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatchers.or(
-      MethodMatcher.create().ofType(GUAVA_BASE_ENCODING).name("base64").withoutParameters(),
-      MethodMatcher.create().ofType(GUAVA_BASE_ENCODING).name("base64Url").withoutParameters(),
-      MethodMatcher.create().ofType(GUAVA_OPTIONAL).name("absent").withoutParameters(),
-      MethodMatcher.create().ofType(GUAVA_OPTIONAL).name("fromNullable").withAnyParameters(),
-      MethodMatcher.create().ofType(GUAVA_OPTIONAL).name("of").withAnyParameters()
+      MethodMatcher.create().ofTypes(GUAVA_BASE_ENCODING).names("base64").addWithoutParametersMatcher(),
+      MethodMatcher.create().ofTypes(GUAVA_BASE_ENCODING).names("base64Url").addWithoutParametersMatcher(),
+      MethodMatcher.create().ofTypes(GUAVA_OPTIONAL).names("absent").addWithoutParametersMatcher(),
+      MethodMatcher.create().ofTypes(GUAVA_OPTIONAL).names("fromNullable").withAnyParameters(),
+      MethodMatcher.create().ofTypes(GUAVA_OPTIONAL).names("of").withAnyParameters()
     );
   }
 

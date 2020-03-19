@@ -32,7 +32,7 @@ public class LongBitsToDoubleOnIntCheck extends AbstractMethodDetection {
 
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
-    return MethodMatcher.create().ofType("java.lang.Double").name("longBitsToDouble").addParameter("long");
+    return MethodMatcher.create().ofTypes("java.lang.Double").names("longBitsToDouble").addParameter("long");
   }
 
   @Override

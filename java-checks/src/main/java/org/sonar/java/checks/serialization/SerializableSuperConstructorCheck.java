@@ -38,8 +38,8 @@ public class SerializableSuperConstructorCheck extends IssuableSubscriptionVisit
 
   private static final MethodMatcher WRITE_REPLACE = MethodMatcher.create()
     .ofType(TypeCriteria.anyType())
-    .name("writeReplace")
-    .withoutParameters();
+    .names("writeReplace")
+    .addWithoutParametersMatcher();
 
   @Override
   public List<Kind> nodesToVisit() {

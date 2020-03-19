@@ -41,16 +41,16 @@ public class IndexOfWithPositiveNumberCheck extends IssuableSubscriptionVisitor 
 
   private static final MethodMatchers CHECKED_METHODS = MethodMatchers.or(
     MethodMatcher.create()
-      .ofType(JAVA_LANG_STRING)
-      .name(INDEXOF)
+      .ofTypes(JAVA_LANG_STRING)
+      .names(INDEXOF)
       .addParameter("int"),
     MethodMatcher.create()
-      .ofType(JAVA_LANG_STRING)
-      .name(INDEXOF)
+      .ofTypes(JAVA_LANG_STRING)
+      .names(INDEXOF)
       .addParameter(JAVA_LANG_STRING),
     MethodMatcher.create()
       .ofType(TypeCriteria.subtypeOf("java.util.List"))
-      .name(INDEXOF)
+      .names(INDEXOF)
       .addParameter("java.lang.Object")
     );
 

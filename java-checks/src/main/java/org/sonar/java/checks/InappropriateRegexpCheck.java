@@ -38,8 +38,8 @@ public class InappropriateRegexpCheck extends AbstractMethodDetection {
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatchers.or(
-      MethodMatcher.create().ofType("java.lang.String").name("replaceAll").withAnyParameters(),
-      MethodMatcher.create().ofType("java.lang.String").name("replaceFirst").withAnyParameters()
+      MethodMatcher.create().ofTypes("java.lang.String").names("replaceAll").withAnyParameters(),
+      MethodMatcher.create().ofTypes("java.lang.String").names("replaceFirst").withAnyParameters()
       );
   }
 

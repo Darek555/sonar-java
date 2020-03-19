@@ -41,16 +41,16 @@ public class RegexPatternsNeedlesslyCheck extends AbstractMethodDetection {
 
   private static final String STRING = "java.lang.String";
   private static final String PATTERN = "java.util.regex.Pattern";
-  private static final MethodMatcher SPLIT_MATCHER = MethodMatcher.create().ofType(STRING).name("split").withAnyParameters();
+  private static final MethodMatcher SPLIT_MATCHER = MethodMatcher.create().ofTypes(STRING).names("split").withAnyParameters();
 
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatchers.or(
-      MethodMatcher.create().ofType(PATTERN).name("compile").addParameter(STRING),
-      MethodMatcher.create().ofType(STRING).name("matches").withAnyParameters(),
+      MethodMatcher.create().ofTypes(PATTERN).names("compile").addParameter(STRING),
+      MethodMatcher.create().ofTypes(STRING).names("matches").withAnyParameters(),
       SPLIT_MATCHER,
-      MethodMatcher.create().ofType(STRING).name("replaceAll").withAnyParameters(),
-      MethodMatcher.create().ofType(STRING).name("replaceFirst").withAnyParameters());
+      MethodMatcher.create().ofTypes(STRING).names("replaceAll").withAnyParameters(),
+      MethodMatcher.create().ofTypes(STRING).names("replaceFirst").withAnyParameters());
   }
 
   @Override

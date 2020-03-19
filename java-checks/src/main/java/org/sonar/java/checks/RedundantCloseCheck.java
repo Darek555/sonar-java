@@ -43,8 +43,8 @@ public class RedundantCloseCheck extends IssuableSubscriptionVisitor {
 
   private static final MethodMatcher AUTOCLOSEABLE_CLOSE = MethodMatcher.create()
     .ofType(TypeCriteria.subtypeOf("java.lang.AutoCloseable"))
-    .name("close")
-    .withoutParameters();
+    .names("close")
+    .addWithoutParametersMatcher();
 
   @Override
   public List<Tree.Kind> nodesToVisit() {

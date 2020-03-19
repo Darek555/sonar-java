@@ -40,8 +40,8 @@ public class IgnoredTestsCheck extends IssuableSubscriptionVisitor {
   private static final String BOOLEAN_TYPE = "boolean";
 
   private static final MethodMatchers ASSUME_METHODS = MethodMatchers.or(
-    MethodMatcher.create().ofType(ORG_JUNIT_ASSUME).name("assumeTrue").withParameters(BOOLEAN_TYPE),
-    MethodMatcher.create().ofType(ORG_JUNIT_ASSUME).name("assumeFalse").withParameters(BOOLEAN_TYPE)
+    MethodMatcher.create().ofTypes(ORG_JUNIT_ASSUME).names("assumeTrue").addParametersMatcher(BOOLEAN_TYPE),
+    MethodMatcher.create().ofTypes(ORG_JUNIT_ASSUME).names("assumeFalse").addParametersMatcher(BOOLEAN_TYPE)
   );
 
 

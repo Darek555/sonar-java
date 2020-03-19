@@ -93,7 +93,7 @@ public class ReturnEmptyArrayNotNullCheck extends IssuableSubscriptionVisitor {
     "org.springframework.batch.item.ItemProcessor");
 
   private static final MethodMatcher ITEM_PROCESSOR_PROCESS_METHOD = MethodMatcher.create()
-    .name("process").withAnyParameters();
+    .names("process").withAnyParameters();
 
   private final Deque<Returns> returnType = new LinkedList<>();
 

@@ -42,7 +42,7 @@ public class SecureXmlTransformerCheck extends AbstractMethodDetection {
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatcher.create()
         .ofType(subtypeOf(TRANSFORMER_FACTORY_CLASS_NAME))
-        .name("newInstance")
+        .names("newInstance")
         .withAnyParameters();
   }
 
@@ -68,14 +68,14 @@ public class SecureXmlTransformerCheck extends AbstractMethodDetection {
     private static final MethodMatcher SET_FEATURE =
       MethodMatcher.create()
         .ofType(subtypeOf(TRANSFORMER_FACTORY_CLASS_NAME))
-        .name("setFeature")
-        .withParameters("java.lang.String", "boolean");
+        .names("setFeature")
+        .addParametersMatcher("java.lang.String", "boolean");
 
     private static final MethodMatcher SET_ATTRIBUTE =
       MethodMatcher.create()
         .ofType(subtypeOf(TRANSFORMER_FACTORY_CLASS_NAME))
-        .name("setAttribute")
-        .withParameters("java.lang.String", "java.lang.Object");
+        .names("setAttribute")
+        .addParametersMatcher("java.lang.String", "java.lang.Object");
 
     private boolean hasSecureProcessingFeature = false;
     private boolean hasSecuredExternalDtd = false;

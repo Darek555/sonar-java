@@ -23,7 +23,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import org.sonar.check.Rule;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
-import org.sonar.java.matcher.MethodMatcher;
 import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.semantic.Type;
 import org.sonar.plugins.java.api.tree.Arguments;
@@ -35,11 +34,13 @@ import org.sonar.plugins.java.api.tree.Tree;
 @Rule(key = "S3631")
 public class ArraysAsListOfPrimitiveToStreamCheck extends AbstractMethodDetection {
 
-  private static final MethodMatcher ARRAYS_AS_LIST = MethodMatcher.create().ofType("java.util.Arrays").name("asList").withAnyParameters();
+  private static final MethodMatchers ARRAYS_AS_LIST = MethodMatchers.create()
+    .ofTypes("java.util.Arrays").names("asList").withAnyParameters().build();
 
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
-    return MethodMatchers.create().ofTypes("java.util.List").names("stream").addWithoutParametersMatcher().build();
+    return MethodMatchers.create()
+      .ofTypes("java.util.List").names("stream").addWithoutParametersMatcher().build();
   }
 
   @Override

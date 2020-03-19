@@ -56,8 +56,8 @@ public class UnusedMethodParameterCheck extends IssuableSubscriptionVisitor {
   private static final String SUPPRESS_WARNINGS_ANNOTATION = "java.lang.SuppressWarnings";
   private static final Collection<String> EXCLUDED_WARNINGS_SUPPRESSIONS = ImmutableList.of("\"rawtypes\"", "\"unchecked\"");
   private static final MethodMatchers SERIALIZABLE_METHODS = MethodMatchers.or(
-    MethodMatcher.create().name("writeObject").addParameter("java.io.ObjectOutputStream"),
-    MethodMatcher.create().name("readObject").addParameter("java.io.ObjectInputStream"));
+    MethodMatcher.create().names("writeObject").addParameter("java.io.ObjectOutputStream"),
+    MethodMatcher.create().names("readObject").addParameter("java.io.ObjectInputStream"));
   private static final String STRUTS_ACTION_SUPERCLASS = "org.apache.struts.action.Action";
   private static final Collection<String> EXCLUDED_STRUTS_ACTION_PARAMETER_TYPES = ImmutableList.of("org.apache.struts.action.ActionMapping",
     "org.apache.struts.action.ActionForm", "javax.servlet.http.HttpServletRequest", "javax.servlet.http.HttpServletResponse");

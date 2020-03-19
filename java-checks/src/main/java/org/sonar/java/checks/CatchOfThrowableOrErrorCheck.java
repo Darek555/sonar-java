@@ -22,7 +22,6 @@ package org.sonar.java.checks;
 import java.util.Collections;
 import java.util.List;
 import org.sonar.check.Rule;
-import org.sonar.java.matcher.MethodMatcher;
 import org.sonar.plugins.java.api.IssuableSubscriptionVisitor;
 import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.semantic.Symbol;
@@ -87,10 +86,13 @@ public class CatchOfThrowableOrErrorCheck extends IssuableSubscriptionVisitor {
 
   private static class GuavaCloserRethrowVisitor extends BaseTreeVisitor {
     private static final String JAVA_LANG_CLASS = "java.lang.Class";
-    private static final MethodMatchers MATCHERS = MethodMatchers.or(
-      rethrowMethod(),
-      rethrowMethod().addParameter(JAVA_LANG_CLASS),
-      rethrowMethod().addParameter(JAVA_LANG_CLASS).addParameter(JAVA_LANG_CLASS));
+    private static final MethodMatchers MATCHERS = MethodMatchers.create()
+      .ofTypes("com.google.common.io.Closer")
+      .names("rethrow")
+      .addParametersMatcher(JAVA_LANG_THROWABLE)
+      .addParametersMatcher(JAVA_LANG_THROWABLE, JAVA_LANG_CLASS)
+      .addParametersMatcher(JAVA_LANG_THROWABLE, JAVA_LANG_CLASS, JAVA_LANG_CLASS)
+      .build();
 
     private boolean foundRethrow = false;
     private final Symbol exceptionSymbol;
@@ -115,10 +117,6 @@ public class CatchOfThrowableOrErrorCheck extends IssuableSubscriptionVisitor {
         }
       }
       return false;
-    }
-
-    private static MethodMatcher rethrowMethod() {
-      return MethodMatcher.create().ofType("com.google.common.io.Closer").name("rethrow").addParameter(JAVA_LANG_THROWABLE);
     }
   }
 

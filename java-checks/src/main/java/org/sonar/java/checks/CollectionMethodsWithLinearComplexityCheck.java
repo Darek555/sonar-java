@@ -61,19 +61,19 @@ public class CollectionMethodsWithLinearComplexityCheck extends IssuableSubscrip
   static {
     ImmutableMap.Builder<MethodMatcher, Set<String>> builder = ImmutableMap.builder();
 
-    MethodMatcher collectionContains = collectionMethodMatcher().name("contains").addParameter("java.lang.Object");
+    MethodMatcher collectionContains = collectionMethodMatcher().names("contains").addParameter("java.lang.Object");
     builder.put(collectionContains, ImmutableSet.of(ARRAY_LIST, LINKED_LIST, COPY_ON_WRITE_ARRAY_LIST, COPY_ON_WRITE_ARRAY_SET, CONCURRENT_LINKED_QUEUE, CONCURRENT_LINKED_DEQUE));
 
-    MethodMatcher collectionSize = collectionMethodMatcher().name("size").withoutParameters();
+    MethodMatcher collectionSize = collectionMethodMatcher().names("size").addWithoutParametersMatcher();
     builder.put(collectionSize, ImmutableSet.of(CONCURRENT_LINKED_QUEUE, CONCURRENT_LINKED_DEQUE));
 
-    MethodMatcher collectionAdd = collectionMethodMatcher().name("add").addParameter(TypeCriteria.anyType());
+    MethodMatcher collectionAdd = collectionMethodMatcher().names("add").addParameter(TypeCriteria.anyType());
     builder.put(collectionAdd, ImmutableSet.of(COPY_ON_WRITE_ARRAY_SET, COPY_ON_WRITE_ARRAY_LIST));
 
-    MethodMatcher collectionRemove = collectionMethodMatcher().name("remove").addParameter("java.lang.Object");
+    MethodMatcher collectionRemove = collectionMethodMatcher().names("remove").addParameter("java.lang.Object");
     builder.put(collectionRemove, ImmutableSet.of(ARRAY_LIST, COPY_ON_WRITE_ARRAY_SET, COPY_ON_WRITE_ARRAY_LIST));
 
-    MethodMatcher listGet = MethodMatcher.create().ofType(TypeCriteria.subtypeOf("java.util.List")).name("get").addParameter("int");
+    MethodMatcher listGet = MethodMatcher.create().ofType(TypeCriteria.subtypeOf("java.util.List")).names("get").addParameter("int");
     builder.put(listGet, Collections.singleton(LINKED_LIST));
     matcherActualTypeMap = builder.build();
   }

@@ -43,8 +43,8 @@ import org.sonar.plugins.java.api.tree.VariableTree;
 @Rule(key = "S5413")
 public class SuspiciousListRemoveCheck extends IssuableSubscriptionVisitor {
 
-  private static final MethodMatcher LIST_REMOVE = MethodMatcher.create().ofType("java.util.List")
-    .name("remove").addParameter("int");
+  private static final MethodMatcher LIST_REMOVE = MethodMatcher.create().ofTypes("java.util.List")
+    .names("remove").addParameter("int");
 
   @Override
   public List<Tree.Kind> nodesToVisit() {

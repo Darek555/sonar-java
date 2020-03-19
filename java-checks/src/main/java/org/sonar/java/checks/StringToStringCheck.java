@@ -39,9 +39,9 @@ public class StringToStringCheck extends AbstractMethodDetection {
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatcher.create()
-      .ofType("java.lang.String")
-      .name("toString")
-      .withoutParameters();
+      .ofTypes("java.lang.String")
+      .names("toString")
+      .addWithoutParametersMatcher();
   }
 
   @Override

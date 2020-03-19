@@ -41,7 +41,7 @@ import java.util.List;
 public class ThreadOverridesRunCheck extends IssuableSubscriptionVisitor {
 
   private static final String JAVA_LANG_THREAD = "java.lang.Thread";
-  private static final MethodMatcher RUN = MethodMatcher.create().ofType(TypeCriteria.subtypeOf(JAVA_LANG_THREAD)).name("run").withoutParameters();
+  private static final MethodMatcher RUN = MethodMatcher.create().ofType(TypeCriteria.subtypeOf(JAVA_LANG_THREAD)).names("run").addWithoutParametersMatcher();
 
   @Override
   public List<Tree.Kind> nodesToVisit() {
@@ -105,7 +105,7 @@ public class ThreadOverridesRunCheck extends IssuableSubscriptionVisitor {
 
     private boolean callSuperWithRunnable = false;
 
-    private static final MethodMatcher SUPER_THREAD = MethodMatcher.create().ofType(JAVA_LANG_THREAD).name("<init>").withAnyParameters();
+    private static final MethodMatcher SUPER_THREAD = MethodMatcher.create().ofTypes(JAVA_LANG_THREAD).names("<init>").withAnyParameters();
 
     @Override
     public void visitMethodInvocation(MethodInvocationTree tree) {

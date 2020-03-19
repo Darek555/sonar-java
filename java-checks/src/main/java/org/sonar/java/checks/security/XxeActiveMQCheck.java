@@ -49,8 +49,8 @@ public class XxeActiveMQCheck extends AbstractMethodDetection {
 
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
-    return MethodMatcher.create().ofType(MQ_CONNECTION_FACTORY_CLASS_NAME)
-      .name(CONSTRUCTOR).withAnyParameters();
+    return MethodMatcher.create().ofTypes(MQ_CONNECTION_FACTORY_CLASS_NAME)
+      .names(CONSTRUCTOR).withAnyParameters();
   }
 
   @Override
@@ -73,12 +73,12 @@ public class XxeActiveMQCheck extends AbstractMethodDetection {
   private static class MethodBodyVisitor extends BaseTreeVisitor {
 
     private static final MethodMatcher SET_TRUSTED_PACKAGES = MethodMatcher.create()
-      .ofType(subtypeOf(MQ_CONNECTION_FACTORY_CLASS_NAME)).name("setTrustedPackages")
+      .ofType(subtypeOf(MQ_CONNECTION_FACTORY_CLASS_NAME)).names("setTrustedPackages")
       .addParameter(TypeCriteria.anyType());
 
     private static final MethodMatcher SET_TRUST_ALL_PACKAGES = MethodMatcher.create()
-      .ofType(subtypeOf(MQ_CONNECTION_FACTORY_CLASS_NAME)).name("setTrustAllPackages")
-      .withParameters("boolean");
+      .ofType(subtypeOf(MQ_CONNECTION_FACTORY_CLASS_NAME)).names("setTrustAllPackages")
+      .addParametersMatcher("boolean");
 
     private boolean hasTrustedPackages = false;
     private boolean hasTrustAllPackages = false;

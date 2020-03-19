@@ -21,7 +21,6 @@ package org.sonar.java.checks;
 
 import org.sonar.check.Rule;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
-import org.sonar.java.matcher.MethodMatcher;
 import org.sonar.java.model.ExpressionUtils;
 import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.ExpressionTree;
@@ -34,10 +33,11 @@ public class HttpRefererCheck extends AbstractMethodDetection {
 
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
-    return MethodMatcher.create()
-      .ofType("javax.servlet.http.HttpServletRequest")
-      .name("getHeader")
-      .addParameter("java.lang.String");
+    return MethodMatchers.create()
+      .ofTypes("javax.servlet.http.HttpServletRequest")
+      .names("getHeader")
+      .addParametersMatcher("java.lang.String")
+      .build();
   }
 
   @Override

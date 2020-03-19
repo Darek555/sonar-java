@@ -77,7 +77,7 @@ public class LazyArgEvaluationCheck extends BaseTreeVisitor implements JavaFileS
     static MethodMatcher levelTestMatcher(TypeCriteria typeDefinition, String level) {
       return MethodMatcher.create()
         .ofType(typeDefinition)
-        .name(String.format("is%c%sEnabled", level.charAt(0), level.toLowerCase(Locale.ROOT).substring(1)));
+        .names(String.format("is%c%sEnabled", level.charAt(0), level.toLowerCase(Locale.ROOT).substring(1)));
     }
 
     enum SLF4J implements LogLevels {
@@ -109,7 +109,7 @@ public class LazyArgEvaluationCheck extends BaseTreeVisitor implements JavaFileS
 
       @Override
       public MethodMatcher test() {
-        return LogLevels.levelTestMatcher(LOGGER, toString()).withoutParameters();
+        return LogLevels.levelTestMatcher(LOGGER, toString()).addWithoutParametersMatcher();
       }
 
     }
@@ -125,24 +125,24 @@ public class LazyArgEvaluationCheck extends BaseTreeVisitor implements JavaFileS
 
       private static final String LOGGER = "java.util.logging.Logger";
       private static final MethodMatcher LOG = MethodMatcher.create()
-        .ofType(LOGGER)
-        .name("log")
+        .ofTypes(LOGGER)
+        .names("log")
         .addParameter("java.util.logging.Level")
         .addParameter(STRING);
 
       @Override
       public MethodMatchers log() {
         return MethodMatcher.create()
-          .ofType(LOGGER)
-          .name(toString().toLowerCase(Locale.ROOT))
+          .ofTypes(LOGGER)
+          .names(toString().toLowerCase(Locale.ROOT))
           .addParameter(STRING);
       }
 
       @Override
       public MethodMatcher test() {
         return MethodMatcher.create()
-          .ofType(LOGGER)
-          .name("isLoggable")
+          .ofTypes(LOGGER)
+          .names("isLoggable")
           .addParameter("java.util.logging.Level");
       }
     }
@@ -167,13 +167,13 @@ public class LazyArgEvaluationCheck extends BaseTreeVisitor implements JavaFileS
         .addParametersMatcher(LEVEL, MARKER)
         .build();
 
-      private static final MethodMatcher LOG = MethodMatcher.create().ofType(LOGGER).name("log").withAnyParameters();
+      private static final MethodMatcher LOG = MethodMatcher.create().ofType(LOGGER).names("log").withAnyParameters();
 
       @Override
       public MethodMatchers log() {
         return MethodMatcher.create()
           .ofType(LOGGER)
-          .name(toString().toLowerCase(Locale.ROOT))
+          .names(toString().toLowerCase(Locale.ROOT))
           .withAnyParameters();
       }
 
@@ -185,8 +185,8 @@ public class LazyArgEvaluationCheck extends BaseTreeVisitor implements JavaFileS
   }
 
   private static final MethodMatcher PRECONDITIONS = MethodMatcher.create()
-    .ofType("com.google.common.base.Preconditions")
-    .name("checkState")
+    .ofTypes("com.google.common.base.Preconditions")
+    .names("checkState")
     .withAnyParameters();
 
   private static final MethodMatchers LAZY_ARG_METHODS = MethodMatchers.or(

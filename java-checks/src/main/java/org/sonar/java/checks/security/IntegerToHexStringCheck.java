@@ -35,24 +35,24 @@ public class IntegerToHexStringCheck extends AbstractMethodDetection {
 
   private static final MethodMatcher APPEND_MATCHER = MethodMatcher.create()
     .ofType(TypeCriteria.subtypeOf("java.lang.AbstractStringBuilder"))
-    .name("append")
+    .names("append")
     .addParameter(TypeCriteria.is("java.lang.String"));
 
   private static final MethodMatcher PRINT_MATCHER = MethodMatcher.create()
     .ofType(TypeCriteria.subtypeOf("java.io.PrintStream"))
-    .name("print")
+    .names("print")
     .addParameter(TypeCriteria.is("java.lang.String"));
 
   private static final MethodMatcher JOINER_MATCHER = MethodMatcher.create()
     .ofType(TypeCriteria.subtypeOf("java.util.StringJoiner"))
-    .name("add")
+    .names("add")
     .addParameter(TypeCriteria.is("java.lang.CharSequence"));
 
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatcher.create()
         .ofType(TypeCriteria.is("java.lang.Integer"))
-        .name("toHexString")
+        .names("toHexString")
         .addParameter(TypeCriteria.is("int"));
   }
 

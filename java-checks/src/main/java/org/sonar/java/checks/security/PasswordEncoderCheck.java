@@ -36,17 +36,17 @@ public class PasswordEncoderCheck extends IssuableSubscriptionVisitor {
 
   private static final MethodMatcher JDBC_AUTHENTICATION = MethodMatcher.create()
     .ofType(TypeCriteria.subtypeOf("org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder"))
-    .name("jdbcAuthentication")
-    .withoutParameters();
+    .names("jdbcAuthentication")
+    .addWithoutParametersMatcher();
 
   private static final MethodMatcher USER_DETAIL_SERVICE = MethodMatcher.create()
     .ofType(TypeCriteria.subtypeOf("org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder"))
-    .name("userDetailsService")
+    .names("userDetailsService")
     .withAnyParameters();
 
   private static final MethodMatcher PASSWORD_ENCODER_SETTER = MethodMatcher.create()
     .ofType(TypeCriteria.subtypeOf("org.springframework.security.config.annotation.authentication.configurers.userdetails.AbstractDaoAuthenticationConfigurer"))
-    .name("passwordEncoder")
+    .names("passwordEncoder")
     .withAnyParameters();
 
   private static final MethodMatchers UNSAFE_PASSWORD_ENCODERS = MethodMatchers.or(
@@ -82,7 +82,7 @@ public class PasswordEncoderCheck extends IssuableSubscriptionVisitor {
   }
 
   private static MethodMatcher constructorMatcher(String fullyQualifiedName) {
-    return MethodMatcher.create().ofType(fullyQualifiedName).name("<init>");
+    return MethodMatcher.create().ofTypes(fullyQualifiedName).names("<init>");
   }
 
   static class MethodInvocationVisitor extends BaseTreeVisitor {

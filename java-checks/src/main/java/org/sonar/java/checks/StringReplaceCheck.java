@@ -35,8 +35,8 @@ public class StringReplaceCheck extends AbstractMethodDetection {
 
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
-    return MethodMatcher.create().ofType(LANG_STRING)
-      .name("replaceAll")
+    return MethodMatcher.create().ofTypes(LANG_STRING)
+      .names("replaceAll")
       .addParameter(LANG_STRING)
       .addParameter(LANG_STRING);
   }

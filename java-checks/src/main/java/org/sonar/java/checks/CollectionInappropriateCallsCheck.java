@@ -242,7 +242,7 @@ public class CollectionInappropriateCallsCheck extends IssuableSubscriptionVisit
     private TypeCheckerListBuilder add() {
       int argumentIndex = argumentPosition - 1;
       int parametrizedTypeIndex = parametrizedTypePosition - 1;
-      MethodMatcher methodMatcher = MethodMatcher.create().ofType(TypeCriteria.subtypeOf(methodOwnerType)).name(methodName);
+      MethodMatcher methodMatcher = MethodMatcher.create().ofType(TypeCriteria.subtypeOf(methodOwnerType)).names(methodName);
       for (int i = 0; i < argumentCount; i++) {
         TypeCriteria parameterType = TypeCriteria.anyType();
         if (i == argumentIndex) {

@@ -22,7 +22,6 @@ package org.sonar.java.checks;
 import java.util.Arrays;
 import java.util.List;
 import org.sonar.check.Rule;
-import org.sonar.java.matcher.MethodMatcher;
 import org.sonar.java.model.SyntacticEquivalence;
 import org.sonar.plugins.java.api.IssuableSubscriptionVisitor;
 import org.sonar.plugins.java.api.semantic.MethodMatchers;
@@ -35,10 +34,11 @@ import org.sonar.plugins.java.api.tree.Tree;
 @Rule(key = "S1244")
 public class FloatEqualityCheck extends IssuableSubscriptionVisitor {
 
-  private static final MethodMatchers EQUALS_MATCHER = MethodMatchers.or(
-    MethodMatcher.create().ofType("java.lang.Double").name("equals").withParameters("java.lang.Object"),
-    MethodMatcher.create().ofType("java.lang.Float").name("equals").withParameters("java.lang.Object")
-  );
+  private static final MethodMatchers EQUALS_MATCHER = MethodMatchers.create()
+    .ofTypes("java.lang.Double", "java.lang.Float")
+    .names("equals")
+    .addParametersMatcher("java.lang.Object")
+    .build();
 
   @Override
   public List<Tree.Kind> nodesToVisit() {

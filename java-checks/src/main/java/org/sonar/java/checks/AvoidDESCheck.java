@@ -22,7 +22,6 @@ package org.sonar.java.checks;
 import org.sonar.check.Rule;
 import org.sonar.java.checks.helpers.JavaPropertiesHelper;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
-import org.sonar.java.matcher.MethodMatcher;
 import org.sonar.java.model.LiteralUtils;
 import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.ExpressionTree;
@@ -35,7 +34,8 @@ public class AvoidDESCheck extends AbstractMethodDetection {
 
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
-    return MethodMatcher.create().ofType("javax.crypto.Cipher").name("getInstance").withAnyParameters();
+    return MethodMatchers.create()
+      .ofTypes("javax.crypto.Cipher").names("getInstance").withAnyParameters().build();
   }
 
   @Override

@@ -33,7 +33,7 @@ import org.sonar.plugins.java.api.tree.Tree;
 
 @Rule(key = "S4065")
 public class ThreadLocalWithInitialCheck extends AbstractMethodDetection implements JavaVersionAwareVisitor {
-  private static final MethodMatcher THREADLOCAL_CONSTRUCTOR = MethodMatcher.create().ofType("java.lang.ThreadLocal").name("<init>").withoutParameters();
+  private static final MethodMatcher THREADLOCAL_CONSTRUCTOR = MethodMatcher.create().ofTypes("java.lang.ThreadLocal").names("<init>").addWithoutParametersMatcher();
 
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {

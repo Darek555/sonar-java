@@ -35,8 +35,8 @@ import org.sonar.plugins.java.api.tree.Tree;
 @Rule(key = "S4349")
 public class OutputStreamOverrideWriteCheck extends IssuableSubscriptionVisitor {
 
-  private static final MethodMatcher WRITE_BYTES_INT_INT = MethodMatcher.create().ofType(TypeCriteria.anyType()).name("write").withParameters("byte[]", "int", "int");
-  private static final MethodMatcher WRITE_INT = MethodMatcher.create().ofType(TypeCriteria.anyType()).name("write").withParameters("int");
+  private static final MethodMatcher WRITE_BYTES_INT_INT = MethodMatcher.create().ofType(TypeCriteria.anyType()).names("write").addParametersMatcher("byte[]", "int", "int");
+  private static final MethodMatcher WRITE_INT = MethodMatcher.create().ofType(TypeCriteria.anyType()).names("write").addParametersMatcher("int");
 
   @Override
   public List<Tree.Kind> nodesToVisit() {

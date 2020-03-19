@@ -43,7 +43,7 @@ public class SillyEqualsCheck extends AbstractMethodDetection {
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatcher.create()
-      .name("equals")
+      .names("equals")
       .addParameter(JAVA_LANG_OBJECT);
   }
 

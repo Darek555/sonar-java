@@ -33,7 +33,7 @@ public class NioFileDeleteCheck extends AbstractMethodDetection implements JavaV
 
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
-    return MethodMatcher.create().ofType("java.io.File").name("delete").withoutParameters();
+    return MethodMatcher.create().ofTypes("java.io.File").names("delete").addWithoutParametersMatcher();
   }
 
   @Override

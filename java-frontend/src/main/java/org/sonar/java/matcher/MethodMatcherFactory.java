@@ -37,7 +37,7 @@ public class MethodMatcherFactory {
     if (!matcher.find()) {
       throw new IllegalArgumentException("Illegal constructor specification: " + descriptor);
     }
-    MethodMatcher constructorMatcher = MethodMatcher.create().ofType(matcher.group(1)).name("<init>");
+    MethodMatcher constructorMatcher = MethodMatcher.create().ofTypes(matcher.group(1)).names("<init>");
     collectArguments(descriptor, matcher, 2, constructorMatcher);
     return constructorMatcher;
   }
@@ -47,7 +47,7 @@ public class MethodMatcherFactory {
     if (!matcher.find()) {
       throw new IllegalArgumentException("Illegal method specification: " + descriptor);
     }
-    MethodMatcher methodMatcher = MethodMatcher.create().ofType(matcher.group(1)).name(matcher.group(2));
+    MethodMatcher methodMatcher = MethodMatcher.create().ofTypes(matcher.group(1)).names(matcher.group(2));
     collectArguments(descriptor, matcher, 3, methodMatcher);
     return methodMatcher;
   }
@@ -66,7 +66,7 @@ public class MethodMatcherFactory {
           throw new IllegalArgumentException("Illegal method or constructor arguments specification: " + descriptor);
         }
       } else {
-        methodMatcher.withoutParameters();
+        methodMatcher.addWithoutParametersMatcher();
       }
     } else {
       if (initialMatcher.end() < descriptor.length()) {

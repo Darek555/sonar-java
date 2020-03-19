@@ -35,8 +35,6 @@ import javax.annotation.Nullable;
 import org.sonar.check.Rule;
 import org.sonar.check.RuleProperty;
 import org.sonar.java.checks.helpers.ExpressionsHelper;
-import org.sonar.java.matcher.MethodMatcher;
-import org.sonar.java.matcher.TypeCriteria;
 import org.sonar.plugins.java.api.JavaFileScanner;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.semantic.MethodMatchers;
@@ -72,26 +70,23 @@ public class CatchUsesExceptionWithContextCheck extends BaseTreeVisitor implemen
   private static final String JAVA_UTIL_LOGGING_LOGGER = "java.util.logging.Logger";
   private static final String SLF4J_LOGGER = "org.slf4j.Logger";
 
-  private static final MethodMatcher JAVA_UTIL_LOG_METHOD = MethodMatcher.create().ofType(JAVA_UTIL_LOGGING_LOGGER).name("log").withAnyParameters();
-  private static final MethodMatcher JAVA_UTIL_LOGP_METHOD = MethodMatcher.create().ofType(JAVA_UTIL_LOGGING_LOGGER).name("logp").withAnyParameters();
-  private static final MethodMatcher JAVA_UTIL_LOGRB_METHOD = MethodMatcher.create().ofType(JAVA_UTIL_LOGGING_LOGGER).name("logrb").withAnyParameters();
+  private static final MethodMatchers JAVA_UTIL_LOG_METHOD = MethodMatchers.create()
+    .ofTypes(JAVA_UTIL_LOGGING_LOGGER).names("log").withAnyParameters().build();
+
+  private static final MethodMatchers JAVA_UTIL_LOGP_METHOD = MethodMatchers.create()
+    .ofTypes(JAVA_UTIL_LOGGING_LOGGER).names("logp").withAnyParameters().build();
+
+  private static final MethodMatchers JAVA_UTIL_LOGRB_METHOD = MethodMatchers.create()
+    .ofTypes(JAVA_UTIL_LOGGING_LOGGER).names("logrb").withAnyParameters().build();
 
   private static final MethodMatchers LOGGING_METHODS = MethodMatchers.or(
-    MethodMatcher.create().ofType(JAVA_UTIL_LOGGING_LOGGER).name("config").withAnyParameters(),
-    MethodMatcher.create().ofType(JAVA_UTIL_LOGGING_LOGGER).name("fine").withAnyParameters(),
-    MethodMatcher.create().ofType(JAVA_UTIL_LOGGING_LOGGER).name("finer").withAnyParameters(),
-    MethodMatcher.create().ofType(JAVA_UTIL_LOGGING_LOGGER).name("finest").withAnyParameters(),
-    MethodMatcher.create().ofType(JAVA_UTIL_LOGGING_LOGGER).name("info").withAnyParameters(),
-    MethodMatcher.create().ofType(JAVA_UTIL_LOGGING_LOGGER).name("severe").withAnyParameters(),
-    MethodMatcher.create().ofType(JAVA_UTIL_LOGGING_LOGGER).name("warning").withAnyParameters(),
+    MethodMatchers.create()
+      .ofTypes(JAVA_UTIL_LOGGING_LOGGER).names("config", "fine", "finer", "finest", "info", "severe", "warning").withAnyParameters().build(),
     JAVA_UTIL_LOG_METHOD,
     JAVA_UTIL_LOGP_METHOD,
     JAVA_UTIL_LOGRB_METHOD,
-    MethodMatcher.create().ofType(SLF4J_LOGGER).name("debug").withAnyParameters(),
-    MethodMatcher.create().ofType(SLF4J_LOGGER).name("error").withAnyParameters(),
-    MethodMatcher.create().ofType(SLF4J_LOGGER).name("info").withAnyParameters(),
-    MethodMatcher.create().ofType(SLF4J_LOGGER).name("trace").withAnyParameters(),
-    MethodMatcher.create().ofType(SLF4J_LOGGER).name("warn").withAnyParameters());
+    MethodMatchers.create()
+      .ofTypes(SLF4J_LOGGER).names("debug", "error", "info", "trace", "warn").withAnyParameters().build());
 
   private static final String EXCLUDED_EXCEPTION_TYPE = "java.lang.InterruptedException, " +
       "java.lang.NumberFormatException, " +
@@ -140,10 +135,13 @@ public class CatchUsesExceptionWithContextCheck extends BaseTreeVisitor implemen
   }
 
   private static class EnumValueOfVisitor extends BaseTreeVisitor {
-    private static final MethodMatcher ENUM_VALUE_OF = MethodMatcher.create()
-      .ofType(TypeCriteria.subtypeOf("java.lang.Enum"))
-      .name("valueOf")
-      .withAnyParameters();
+
+    private static final MethodMatchers ENUM_VALUE_OF = MethodMatchers.create()
+      .ofSubTypes("java.lang.Enum")
+      .names("valueOf")
+      .withAnyParameters()
+      .build();
+
     private boolean hasEnumValueOf = false;
 
     @Override

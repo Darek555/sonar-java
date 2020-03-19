@@ -39,11 +39,11 @@ public class RegexHotspotCheck extends IssuableSubscriptionVisitor {
 
   private static final String JAVA_LANG_STRING = "java.lang.String";
   private static final MethodMatchers REGEX_HOTSPOTS = MethodMatchers.or(
-    MethodMatcher.create().ofType(JAVA_LANG_STRING).name("matches").addParameter(JAVA_LANG_STRING),
-    MethodMatcher.create().ofType(JAVA_LANG_STRING).name("replaceAll").withAnyParameters(),
-    MethodMatcher.create().ofType(JAVA_LANG_STRING).name("replaceFirst").withAnyParameters(),
-    MethodMatcher.create().ofType("java.util.regex.Pattern").name("compile").withAnyParameters(),
-    MethodMatcher.create().ofType("java.util.regex.Pattern").name("matches").withAnyParameters()
+    MethodMatcher.create().ofTypes(JAVA_LANG_STRING).names("matches").addParameter(JAVA_LANG_STRING),
+    MethodMatcher.create().ofTypes(JAVA_LANG_STRING).names("replaceAll").withAnyParameters(),
+    MethodMatcher.create().ofTypes(JAVA_LANG_STRING).names("replaceFirst").withAnyParameters(),
+    MethodMatcher.create().ofTypes("java.util.regex.Pattern").names("compile").withAnyParameters(),
+    MethodMatcher.create().ofTypes("java.util.regex.Pattern").names("matches").withAnyParameters()
   );
   private static final String MESSAGE = "Make sure that using a regular expression is safe here.";
   private static final List<String> HOTSPOT_ANNOTATION_TYPES = Arrays.asList(

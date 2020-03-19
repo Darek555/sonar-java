@@ -48,9 +48,9 @@ public class MethodOnlyCallsSuperCheck extends IssuableSubscriptionVisitor {
 
   private static final String JAVA_LANG_OBJECT = "java.lang.Object";
   private static final MethodMatchers ALLOWED_METHODS = MethodMatchers.or(
-    MethodMatcher.create().name("toString").ofType(TypeCriteria.anyType()).withoutParameters(),
-    MethodMatcher.create().name("hashCode").ofType(TypeCriteria.anyType()).withoutParameters(),
-    MethodMatcher.create().name("equals").ofType(TypeCriteria.anyType()).withParameters(JAVA_LANG_OBJECT));
+    MethodMatcher.create().names("toString").ofType(TypeCriteria.anyType()).addWithoutParametersMatcher(),
+    MethodMatcher.create().names("hashCode").ofType(TypeCriteria.anyType()).addWithoutParametersMatcher(),
+    MethodMatcher.create().names("equals").ofType(TypeCriteria.anyType()).addParametersMatcher(JAVA_LANG_OBJECT));
 
   @Override
   public List<Tree.Kind> nodesToVisit() {

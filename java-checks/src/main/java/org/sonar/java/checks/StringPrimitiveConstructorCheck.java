@@ -41,17 +41,17 @@ public class StringPrimitiveConstructorCheck extends AbstractMethodDetection {
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatchers.or(
-      MethodMatcher.create().ofType(STRING).name(INIT).withoutParameters(),
-      MethodMatcher.create().ofType(STRING).name(INIT).addParameter(STRING),
-      MethodMatcher.create().ofType("java.lang.Byte").name(INIT).addParameter("byte"),
-      MethodMatcher.create().ofType("java.lang.Character").name(INIT).addParameter("char"),
-      MethodMatcher.create().ofType("java.lang.Short").name(INIT).addParameter("short"),
-      MethodMatcher.create().ofType("java.lang.Integer").name(INIT).addParameter("int"),
-      MethodMatcher.create().ofType("java.lang.Long").name(INIT).addParameter("long"),
-      MethodMatcher.create().ofType("java.lang.Float").name(INIT).addParameter("float"),
-      MethodMatcher.create().ofType("java.lang.Double").name(INIT).addParameter("double"),
-      MethodMatcher.create().ofType("java.lang.Boolean").name(INIT).addParameter("boolean"),
-      MethodMatcher.create().ofType("java.math.BigInteger").name(INIT).addParameter(STRING)
+      MethodMatcher.create().ofTypes(STRING).names(INIT).addWithoutParametersMatcher(),
+      MethodMatcher.create().ofTypes(STRING).names(INIT).addParameter(STRING),
+      MethodMatcher.create().ofTypes("java.lang.Byte").names(INIT).addParameter("byte"),
+      MethodMatcher.create().ofTypes("java.lang.Character").names(INIT).addParameter("char"),
+      MethodMatcher.create().ofTypes("java.lang.Short").names(INIT).addParameter("short"),
+      MethodMatcher.create().ofTypes("java.lang.Integer").names(INIT).addParameter("int"),
+      MethodMatcher.create().ofTypes("java.lang.Long").names(INIT).addParameter("long"),
+      MethodMatcher.create().ofTypes("java.lang.Float").names(INIT).addParameter("float"),
+      MethodMatcher.create().ofTypes("java.lang.Double").names(INIT).addParameter("double"),
+      MethodMatcher.create().ofTypes("java.lang.Boolean").names(INIT).addParameter("boolean"),
+      MethodMatcher.create().ofTypes("java.math.BigInteger").names(INIT).addParameter(STRING)
     );
   }
 

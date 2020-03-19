@@ -23,8 +23,6 @@ import org.sonar.check.Rule;
 import org.sonar.java.checks.helpers.ExpressionsHelper;
 import org.sonar.java.checks.helpers.JavaPropertiesHelper;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
-import org.sonar.java.matcher.MethodMatcher;
-import org.sonar.java.matcher.TypeCriteria;
 import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.ExpressionTree;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
@@ -34,10 +32,11 @@ public class AESAlgorithmCheck extends AbstractMethodDetection {
 
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
-    return MethodMatcher.create()
-        .ofType(TypeCriteria.is("javax.crypto.Cipher"))
-        .name("getInstance")
-        .withAnyParameters();
+    return MethodMatchers.create()
+        .ofTypes("javax.crypto.Cipher")
+        .names("getInstance")
+        .withAnyParameters()
+        .build();
   }
 
   @Override

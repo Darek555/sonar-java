@@ -39,8 +39,8 @@ import org.sonar.plugins.java.api.tree.Tree.Kind;
 public class NonSerializableWriteCheck extends IssuableSubscriptionVisitor {
 
   private static final MethodMatcher WRITE_OBJECT_MATCHER = MethodMatcher.create()
-    .ofType("java.io.ObjectOutputStream")
-    .name("writeObject")
+    .ofTypes("java.io.ObjectOutputStream")
+    .names("writeObject")
     .addParameter("java.lang.Object");
 
   private final List<Symbol> testedSymbols = new ArrayList<>();

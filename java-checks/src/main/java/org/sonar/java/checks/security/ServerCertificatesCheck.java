@@ -46,10 +46,10 @@ public class ServerCertificatesCheck extends IssuableSubscriptionVisitor {
     .addParameter(TypeCriteria.is("java.lang.String"));
 
   private static final MethodMatcher CHECK_CLIENT_TRUSTED_MATCHER = CHECK_TRUSTED_MATCHER.copy()
-    .name("checkClientTrusted");
+    .names("checkClientTrusted");
 
   private static final MethodMatcher CHECK_SERVER_TRUSTED_MATCHER = CHECK_TRUSTED_MATCHER.copy()
-    .name("checkServerTrusted");
+    .names("checkServerTrusted");
 
   @Override
   public List<Tree.Kind> nodesToVisit() {

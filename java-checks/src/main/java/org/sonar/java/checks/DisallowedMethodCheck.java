@@ -48,16 +48,16 @@ public class DisallowedMethodCheck extends AbstractMethodDetection {
     if (StringUtils.isEmpty(methodName)) {
       return MethodMatchers.none();
     }
-    MethodMatcher invocationMatcher = MethodMatcher.create().name(methodName);
+    MethodMatcher invocationMatcher = MethodMatcher.create().names(methodName);
     if (StringUtils.isNotEmpty(className)) {
-      invocationMatcher.ofType(className);
+      invocationMatcher.ofTypes(className);
     }
     if (allOverloads) {
       invocationMatcher.withAnyParameters();
     } else {
       String[] args = StringUtils.split(argumentTypes, ",");
       if (args.length == 0) {
-        invocationMatcher.withoutParameters();
+        invocationMatcher.addWithoutParametersMatcher();
       } else {
         for (String arg : args) {
           invocationMatcher.addParameter(StringUtils.trim(arg));

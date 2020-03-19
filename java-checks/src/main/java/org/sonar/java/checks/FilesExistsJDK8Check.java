@@ -24,7 +24,6 @@ import java.util.Map;
 import org.sonar.check.Rule;
 import org.sonar.java.JavaVersionAwareVisitor;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
-import org.sonar.java.matcher.MethodMatcher;
 import org.sonar.java.model.ExpressionUtils;
 import org.sonar.plugins.java.api.JavaVersion;
 import org.sonar.plugins.java.api.semantic.MethodMatchers;
@@ -51,12 +50,11 @@ public class FilesExistsJDK8Check extends AbstractMethodDetection implements Jav
 
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
-    return MethodMatchers.or(
-      MethodMatcher.create().ofType(JAVA_NIO_FILE_FILES).name(EXISTS).withAnyParameters(),
-      MethodMatcher.create().ofType(JAVA_NIO_FILE_FILES).name("notExists").withAnyParameters(),
-      MethodMatcher.create().ofType(JAVA_NIO_FILE_FILES).name("isRegularFile").withAnyParameters(),
-      MethodMatcher.create().ofType(JAVA_NIO_FILE_FILES).name(IS_DIRECTORY).withAnyParameters()
-      );
+    return MethodMatchers.create()
+      .ofTypes(JAVA_NIO_FILE_FILES)
+      .names(EXISTS, "notExists", "isRegularFile", IS_DIRECTORY)
+      .withAnyParameters()
+      .build();
   }
 
   @Override

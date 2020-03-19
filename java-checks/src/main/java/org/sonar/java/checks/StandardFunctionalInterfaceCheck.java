@@ -119,9 +119,9 @@ public class StandardFunctionalInterfaceCheck extends IssuableSubscriptionVisito
   }
 
   private static MethodMatcher methodMatcherWithName(String name, String... parameters) {
-    MethodMatcher methodMatcher = MethodMatcher.create().ofType(TypeCriteria.anyType()).name(name);
+    MethodMatcher methodMatcher = MethodMatcher.create().ofType(TypeCriteria.anyType()).names(name);
     if(parameters.length == 0) {
-      methodMatcher.withoutParameters();
+      methodMatcher.addWithoutParametersMatcher();
     }
     for (String parameter : parameters) {
       methodMatcher.addParameter(parameter);

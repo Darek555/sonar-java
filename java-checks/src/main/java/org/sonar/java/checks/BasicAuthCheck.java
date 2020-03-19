@@ -22,8 +22,6 @@ package org.sonar.java.checks;
 import org.sonar.check.Rule;
 import org.sonar.java.checks.helpers.ExpressionsHelper;
 import org.sonar.java.checks.methods.AbstractMethodDetection;
-import org.sonar.java.matcher.MethodMatcher;
-import org.sonar.java.matcher.TypeCriteria;
 import org.sonar.java.model.ExpressionUtils;
 import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.tree.Arguments;
@@ -41,13 +39,16 @@ public class BasicAuthCheck extends AbstractMethodDetection {
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatchers.or(
-      MethodMatcher.create().ofType(TypeCriteria.subtypeOf("org.apache.http.message.AbstractHttpMessage"))
-        .name("setHeader").withAnyParameters(),
-      MethodMatcher.create().ofType(TypeCriteria.subtypeOf("org.apache.http.message.AbstractHttpMessage"))
-        .name("addHeader").addParameter(LANG_STRING).addParameter(LANG_STRING),
-      MethodMatcher.create().ofType(TypeCriteria.subtypeOf("org.apache.http.message.BasicHeader")).name("<init>").addParameter(LANG_STRING).addParameter(LANG_STRING),
-      MethodMatcher.create().ofType(TypeCriteria.subtypeOf("java.net.URLConnection")).name("setRequestProperty").withAnyParameters(),
-      MethodMatcher.create().ofType(TypeCriteria.subtypeOf("java.net.URLConnection")).name("addRequestProperty").withAnyParameters()
+      MethodMatchers.create()
+        .ofSubTypes("org.apache.http.message.AbstractHttpMessage").names("setHeader").withAnyParameters().build(),
+      MethodMatchers.create()
+        .ofSubTypes("org.apache.http.message.AbstractHttpMessage").names("addHeader").addParametersMatcher(LANG_STRING, LANG_STRING).build(),
+      MethodMatchers.create()
+        .ofSubTypes("org.apache.http.message.BasicHeader").constructor().addParametersMatcher(LANG_STRING, LANG_STRING).build(),
+      MethodMatchers.create()
+        .ofSubTypes("java.net.URLConnection").names("setRequestProperty").withAnyParameters().build(),
+      MethodMatchers.create()
+        .ofSubTypes("java.net.URLConnection").names("addRequestProperty").withAnyParameters().build()
       );
   }
 

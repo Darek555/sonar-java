@@ -34,8 +34,8 @@ public class RunFinalizersCheck extends AbstractMethodDetection implements JavaV
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatchers.or(
-      MethodMatcher.create().ofType("java.lang.Runtime").name("runFinalizersOnExit").addParameter("boolean"),
-      MethodMatcher.create().ofType("java.lang.System").name("runFinalizersOnExit").addParameter("boolean"));
+      MethodMatcher.create().ofTypes("java.lang.Runtime").names("runFinalizersOnExit").addParameter("boolean"),
+      MethodMatcher.create().ofTypes("java.lang.System").names("runFinalizersOnExit").addParameter("boolean"));
   }
 
   @Override

@@ -35,8 +35,8 @@ public class SerializableObjectInSessionCheck extends AbstractMethodDetection {
 
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
-    return MethodMatcher.create().ofType("javax.servlet.http.HttpSession")
-      .name("setAttribute").addParameter("java.lang.String").addParameter(TypeCriteria.anyType());
+    return MethodMatcher.create().ofTypes("javax.servlet.http.HttpSession")
+      .names("setAttribute").addParameter("java.lang.String").addParameter(TypeCriteria.anyType());
   }
 
   @Override

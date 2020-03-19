@@ -44,8 +44,8 @@ public class StrongCipherAlgorithmCheck extends AbstractMethodDetection {
   @Override
   protected MethodMatchers getMethodInvocationMatchers() {
     return MethodMatchers.or(
-      MethodMatcher.create().ofType("javax.crypto.Cipher").name("getInstance").withAnyParameters(),
-      MethodMatcher.create().ofType("javax.crypto.NullCipher").name("<init>").withAnyParameters());
+      MethodMatcher.create().ofTypes("javax.crypto.Cipher").names("getInstance").withAnyParameters(),
+      MethodMatcher.create().ofTypes("javax.crypto.NullCipher").names("<init>").withAnyParameters());
   }
 
   @Override
