@@ -66,6 +66,7 @@ class JasperTest {
     ctx.fileSystem().setWorkDir(workDir);
     Collection<GeneratedFile> generatedFiles = new Jasper().generateFiles(ctx, emptyList());
     assertThat(generatedFiles).isEmpty();
+    assertThat(logTester.logs()).containsOnly("Found 0 JSP files.");
   }
 
   @Test

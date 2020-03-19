@@ -55,6 +55,9 @@ public class Jasper {
     try {
       List<Path> jspFiles = jspFiles(context.fileSystem());
       LOG.debug("Found {} JSP files.", jspFiles.size());
+      if (jspFiles.isEmpty()) {
+        return Collections.emptyList();
+      }
       Path outputDir = outputDir(context);
       Jasper.compileJspFiles(jspFiles, javaClasspath, outputDir);
       return findGeneratedFiles(outputDir);
@@ -108,8 +111,10 @@ public class Jasper {
 
   }
 
-  private static Path outputDir(SensorContext sensorContext) {
-    return sensorContext.fileSystem().workDir().toPath().resolve("jsp");
+  private static Path outputDir(SensorContext sensorContext) throws IOException {
+    Path path = sensorContext.fileSystem().workDir().toPath().resolve("jsp");
+    Files.createDirectory(path);
+    return path;
   }
 
 
